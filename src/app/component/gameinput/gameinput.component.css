@@ -1,0 +1,486 @@
+label {
+  /* Other styling... */
+  text-align: right;
+  clear: both;
+  float:left;
+  margin-right:15px;
+}
+
+.groupuser {
+  display: block;
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+  margin-left: 0;
+
+}
+
+.teetop {
+  display: block;
+  margin-top: 0em;
+  margin-bottom: 0em;
+  margin-left: 0;
+
+}
+
+.user {
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+
+  position: absolute;
+  left: 25%;
+}
+
+.example-card{
+  margin: 1%;
+  width: 1800px;
+  text-align: left;
+  float: left;
+}
+
+
+mat-card{
+  margin: 2%;
+  text-align: left;
+}
+
+.mat-mdc-form-field {
+  width: 98%;
+  margin: 1%;
+}
+
+.mat-50{
+  width: 18%;
+  margin: 1%;
+}
+
+button{
+  margin: 2px;
+}
+.container {
+  margin-top: 12px;
+  height: 45%;
+  width: 60%;
+  margin: auto;
+  margin-bottom:15px;
+}
+
+.container-event {
+  margin-top: 12px;
+  height: 80px;
+  width: 80%;
+  margin: auto;
+  margin-bottom:15px;
+}
+
+div.record-picker {
+	overflow-x: hidden;
+	overflow-y: auto;
+	border: 1px solid #ddd;
+	border-radius:8px;
+	position: relative;
+	cursor: pointer;
+}
+
+/* http://www.ourtuts.com/how-to-customize-browser-scrollbars-using-css3/ */
+div.record-picker::-webkit-scrollbar {
+	width: 12px;
+}
+
+div.record-picker::-webkit-scrollbar-button {
+	width: 0px;
+	height: 0px;
+}
+
+div.record-picker {
+	scrollbar-base-color: #337ab7;
+	scrollbar-3dlight-color: #337ab7;
+	scrollbar-highlight-color: #337ab7;
+	scrollbar-track-color: #eee;
+	scrollbar-arrow-color: gray;
+	scrollbar-shadow-color: gray;
+	scrollbar-dark-shadow-color: gray;
+}
+
+div.record-picker::-webkit-scrollbar-track {
+	background:#eee;
+	box-shadow: 0px 0px 3px #dfdfdf inset;
+	border-top-right-radius: 8px;
+	border-bottom-right-radius: 8px;
+}
+
+div.record-picker::-webkit-scrollbar-thumb {
+	background: #337ab7;
+	border: thin solid gray;
+	border-top-right-radius: 8px;
+	border-bottom-right-radius: 8px;
+}
+
+div.record-picker::-webkit-scrollbar-thumb:hover {
+	background: #286090;
+}
+
+.record-picker ul {
+	margin: 0;
+	padding: 0 0 1px 0;
+}
+
+.record-picker li {
+	border-top: thin solid #ddd;
+	border-bottom: 1px solid #ddd;
+	display: block;
+	padding: 2px 2px 2px 10px;
+	margin-bottom: -1px;
+	font-size: 0.85em;
+	cursor: pointer;
+	white-space: nowrap;
+	min-height:16px;
+}
+
+.record-picker li:hover {
+	background-color: #f5f5f5;
+}
+
+.record-picker li.selected {
+	background-color: #d9edf7;
+}
+
+.record-picker li.selected:hover {
+	background-color: #c4e3f3;
+}
+
+.record-picker li.disabled {
+	opacity: 0.5;
+	cursor: default;
+	background-color: inherit;
+}
+
+.record-picker li:first-child {
+	border-top-left-radius: 8px;
+	border-top-right-radius: 8px;
+	border-top: none;
+}
+
+.record-picker li:last-child {
+	border-bottom-left-radius: 8px;
+	border-bottom-right-radius: 8px;
+	border-bottom: none;
+}
+
+.record-picker label {
+	cursor: pointer;
+	font-weight: inherit;
+	font-size: 14px;
+	padding: 4px;
+	margin-bottom: -1px;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.record-picker ul.over {
+	background-color:lightgray;
+}
+
+.dual-list  {
+	display: -webkit-box;
+	display: flex;
+	flex-direction: row;
+	align-content: flex-start;
+}
+
+.dual-list .listbox {
+	width: 50%;
+	margin: 0px;
+}
+
+.dual-list .button-bar {
+	margin-top: 8px;
+}
+
+/* &nbsp;&nbsp;&nbsp;&#9654; */
+.point-right::after {
+	content: "\25B6";
+	padding-left: 1em;
+}
+
+/* &#9664;&nbsp;&nbsp;&nbsp; */
+.point-left::before {
+	content: "\25C0";
+	padding-right: 1em;
+}
+
+.dual-list .button-bar button {
+	width: 47%;
+}
+
+button.btn-block {
+	display: block;
+	width: 100%;
+	margin-bottom: 8px;
+}
+
+.filter {
+	margin-bottom: -2.2em;
+}
+
+.filter::after {
+	content:"o";
+	width:40px;
+	color:transparent;
+	font-size:2em;
+	background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M0 64l192 192v192l128-32V256L512 64H0z"/></svg>');
+	background-repeat:no-repeat;
+	background-position:center center;
+	opacity:.2;
+	top: -36px;
+	left: calc(100% - 21px);
+	position:relative;
+}
+
+
+
+
+ul {
+  text-align: center;
+}
+div.record-picker {
+  overflow-x: hidden;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  position: relative;
+  cursor: pointer;
+  font-family: sans-serif;
+}
+
+div.record-picker::-webkit-scrollbar {
+  width: 12px;
+}
+
+div.record-picker::-webkit-scrollbar-button {
+  width: 0px;
+  height: 0px;
+}
+
+div.record-picker {
+  scrollbar-base-color: indigo;
+  scrollbar-3dlight-color: indigo;
+  scrollbar-highlight-color: indigo;
+  scrollbar-track-color: #eee;
+  scrollbar-arrow-color: gray;
+  scrollbar-shadow-color: gray;
+  scrollbar-dark-shadow-color: gray;
+}
+
+div.record-picker::-webkit-scrollbar-track {
+  background: #eee;
+  box-shadow: 0px 0px 3px #dfdfdf inset;
+}
+
+div.record-picker::-webkit-scrollbar-thumb {
+  background: indigo;
+  border: thin solid gray;
+}
+
+div.record-picker::-webkit-scrollbar-thumb:hover {
+  background: purple;
+}
+
+.record-picker ul {
+  margin: 0;
+  padding: 0 0 1px 0;
+}
+
+.record-picker li {
+  border-top: thin solid #ddd;
+  border-bottom: 1px solid #ddd;
+  display: block;
+  padding: 2px 2px 2px 10px;
+  margin-bottom: -1px;
+  font-size: 0.85em;
+  cursor: pointer;
+  white-space: nowrap;
+  min-height: 16px;
+  text-align: left;
+}
+
+.record-picker li:hover {
+  background-color: #f5f5f5;
+}
+
+.record-picker li.selected {
+  background-color: thistle;
+}
+
+.record-picker li.selected:hover {
+  background-color: plum;
+}
+
+.record-picker li.disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.record-picker li:first-child {
+  border-top: none;
+}
+
+.record-picker li:last-child {
+  border-bottom: none;
+}
+
+.record-picker label {
+  cursor: pointer;
+  font-weight: inherit;
+  font-size: 14px;
+  padding: 4px;
+  margin-bottom: -1px;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.record-picker ul.over {
+  background-color: lightgray;
+}
+
+.dual-list {
+  display: flex;
+  flex-direction: row;
+  align-content: flex-start;
+  justify-content: space-evenly;
+}
+
+.dual-list .listbox {
+  width: 35%;
+  margin: 0px;
+  flex-grow: 2;
+}
+
+.buttonbox {
+  margin: 0 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.btn-block {
+  display: block;
+  width: 70px;
+  margin: 4px;
+}
+
+button {
+  color: white;
+  font-size: 18px;
+  background: indigo;
+  padding: 5px 10px;
+  border: solid black 1px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background: purple;
+  text-decoration: none;
+}
+
+button:disabled {
+  background: rgba(75, 0, 130, 0.5);
+  cursor: default;
+}
+
+p {
+  font-family: sans-serif;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+
+
+
+.form-container {
+  max-width: 400px;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f7f7f7;
+}
+
+h2 {
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"],
+textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button[type="submit"] {
+  display: block;
+  margin: auto;
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+thead {
+  background-color: #f2f2f2;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  font-weight: bold;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+

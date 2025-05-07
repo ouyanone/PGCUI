@@ -1,0 +1,119 @@
+
+<div class="flex-container"  *ngFor="let tee of editdata.teeList;let i = index">
+  <mat-card class="example-card" >
+      <mat-card-header>
+        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-title>Tee # {{tee.teeName}}</mat-card-title>
+        <mat-card-subtitle>event date:  {{editdata.eventDate}}  </mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+          <div  style="display:flex; flex-direction: row; justify-content: center; align-items: right; width: 200px;">
+              <label>Teetime:</label>  {{tee.teeTime}}
+          </div>
+
+          <mat-grid-list cols="2" rowHeight="300">
+              <mat-grid-tile style="background-color: SeaShell">
+                <div  *ngIf="tee.teeTeamXrefList[0]">
+                    <div class="user" style=" background-image: url('../../../assets/{{tee.teeTeamXrefList[0].playScoreList[0].player.fName}}.jpg');">
+
+                    </div>
+                    <div>
+                      <h4 class="groupuser">{{tee.teeTeamXrefList[0].playScoreList[0].player.fName}} {{tee.teeTeamXrefList[0].playScoreList[0].player.lName}}</h4>
+                      <h4 class="groupuser">{{tee.teeTeamXrefList[0].playScoreList[0].player.chineseNickName}}</h4>
+                      <h5 class="groupuser">handicap: {{tee.teeTeamXrefList[0].playScoreList[0].player.handicap}}</h5>
+                      <h5 class="groupuser">Latest 3 Avg: {{tee.teeTeamXrefList[0].playScoreList[0].entryScore}}</h5>
+                      <div  style="display:flex; flex-direction: row; justify-content: center; align-items: right; width: 200px;">
+                          <h5 class="groupuser">Personal Score::&nbsp;&nbsp;&nbsp;</h5>  <input type="text" size="8" maxlength="8" [(ngModel)]="tee.teeTeamXrefList[0].playScoreList[0].score">
+                      </div>
+
+                      <div  style="display:flex; flex-direction: row; justify-content: center; align-items: right; width: 200px;">
+                          <h5 class="groupuser">Tee Score::&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>  <input type="text" size="8" maxlength="8" [(ngModel)]="tee.teeTeamXrefList[0].score">
+                      </div>
+
+                      <h3 class="groupuser">Tee Win: {{tee.teeTeamXrefList[0].playScoreList[0].teeWin}}</h3>
+                      <h3 class="groupuser">Team Win: {{tee.teeTeamXrefList[0].playScoreList[0].teamWin}}</h3>
+                    </div>
+              </div>
+              </mat-grid-tile>
+
+              <mat-grid-tile style="background-color: LightCyan">
+                  <div  *ngIf="tee.teeTeamXrefList[1]">
+                    <div class="user" style=" background-image: url('../../../assets/{{tee.teeTeamXrefList[1].playScoreList[0].player.fName}}.jpg');">
+
+                    </div>
+                    <div>
+                        <h4 class="groupuser">{{tee.teeTeamXrefList[1].playScoreList[0].player.fName}} {{tee.teeTeamXrefList[1].playScoreList[0].player.lName}}</h4>
+                        <h4 class="groupuser">{{tee.teeTeamXrefList[1].playScoreList[0].player.chineseNickName}}</h4>
+                        <h5 class="groupuser">handicap: {{tee.teeTeamXrefList[1].playScoreList[0].player.handicap}}</h5>
+                        <h5 class="groupuser">Latest 3 Avg: {{tee.teeTeamXrefList[1].playScoreList[0].player.last3GameAvg}}</h5>
+                        <div  style="display:flex; flex-direction: row; justify-content: center; align-items: right; width: 200px;">
+                            <h5 class="groupuser">Personal Score::&nbsp;&nbsp;&nbsp;</h5>  <input type="text" size="8" maxlength="8" [(ngModel)]="tee.teeTeamXrefList[1].playScoreList[0].score">
+                        </div>
+                        <h3 class="groupuser">Tee Win: {{tee.teeTeamXrefList[1].playScoreList[0].teeWin}}</h3>
+                        <h3 class="groupuser">Team Win: {{tee.teeTeamXrefList[1].playScoreList[0].teamWin}}</h3>
+                    </div>
+                </div>
+              </mat-grid-tile>
+              <mat-grid-tile style="background-color: SeaShell">
+                  <div  *ngIf="tee.teeTeamXrefList[0]">
+                      <div class="user" style=" background-image: url('../../../assets/{{tee.teeTeamXrefList[0].playScoreList[1].player.fName}}.jpg');">
+
+                      </div>
+                      <div>
+                        <h4 class="groupuser">{{tee.teeTeamXrefList[0].playScoreList[1].player.fName}} {{tee.teeTeamXrefList[0].playScoreList[1].player.lName}}</h4>
+                        <h4 class="groupuser">{{tee.teeTeamXrefList[0].playScoreList[1].player.chineseNickName}}</h4>
+                        <h5 class="groupuser">handicap: {{tee.teeTeamXrefList[0].playScoreList[1].player.handicap}}</h5>
+                        <h5 class="groupuser">Latest 3 Avg: {{tee.teeTeamXrefList[0].playScoreList[1].player.last3GameAvg}}</h5>
+
+
+                        <div  style="display:flex; flex-direction: row; justify-content: center; align-items: right; width: 200px;">
+                            <h5 class="groupuser">Tee Score::&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h5>  <input type="text" size="8" maxlength="8" [(ngModel)]="tee.teeTeamXrefList[0].playScoreList[1].score">
+                        </div>
+
+                        <h3 class="groupuser">Tee Win: {{tee.teeTeamXrefList[0].playScoreList[1].teeWin}}</h3>
+                        <h3 class="groupuser">Team Win: {{tee.teeTeamXrefList[0].playScoreList[1].teamWin}}</h3>
+                      </div>
+                </div>
+                </mat-grid-tile>
+
+                <mat-grid-tile style="background-color: LightCyan">
+                    <div  *ngIf="tee.teeTeamXrefList[1]">
+                      <div class="user" style=" background-image: url('../../../assets/{{tee.teeTeamXrefList[1].playScoreList[1].player.fName}}.jpg');">
+
+                      </div>
+                      <div>
+                          <h4 class="groupuser">{{tee.teeTeamXrefList[1].playScoreList[1].player.fName}} {{tee.teeTeamXrefList[1].playScoreList[1].player.lName}}</h4>
+                          <h4 class="groupuser">{{tee.teeTeamXrefList[1].playScoreList[1].player.chineseNickName}}</h4>
+                          <h5 class="groupuser">handicap: {{tee.teeTeamXrefList[1].playScoreList[1].player.handicap}}</h5>
+                          <h5 class="groupuser">Latest 3 Avg: {{tee.teeTeamXrefList[1].playScoreList[1].player.last3GameAvg}}</h5>
+                          <div  style="display:flex; flex-direction: row; justify-content: center; align-items: right; width: 200px;">
+                              <h5 class="groupuser">Personal Score::&nbsp;&nbsp;&nbsp;</h5>  <input type="text" size="8" maxlength="8" [(ngModel)]="tee.teeTeamXrefList[1].playScoreList[1].score">
+                          </div>
+                          <h3 class="groupuser">Tee Win: {{tee.teeTeamXrefList[1].playScoreList[1].teeWin}}</h3>
+                          <h3 class="groupuser">Team Win: {{tee.teeTeamXrefList[1].playScoreList[1].teamWin}}</h3>
+                      </div>
+                  </div>
+                </mat-grid-tile>
+
+
+            </mat-grid-list>
+
+      </mat-card-content>
+
+      <mat-card-actions>
+
+      </mat-card-actions>
+    </mat-card>
+
+
+</div>
+
+<div style="display:flex;" >
+    <button type="submit" (click)="deleteEvent()" *ngIf="editdata.status == 'OPEN'">Delete this Event</button>
+    <button type="submit" (click)="onSubmitScore()" *ngIf="editdata.status == 'OPEN'">Submit Score</button>
+
+    <button type="submit"  (click)="closepopup()" >Close</button>
+</div>
+
+

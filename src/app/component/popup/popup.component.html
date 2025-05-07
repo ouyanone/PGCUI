@@ -1,0 +1,55 @@
+<form [formGroup]="myform" (ngSubmit)="Saveuser()">
+<h1 mat-dialog-title>{{inputdata.title}}</h1>
+<div mat-dialog-content>
+  <mat-form-field appearance="outline">
+    <mat-label>Golfer Id</mat-label>
+    <input formControlName="id" matInput>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>First Name</mat-label>
+    <input formControlName="fName" matInput>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Last Name</mat-label>
+    <input formControlName="lName" matInput>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Ghin Number</mat-label>
+    <input formControlName="ghinNumber" matInput>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Phone Number</mat-label>
+    <input formControlName="phone" matInput>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Email</mat-label>
+    <input formControlName="email" matInput>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Nick Name</mat-label>
+    <input formControlName="nickName" matInput>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Chinese Nick Name</mat-label>
+    <input formControlName="chineseNickName" matInput>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Handicap</mat-label>
+    <input formControlName="handicap" matInput>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Club ID</mat-label>
+    <input formControlName="clubId" matInput>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Club Name</mat-label>
+    <input formControlName="clubName" matInput>
+  </mat-form-field>
+
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button type="submit" color="primary">Save</button>
+  <a (click)="closepopup()" mat-raised-button color="warn">Close</a>
+  <!-- <button mat-raised-button [mat-dialog-close]="closemessage" color="accent">Cancel</button> -->
+</div>
+</form>

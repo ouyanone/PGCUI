@@ -1,0 +1,224 @@
+<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" animationDuration="800ms"  (selectedTabChange)="onTabClick($event)"  #grouptab>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">calendar_month</mat-icon>
+            Setup Event and Pick users 建立比赛
+          </ng-template>
+        <mat-card>
+            <mat-card-content>
+              <form (ngSubmit)="onGroupingSubmit(grouptab)" [formGroup]="eventForm">
+                <mat-form-field style="width:10%;margin: 1%">
+                    <mat-label>Select a Season</mat-label>
+                    <mat-select [(value)]="season" >
+                      <mat-option value="2024">2024</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+                  <mat-form-field style="width:12%;margin: 1%">
+                      <mat-label>Choose a date</mat-label>
+                      <input matInput [matDatepicker]="picker" (dateChange)="dateChanged($event)">
+                      <mat-hint>MM/DD/YYYY</mat-hint>
+                      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field style="width:12%;margin: 1%">
+                    <mat-label>Select a golf course</mat-label>
+                    <mat-select [(value)]="course">
+                      <mat-option>None</mat-option>
+                      <mat-option value="1">Forsgate - Banks</mat-option>
+                      <mat-option value="2">Forsgate - Palmer</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+                  <mat-form-field style="width:22%;margin: 1%"appearance="outline">
+                      <mat-label>Event Name</mat-label>
+                      <input formControlName="eventName" matInput [(ngModel)]="eventName">
+                  </mat-form-field>
+                  <mat-form-field style="width:30%;margin: 1%" appearance="outline">
+                        <mat-label>Event Description</mat-label>
+                        <input formControlName="eventDesc" matInput [(ngModel)]="eventDesc">
+                  </mat-form-field>
+
+
+                  <div class="container-fluid">
+                      <p></p>
+                      <div class="container">
+                      <dual-list  [source]="source" [key]="key" [display]="display" [filter]="filter"
+                        [(destination)]="confirmed" height="500px" [format]="format" [disabled]="disabled"></dual-list>
+                      </div>
+                  </div>
+
+                  <mat-divider></mat-divider>
+
+
+                  <label id="groupingId">Pick a grouping method</label>
+                  <mat-radio-group aria-label="Select the way of grouping: " [(ngModel)]="groupingMethod"   formControlName="groupMethod">
+                      <mat-radio-button value="1" [checked]=true>Based on the average score of the latest 3 games</mat-radio-button>
+                      <mat-radio-button value="2">Based on handicap</mat-radio-button>
+                      <mat-radio-button value="3">Manually assign group</mat-radio-button>
+                  </mat-radio-group>
+                  <div style="display:flex;" >
+
+
+                    <button type="button" (click)="addTee()">Add Tee</button>
+                    <button type="submit">Generate Group</button>
+                    <button type="button" (click)="resetTee()">Reset Tee</button>
+                  </div>
+              </form>
+            </mat-card-content>
+        </mat-card>
+    </mat-tab>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">sports_golf</mat-icon>
+            Grouping Assignment 比赛分组
+          </ng-template>
+
+
+      <h1>Game {{eventName}} Group Assignment 比赛分组细节</h1>
+
+      <div style="width: 1400px">
+          <mat-grid-list cols="2" rowHeight="50">
+              <mat-grid-tile>
+                  <div>
+                    <h4 class="teetop" style="text-align: left; color: Green">Team A 红队 avg handicap: {{totalTeamAHandicap}} </h4>
+                    <h4 class="teetop" style="text-align: left; color: Green">Team B 蓝队 avg handicap: {{totalTeamBHandicap}} </h4>
+
+
+                  </div>
+                </mat-grid-tile>
+                <mat-grid-tile>
+                    <div>
+                        <h4 class="teetop" style="text-align: left; color: Green">Team A 红队 lastest 3 game avg score: {{totalTeamA3Score}}</h4>
+                        <h4 class="teetop" style="text-align: left; color: Green">Team B 蓝队 lastest 3 game avg score: {{totalTeamB3Score}}</h4>
+                    </div>
+                </mat-grid-tile>
+          </mat-grid-list>
+    </div>
+
+      <div class="flex-container" *ngIf="isSubmitted">
+          <mat-card class="example-card"  *ngFor="let tee of teeList;let i = index">
+              <mat-card-header>
+                <div mat-card-avatar class="example-header-image"></div>
+                <mat-card-title>Tee # {{tee.teeName}}</mat-card-title>
+                <mat-card-subtitle>event date: {{eventDate}} </mat-card-subtitle>
+              </mat-card-header>
+
+
+
+              <mat-card-content>
+                <div  style="display:flex; flex-direction: row; justify-content: center; align-items: right; width: 200px;">
+                    <label>Teetime:</label>  <input type="text" size="20" maxlength="20" [(ngModel)]="tee.teeTime">
+                </div>
+                  <mat-grid-list cols="2" rowHeight="150">
+
+                      <mat-grid-tile [style.background]="'Tomato'">
+                        <div>
+                          <h2 class="teetop" style="color: GhostWhite">Team A - 红队&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h2>
+                          <h5 class="teetop" style="color: GhostWhite">Handicap: {{tee.teamAavghandicap}}</h5>
+                          <h5 class="teetop" style="color: GhostWhite">Latest 3 Score: {{tee.teamAavgScore}}</h5>
+
+
+                        </div>
+                      </mat-grid-tile>
+                      <mat-grid-tile [style.background]="'DeepSkyBlue'">
+                          <div>
+                              <h2 class="teetop" style="color: GhostWhite">Team B - 蓝队&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h2>
+                              <h5 class="teetop" style="color: GhostWhite">Handicap: {{tee.teamBavghandicap}}</h5>
+                              <h5 class="teetop" style="color: GhostWhite">Latest 3 Score: {{tee.teamBavgScore}}</h5>
+
+                          </div>
+                      </mat-grid-tile>
+
+
+
+                      <mat-grid-tile style="background-color: SeaShell">
+                        <div  *ngIf="tee.teamA[0]">
+                            <div class="user" style=" background-image: url('../../../assets/{{tee.teamA[0].fName}}.jpg');">
+
+                            </div>
+                            <div>
+                              <h4 class="groupuser">{{tee.teamA[0].fName}} {{tee.teamA[0].lName}}</h4>
+                              <h4 class="groupuser">{{tee.teamA[0].chineseNickName}}</h4>
+                              <h5 class="groupuser">handicap: {{tee.teamA[0].handicap}}</h5>
+                              <h5 class="groupuser">Latest 3 Avg: {{tee.teamA[0].last3GameAvg}}</h5>
+                            </div>
+                      </div>
+                      </mat-grid-tile>
+
+
+
+                      <mat-grid-tile style="background-color: LightCyan">
+                          <div  *ngIf="tee.teamB[0]">
+                            <div class="user" style=" background-image: url('../../../assets/{{tee.teamB[0].fName}}.jpg');">
+
+                            </div>
+                            <div>
+                                <h4 class="groupuser">{{tee.teamB[0].fName}} {{tee.teamB[0].lName}}</h4>
+                                <h4 class="groupuser">{{tee.teamB[0].chineseNickName}}</h4>
+                                <h5 class="groupuser">handicap: {{tee.teamB[0].handicap}}</h5>
+                                <h5 class="groupuser">Latest 3 Avg: {{tee.teamB[0].last3GameAvg}}</h5>
+                            </div>
+                        </div>
+                      </mat-grid-tile>
+
+
+
+                      <mat-grid-tile style="background-color: SeaShell">
+                          <div  *ngIf="tee.teamA[1]">
+                            <div  *ngIf="tee.teamA[1]" class="user" style=" background-image: url('../../../assets/{{tee.teamA[1].fName}}.jpg');">
+
+                            </div>
+
+                            <div>
+                                <h4 class="groupuser">{{tee.teamA[1].fName}} {{tee.teamA[1].lName}}</h4>
+                                <h4 class="groupuser">{{tee.teamA[1].chineseNickName}}</h4>
+                                <h5 class="groupuser">handicap: {{tee.teamA[1].handicap}}</h5>
+                                <h5 class="groupuser">Latest 3 Avg: {{tee.teamA[1].last3GameAvg}}</h5>
+                            </div>
+                          </div>
+                      </mat-grid-tile>
+
+
+
+                      <mat-grid-tile style="background-color: LightCyan">
+                        <div  *ngIf="tee.teamB[1]">
+                          <div class="user" style=" background-image: url('../../../assets/{{tee.teamB[1].fName}}.jpg');">
+
+                          </div>
+
+                          <div>
+                              <h4 class="groupuser">{{tee.teamB[1].fName}} {{tee.teamB[1].lName}}</h4>
+                              <h4 class="groupuser">{{tee.teamB[1].chineseNickName}}</h4>
+                              <h5 class="groupuser">handicap: {{tee.teamB[1].handicap}}</h5>
+                              <h5 class="groupuser">Latest 3 Avg: {{tee.teamB[1].last3GameAvg}}</h5>
+                          </div>
+                        </div>
+                      </mat-grid-tile>
+
+                    </mat-grid-list>
+
+
+              </mat-card-content>
+              <mat-card-actions>
+
+              </mat-card-actions>
+            </mat-card>
+
+      </div>
+
+      <div style="width: 60%">
+        <button type="submit" (click)="onSubmitGroup()">Submit Event Group</button>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+
+
+
+
+
+
+
+
+

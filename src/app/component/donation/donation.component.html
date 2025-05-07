@@ -1,0 +1,17 @@
+<p>$10 club donations</p>
+
+
+<div>
+    <ag-grid-angular
+    class="ag-theme-quartz"
+    style="height: 900px; width:80%;margin:0 auto;"
+    [defaultColDef]="defaultColDef"
+    [rowData]="donations"
+    [columnDefs]="colDefs">
+    (gridReady)="onGridReady($event)"
+    [pagination]="true"
+    </ag-grid-angular>
+  </div>
+
+
+

@@ -1,0 +1,17 @@
+<form [formGroup]="myform" (ngSubmit)="updateHandicap()">
+    <h1 mat-dialog-title>{{inputdata.title}}</h1>
+    <div mat-dialog-content>
+      <mat-form-field appearance="outline">
+        <mat-label>Provide the access token so that we can access the ghin API to update the handicap</mat-label>
+        <input formControlName="token" matInput>
+      </mat-form-field>
+
+
+    </div>
+    <div mat-dialog-actions>
+        <button mat-raised-button type="submit" color="primary">Update</button>
+      <a (click)="closepopup()" mat-raised-button color="warn">Close</a>
+      <!-- <button mat-raised-button [mat-dialog-close]="closemessage" color="accent">Cancel</button> -->
+    </div>
+    </form>
+

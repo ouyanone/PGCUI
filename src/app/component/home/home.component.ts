@@ -30,6 +30,12 @@ export class HomeComponent {
 
   }
 
+  show() {
+    let image = document.getElementById("image");
+   
+ 
+  }
+
 
 
 }

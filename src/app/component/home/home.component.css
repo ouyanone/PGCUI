@@ -97,4 +97,23 @@ p {
 }
 
 
+.card-class-upcoming-event{
+  margin: 0 auto;
+  width: 67%;
+  text-align: center;
+  float: center;
+}
+
+.reward-img{
+  
+  width: 10%;
+  height: 10%;
+}
+
+.reward-im1g{
+  
+  width: 20%;
+  height: 20%;
+}
+
 

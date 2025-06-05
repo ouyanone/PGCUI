@@ -5,7 +5,7 @@
       <mat-card-subtitle>{{editdata.fName}} {{editdata.lName}}</mat-card-subtitle>
     </mat-card-header>
     <picture>
-      <source media='(min-width:0px)' srcset="../../../assets/{{editdata.fName}}.jpg">
+      <source media='(min-width:0px)' srcset="../../../assets/{{playerIcon}}.jpg">
       <img mat-card-image src="" alt="Golfer picture">
     </picture>
     <mat-card-content>
@@ -63,8 +63,8 @@
         <input formControlName="handicap" matInput>
       </mat-form-field>
       <mat-form-field appearance="outline">
-          <mat-label>Last 3 Game Avg</mat-label>
-          <input formControlName="last3GameAvg" matInput>
+          <mat-label>PGC Handicap</mat-label>
+          <input formControlName="pgcHandicap" matInput>
         </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Club ID</mat-label>
@@ -75,8 +75,16 @@
         <input formControlName="clubName" matInput>
       </mat-form-field>
 
+      <mat-form-field appearance="outline">
+        <mat-label>2025 PGC Member</mat-label>
+        <input formControlName="pgc2025" matInput>
+      </mat-form-field>
 
-
+      <mat-form-field appearance="outline">
+        <mat-label>Is Active</mat-label>
+        <input formControlName="isActive" matInput>
+      </mat-form-field>
+ 
 
     </div>
     <div mat-dialog-actions>

@@ -7,13 +7,13 @@
       (click)="onGhinSyncClick()"
       >GHIN Sync</button>
       &nbsp;&nbsp;&nbsp;
-
+<!--
       <button  mat-raised-button color="grey"
       type="button"
       (click)="onUpdateLast3()"
       >UpdateLast3</button>
       &nbsp;&nbsp;&nbsp;
-
+-->
      <button mat-raised-button color="grey"
     type="button"
     (click)="onAddUserClick()"
@@ -27,8 +27,11 @@
   style="height: 1400px; width:90%"
   [defaultColDef]="defaultColDef"
   [rowData]="players"
-  [columnDefs]="colDefs">
-  (gridReady)="onGridReady($event)"
+  [columnDefs]="colDefs"
   [pagination]="true"
+  (gridReady)="onGridReady($event)"
+  >
+  
+
   </ag-grid-angular>
 </div>

@@ -11,6 +11,8 @@ export interface PlayerRepresentation {
   clubId?: string,
   clubName?: string,
   last3GameAvg: number,
-  level?: number
+  level?: number,
+  pgc2025?:boolean,
+  pgcHandicap?:number
 
 }

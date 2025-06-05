@@ -6,6 +6,7 @@ import {PopupComponent} from '../popup/popup.component'
 
 
 import { AgGridAngular } from 'ag-grid-angular';
+import { AgGridModule } from 'ag-grid-angular';
 import {
   ColDef,
   ColGroupDef,
@@ -44,15 +45,16 @@ export class PlayerComponent implements OnInit{
     { field: "id", headerName: 'Golfer ID', flex:5, onCellClicked: (event: CellClickedEvent) => this.openEditPlayer(event) },
     { field: "fName", headerName: 'First Name', flex:5,  filter: true },
     { field: "lName", headerName: 'Last Name' , flex:5, filter: true },
-    { field: "ghinNumber", headerName: 'ghin Number',  flex:5 },
-    { field: "phone", headerName: 'Phone Number',  flex:6 },
-    { field: "email", headerName: 'Email',  flex:7 },
-    { field: "nickName", headerName: 'Nick Name',  flex:5 },
+  //  { field: "ghinNumber", headerName: 'ghin Number',  flex:5 },
+  //  { field: "phone", headerName: 'Phone Number',  flex:6 },
+  //  { field: "email", headerName: 'Email',  flex:7 },
+  //  { field: "nickName", headerName: 'Nick Name',  flex:5 },
     { field: "chineseNickName", headerName: 'Chinese Nick Name',  flex:7 },
     { field: "handicap", headerName: 'Handicap', type: 'numericColumn', flex:4, filter: true  },
-    { field: "clubId", headerName: 'Club ID',  flex:4 },
-    { field: "clubName", headerName: 'Club Name', flex:12, filter: true  },
-    { field: "last3GameAvg", headerName: 'last3GameAvg', flex:12, filter: true  }
+  //  { field: "clubId", headerName: 'Club ID',  flex:4 },
+  //  { field: "clubName", headerName: 'Club Name', flex:12, filter: true  },
+    { field: "pgcHandicap", headerName: 'PGC Handicap', flex:12, filter: true  },
+    { field: "pgc2025", headerName: 'PGC Member', flex:12, filter: true  }
    // { field: "icon", headerName: 'Picture', cellRenderer: (params:any) => `<img style="height: 680px; width: 680px" src=http://localhost:8080${params.value} />`}
   ];
 
@@ -60,7 +62,6 @@ export class PlayerComponent implements OnInit{
     flex:10,
     minWidth:20
   }
-
 
 
   constructor(

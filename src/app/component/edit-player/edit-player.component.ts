@@ -11,6 +11,8 @@ import { PlayerService } from 'src/app/services/player.service';
 export class EditPlayerComponent implements OnInit {
   inputdata: any;
   editdata: any;
+  playerIcon: any;
+  isActive: any;
   closemessage = 'closed using directive'
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, private ref: MatDialogRef<EditPlayerComponent>, private buildr: FormBuilder,
     private service: PlayerService) {
@@ -28,9 +30,18 @@ export class EditPlayerComponent implements OnInit {
   setpopupdata(id: any) {
     this.service.getPlayerById(id).subscribe(item => {
       this.editdata = item;
+      this.playerIcon = this.editdata.fName+'_'+this.editdata.lName;
+      this.isActive=this.editdata.isActive;
+      console.log(this.isActive);
       this.myform.setValue({id:this.editdata.id,fName:this.editdata.fName,lName:this.editdata.lName,ghinNumber:this.editdata.ghinNumber,phone:this.editdata.phone,email:this.editdata.email,
-        nickName:this.editdata.nickName,chineseNickName:this.editdata.chineseNickName,handicap:this.editdata.handicap,last3GameAvg:this.editdata.last3GameAvg, clubId:this.editdata.clubId,clubName:this.editdata.clubName, desc:this.editdata.desc})
+        nickName:this.editdata.nickName,chineseNickName:this.editdata.chineseNickName,handicap:this.editdata.handicap,last3GameAvg:this.editdata.last3GameAvg, clubId:this.editdata.clubId,
+        clubName:this.editdata.clubName, desc:this.editdata.desc, pgc2025:this.editdata.pgc2025, pgcHandicap:this.editdata.pgcHandicap, isActive:this.editdata.isActive})
     });
+  }
+
+  toggleIsActive() {
+    console.log("isActive is called...");
+    this.isActive = !this.isActive;
   }
 
   closepopup() {
@@ -50,7 +61,10 @@ export class EditPlayerComponent implements OnInit {
     last3GameAvg:  this.buildr.control(''),
     clubId: this.buildr.control(''),
     clubName: this.buildr.control(''),
-    desc:this.buildr.control('')
+    desc: this.buildr.control(''),
+    pgc2025: this.buildr.control(''),
+    pgcHandicap: this.buildr.control(''),
+    isActive: this.buildr.control(''),
   });
 
   Edituser() {

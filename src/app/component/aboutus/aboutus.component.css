@@ -1,0 +1,109 @@
+.about-page {
+  max-width: 960px;
+}
+
+.about-hero {
+  text-align: center;
+  padding: 40px 0 24px;
+}
+
+.about-icon {
+  font-size: 56px;
+  height: 56px;
+  width: 56px;
+  color: #c9a84c;
+  margin-bottom: 12px;
+}
+
+.about-tagline {
+  color: #5a6a7a;
+  font-size: 16px;
+  margin: 8px 0 0;
+  font-style: italic;
+}
+
+/* ── Poem ── */
+.poem-section {
+  margin-bottom: 40px;
+}
+
+.poem-card {
+  border-radius: 12px !important;
+  box-shadow: 0 2px 16px rgba(26,60,94,0.10) !important;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.poem-card-title {
+  font-family: Georgia, serif;
+  color: #1a3c5e;
+}
+
+.poem {
+  padding: 8px 0;
+}
+
+.poem-line {
+  font-size: 16px;
+  color: #3a4a5a;
+  margin: 4px 0;
+  font-style: italic;
+  font-family: Georgia, serif;
+  line-height: 1.7;
+}
+
+.poem-refrain {
+  font-size: 17px;
+  font-weight: 700;
+  color: #1a3c5e;
+  margin: 10px 0 20px;
+  font-family: Georgia, serif;
+  border-left: 3px solid #c9a84c;
+  padding-left: 12px;
+}
+
+/* ── Values ── */
+.about-values {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.value-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 28px 24px;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(26,60,94,0.08);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.value-card:hover {
+  box-shadow: 0 6px 24px rgba(26,60,94,0.15);
+  transform: translateY(-2px);
+}
+
+.value-icon {
+  font-size: 40px;
+  height: 40px;
+  width: 40px;
+  color: #2d6a4f;
+  margin-bottom: 12px;
+}
+
+.value-card h3 {
+  font-size: 1.1rem;
+  color: #1a3c5e;
+  margin: 0 0 10px;
+}
+
+.value-card p {
+  font-size: 14px;
+  color: #5a6a7a;
+  line-height: 1.6;
+  margin: 0;
+}
+
+@media (max-width: 767px) {
+  .about-values { grid-template-columns: 1fr; }
+}

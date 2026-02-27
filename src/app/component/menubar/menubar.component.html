@@ -1,90 +1,92 @@
-<mat-toolbar color="primary" class="mat-elevation-z8">
-    <button (click)="drawer.toggle()" mat-icon-button>
+<mat-toolbar color="primary" class="mat-elevation-z8" style="background: linear-gradient(135deg, #1a3c5e 0%, #234d76 100%); color: #fff;">
+    <button (click)="drawer.toggle()" mat-icon-button aria-label="Toggle navigation">
         <mat-icon>menu</mat-icon>
     </button>
-    <img cImg rounded src="/assets/pgc-logo.jpeg" height="50" />
-    <span class="toolbar-title">&nbsp;&nbsp;普林斯顿高尔夫俱乐部 - New Jersey Princeton Golf Club</span>
+    <img class="toolbar-logo" src="/assets/pgc-logo.jpeg" alt="PGC Logo" />
+    <span class="toolbar-title">普林斯顿高尔夫俱乐部 &nbsp;|&nbsp; New Jersey Princeton Golf Club</span>
     <span class="example-spacer"></span>
-    <ng-container *ngIf="!isMobile">
-        <button routerLink="" mat-button>Home</button>
-    </ng-container>
-    <!--
-    <button [matMenuTriggerFor]="lvl1master" mat-button>Master</button>
-    <mat-menu #lvl1master="matMenu">
-        <button [matMenuTriggerFor]="company" mat-menu-item>Company</button>
-        <button [matMenuTriggerFor]="customer" mat-menu-item>Customer</button>
-        <button [matMenuTriggerFor]="product" mat-menu-item>Product</button>
-    </mat-menu>
-
-    <mat-menu #company="matMenu">
-        <button mat-menu-item>Term</button>
-        <button mat-menu-item>Tax</button>
-        <button mat-menu-item>Currency</button>
-    </mat-menu>
-    <mat-menu #customer="matMenu">
-        <button mat-menu-item>Type</button>
-        <button mat-menu-item>Tax</button>
-    </mat-menu>
-    <mat-menu #product="matMenu">
-        <button mat-menu-item>Category</button>
-        <button [matMenuTriggerFor]="variant" mat-menu-item>Variant</button>
-        <button mat-menu-item>UOM</button>
-    </mat-menu>
-
-    <mat-menu #variant="matMenu">
-        <button mat-menu-item>Color</button>
-        <button mat-menu-item>Size</button>
-    </mat-menu>
-
-    <button routerLink="input" mat-button>Input</button>
-    <button routerLink="autocomplete" mat-button>Autocomplete</button>
-    <a href="https://www.youtube.com/channel/UCsbmVmB_or8sVLLEq4XhE_A/join" mat-raised-button color="accent">Join Us</a>
-    <button (click)="badgevisibility()"  mat-icon-button>
-        <mat-icon matBadgeColor="accent" matBadge="15" [matBadgeHidden]="badgevisible" matBadgeSize="small">notifications</mat-icon>
-    </button>
-    -->
-    <a href="mailto:yanouone@gmail.com?subject=Request to join Ten Dollar Club" mat-raised-button color="accent">Join Us</a>&nbsp;&nbsp;
-    <a *ngIf="!isMobile" href="/oauth2/authorization/cognito" mat-raised-button color="accent">Sign in</a>&nbsp;&nbsp;
-    <!-- <a href="/logout" mat-raised-button color="warn">Logout</a>-->
+    <div class="toolbar-actions">
+        <a href="mailto:yanouone@gmail.com?subject=Request to join Ten Dollar Club"
+           mat-stroked-button class="join-btn">
+            <mat-icon style="font-size:16px;height:16px;width:16px;vertical-align:middle;">golf_course</mat-icon>
+            &nbsp;Join Us
+        </a>
+        <a *ngIf="!isMobile" href="/oauth2/authorization/cognito"
+           mat-stroked-button class="signin-btn">
+            <mat-icon style="font-size:16px;height:16px;width:16px;vertical-align:middle;">login</mat-icon>
+            &nbsp;Sign In
+        </a>
+    </div>
 </mat-toolbar>
+
 <mat-drawer-container autosize>
-    <mat-drawer #drawer [opened]="!isMobile" [mode]="isMobile ? 'over' : 'side'" position="start">
-    <mat-nav-list>
+    <mat-drawer #drawer class="pgc-drawer"
+                [opened]="!isMobile"
+                [mode]="isMobile ? 'over' : 'side'"
+                position="start">
 
-        <mat-list-item>
-            <button routerLink="" mat-button (click)="isMobile && drawer.close()"><mat-icon>home</mat-icon> Home</button>
-        </mat-list-item>
-        <mat-list-item>
-          <button routerLink="player" mat-button (click)="isMobile && drawer.close()"><mat-icon>person_search</mat-icon> Players Profile</button>
-        </mat-list-item>
-        <mat-list-item>
-            <button routerLink="gameplan" mat-button (click)="isMobile && drawer.close()"><mat-icon>calendar_month</mat-icon> Plan a Game</button>
-        </mat-list-item>
-        <mat-list-item>
-            <button routerLink="gamerecord" mat-button (click)="isMobile && drawer.close()"><mat-icon>scoreboard</mat-icon> Record a Games</button>
-        </mat-list-item>
+        <!-- Drawer header -->
+        <div class="drawer-header">
+            <img class="drawer-logo" src="/assets/pgc-logo.jpeg" alt="PGC Logo" />
+            <div class="drawer-club-name">普林斯顿高尔夫俱乐部<br>Princeton Golf Club</div>
+        </div>
 
-        <mat-list-item>
-            <button routerLink="statistics" mat-button (click)="isMobile && drawer.close()"><mat-icon>insights</mat-icon> Statistics & Analytics</button>
-        </mat-list-item>
-        <mat-list-item>
-            <button routerLink="photos" mat-button (click)="isMobile && drawer.close()"><mat-icon>now_wallpaper</mat-icon> Photos</button>
-        </mat-list-item>
-        <mat-list-item>
-          <button routerLink="donation" mat-button (click)="isMobile && drawer.close()"><mat-icon>attach_money</mat-icon> Donation</button>
-        </mat-list-item>
-        <mat-list-item>
-            <button routerLink="gamerule" mat-button (click)="isMobile && drawer.close()"><mat-icon>menu_book</mat-icon> Game rules</button>
-        </mat-list-item>
-        <mat-list-item>
-            <button routerLink="aboutus" mat-button (click)="isMobile && drawer.close()"><mat-icon>help</mat-icon> About Us</button>
-        </mat-list-item>
-        <mat-list-item *ngIf="isMobile">
-            <a href="/oauth2/authorization/cognito" mat-button><mat-icon>login</mat-icon> Sign in</a>
-        </mat-list-item>
-
-    </mat-nav-list>
+        <!-- Nav items -->
+        <mat-nav-list class="drawer-nav" disableRipple>
+            <mat-list-item>
+                <button mat-button class="nav-item-btn" routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" (click)="isMobile && drawer.close()">
+                    <mat-icon>home</mat-icon> Home
+                </button>
+            </mat-list-item>
+            <mat-list-item>
+                <button mat-button class="nav-item-btn" routerLink="player" routerLinkActive="active" (click)="isMobile && drawer.close()">
+                    <mat-icon>person_search</mat-icon> Players Profile
+                </button>
+            </mat-list-item>
+            <mat-list-item>
+                <button mat-button class="nav-item-btn" routerLink="gameplan" routerLinkActive="active" (click)="isMobile && drawer.close()">
+                    <mat-icon>calendar_month</mat-icon> Plan a Game
+                </button>
+            </mat-list-item>
+            <mat-list-item>
+                <button mat-button class="nav-item-btn" routerLink="gamerecord" routerLinkActive="active" (click)="isMobile && drawer.close()">
+                    <mat-icon>scoreboard</mat-icon> Game Records
+                </button>
+            </mat-list-item>
+            <mat-list-item>
+                <button mat-button class="nav-item-btn" routerLink="statistics" routerLinkActive="active" (click)="isMobile && drawer.close()">
+                    <mat-icon>insights</mat-icon> Statistics
+                </button>
+            </mat-list-item>
+            <mat-list-item>
+                <button mat-button class="nav-item-btn" routerLink="photos" routerLinkActive="active" (click)="isMobile && drawer.close()">
+                    <mat-icon>photo_library</mat-icon> Photos
+                </button>
+            </mat-list-item>
+            <mat-list-item>
+                <button mat-button class="nav-item-btn" routerLink="donation" routerLinkActive="active" (click)="isMobile && drawer.close()">
+                    <mat-icon>volunteer_activism</mat-icon> Donation
+                </button>
+            </mat-list-item>
+            <mat-list-item>
+                <button mat-button class="nav-item-btn" routerLink="gamerule" routerLinkActive="active" (click)="isMobile && drawer.close()">
+                    <mat-icon>menu_book</mat-icon> Game Rules
+                </button>
+            </mat-list-item>
+            <mat-list-item>
+                <button mat-button class="nav-item-btn" routerLink="aboutus" routerLinkActive="active" (click)="isMobile && drawer.close()">
+                    <mat-icon>info</mat-icon> About Us
+                </button>
+            </mat-list-item>
+            <mat-divider style="margin:8px 0;"></mat-divider>
+            <mat-list-item *ngIf="isMobile">
+                <a mat-button class="nav-item-btn" href="/oauth2/authorization/cognito">
+                    <mat-icon>login</mat-icon> Sign In
+                </a>
+            </mat-list-item>
+        </mat-nav-list>
     </mat-drawer>
+
     <mat-drawer-content>
         <div class="main-content">
             <router-outlet></router-outlet>
@@ -92,8 +94,8 @@
     </mat-drawer-content>
 </mat-drawer-container>
 
-<mat-toolbar>
+<mat-toolbar class="pgc-footer">
     <mat-toolbar-row>
-      <span class="footer-text">© Copyright - The New Jersey Princeton Golf Club 2025.</span>
+        <span class="footer-text">© 2025 The New Jersey Princeton Golf Club &nbsp;·&nbsp; 新泽西普林斯顿高尔夫俱乐部</span>
     </mat-toolbar-row>
 </mat-toolbar>

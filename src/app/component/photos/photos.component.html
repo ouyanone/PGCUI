@@ -1,20 +1,22 @@
-<p>photos uploads</p>
+<div class="pgc-page photos-page">
 
+  <div class="page-header">
+    <mat-icon class="page-icon">photo_library</mat-icon>
+    <h1 class="pgc-section-title">Club Photos</h1>
+    <p class="page-subtitle">Share your favourite moments from the course</p>
+  </div>
 
-<input type="file" class="file-input"
-       (change)="onFileSelected($event)" #fileUpload>
+  <input type="file" class="file-input" (change)="onFileSelected($event)" #fileUpload accept="image/*">
 
-<div class="file-upload">
+  <div class="upload-area" (click)="fileUpload.click()">
+    <mat-icon class="upload-icon">cloud_upload</mat-icon>
+    <p class="upload-text">{{ fileName || 'Click to upload a photo' }}</p>
+    <span class="upload-hint">JPG, PNG, GIF supported</span>
+  </div>
 
-   {{fileName || "No file uploaded yet."}}
+  <div class="photo-preview" *ngIf="photourl">
+    <h2 class="preview-label">Uploaded Photo</h2>
+    <img class="preview-img" [src]="photourl" alt="Uploaded photo" />
+  </div>
 
-    <button mat-mini-fab color="primary" class="upload-btn"
-      (click)="fileUpload.click()">
-        <mat-icon>attach_file</mat-icon>
-    </button>
-</div>
-
-<div>
-  uploaded file:
-  <img [src]= photourl  alt="uploaded photo" />
 </div>

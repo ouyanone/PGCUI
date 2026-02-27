@@ -1,15 +1,21 @@
+<div class="pgc-page record-page">
 
-<div>
+  <div class="page-header">
+    <mat-icon class="page-icon">scoreboard</mat-icon>
+    <h1 class="pgc-section-title">Game Records</h1>
+    <p class="page-subtitle">Historical tournament results and scores</p>
+  </div>
+
+  <div class="grid-wrapper">
     <ag-grid-angular
-    class="ag-theme-quartz"
-    style="height: 900px; width:40%"
-    [defaultColDef]="defaultColDef"
-    [rowData]="events"
-    [columnDefs]="colDefs">
-    (gridReady)="onGridReady($event)"
-    [pagination]="true"
+      class="ag-theme-quartz"
+      style="height: 65vh; width: 100%"
+      [defaultColDef]="defaultColDef"
+      [rowData]="events"
+      [columnDefs]="colDefs"
+      (gridReady)="onGridReady($event)"
+      [pagination]="true">
     </ag-grid-angular>
   </div>
 
-
-
+</div>

@@ -1,5 +1,14 @@
+/* ── Toolbar ── */
 .example-spacer {
   flex: 1 1 auto;
+}
+
+.toolbar-logo {
+  height: 46px;
+  width: auto;
+  border-radius: 4px;
+  margin: 0 10px;
+  object-fit: contain;
 }
 
 .toolbar-title {
@@ -7,21 +16,116 @@
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
 }
 
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.join-btn {
+  background-color: #c9a84c !important;
+  color: #1a1a1a !important;
+  font-weight: 600 !important;
+  border-radius: 20px !important;
+  letter-spacing: 0.3px;
+  padding: 0 16px !important;
+}
+
+.signin-btn {
+  border: 1.5px solid rgba(255,255,255,0.75) !important;
+  color: #ffffff !important;
+  border-radius: 20px !important;
+  padding: 0 16px !important;
+}
+
+/* ── Side Drawer ── */
+.pgc-drawer {
+  width: 220px;
+  background: #ffffff;
+  border-right: 1px solid #dde3ec;
+  display: flex;
+  flex-direction: column;
+}
+
+.drawer-header {
+  background: linear-gradient(160deg, #1a3c5e 0%, #234d76 100%);
+  padding: 20px 16px 16px;
+  text-align: center;
+}
+
+.drawer-logo {
+  height: 56px;
+  width: auto;
+  margin: 0 auto 10px;
+  border-radius: 6px;
+}
+
+.drawer-club-name {
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.5;
+  opacity: 0.85;
+  font-family: Roboto, sans-serif;
+}
+
+.drawer-nav {
+  padding: 8px 0;
+  flex: 1;
+}
+
+.nav-item-btn {
+  width: 100%;
+  text-align: left !important;
+  justify-content: flex-start !important;
+  color: #1a1a2e !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  min-height: 48px !important;
+  padding: 0 16px !important;
+  border-radius: 0 !important;
+  transition: background 0.15s, color 0.15s !important;
+}
+
+.nav-item-btn:hover {
+  background-color: #eef2f7 !important;
+  color: #1a3c5e !important;
+}
+
+.nav-item-btn mat-icon {
+  margin-right: 10px;
+  color: #1a3c5e;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+/* ── Main content area ── */
 .main-content {
-  padding: 8px;
+  padding: 16px;
   min-height: calc(100vh - 128px);
+  background-color: #f4f6f8;
+}
+
+/* ── Footer ── */
+.pgc-footer {
+  background: linear-gradient(135deg, #1a3c5e 0%, #234d76 100%) !important;
 }
 
 .footer-text {
   width: 100%;
   text-align: center;
-  font-size: 14px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.75);
+  letter-spacing: 0.2px;
 }
 
+/* ── Responsive ── */
 @media (max-width: 767px) {
-  .toolbar-title {
-    font-size: 11px;
-  }
+  .toolbar-title { font-size: 11px; }
+  .toolbar-logo  { height: 38px; }
 }

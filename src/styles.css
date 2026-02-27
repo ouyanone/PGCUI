@@ -1,26 +1,100 @@
-/* You can add global styles to this file, and also import other style files */
-
 /* Core Grid CSS */
 @import 'ag-grid-community/styles/ag-grid.css';
-/* Quartz Theme Specific CSS */
 @import 'ag-grid-community/styles/ag-theme-quartz.css';
 
+/* ── PGC Design System ── */
+:root {
+  --pgc-navy:        #1a3c5e;
+  --pgc-navy-light:  #234d76;
+  --pgc-green:       #2d6a4f;
+  --pgc-gold:        #c9a84c;
+  --pgc-gold-light:  #e8c97a;
+  --pgc-light:       #f4f6f8;
+  --pgc-white:       #ffffff;
+  --pgc-text:        #1a1a2e;
+  --pgc-text-muted:  #5a6a7a;
+  --pgc-border:      #dde3ec;
+  --pgc-shadow:      0 2px 12px rgba(26,60,94,0.10);
+  --pgc-shadow-lg:   0 6px 28px rgba(26,60,94,0.16);
+  --pgc-radius:      10px;
+  --pgc-radius-sm:   6px;
+}
 
+/* ── Base ── */
+*, *::before, *::after { box-sizing: border-box; }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html, body { height: 100%; scroll-behavior: smooth; }
 
-/* ── Global responsive helpers ── */
-* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  color: var(--pgc-text);
+  background-color: var(--pgc-light);
+}
 
-img { max-width: 100%; height: auto; }
+img { max-width: 100%; height: auto; display: block; }
 
-/* Touch-friendly minimum tap target */
-button, a[mat-button], a[mat-raised-button] {
+/* ── Typography ── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Georgia", serif;
+  color: var(--pgc-navy);
+  margin-top: 0;
+}
+
+/* ── Section title with gold underline ── */
+.pgc-section-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--pgc-navy);
+  margin-bottom: 6px;
+  padding-bottom: 10px;
+  border-bottom: 3px solid var(--pgc-gold);
+  display: inline-block;
+}
+
+/* ── Touch-friendly tap targets ── */
+button, a[mat-button], a[mat-raised-button], a[mat-stroked-button] {
   min-height: 44px;
 }
 
+/* ── Page wrapper used by most pages ── */
+.pgc-page {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ── AG-Grid shared professional theme override ── */
+.ag-theme-quartz {
+  --ag-header-height: 44px;
+  --ag-header-foreground-color: #ffffff;
+  --ag-header-background-color: var(--pgc-navy);
+  --ag-header-cell-hover-background-color: var(--pgc-navy-light);
+  --ag-header-cell-moving-background-color: var(--pgc-navy-light);
+  --ag-odd-row-background-color: #f0f4f8;
+  --ag-row-hover-color: #e8f0fb;
+  --ag-border-color: var(--pgc-border);
+  --ag-font-family: Roboto, "Helvetica Neue", sans-serif;
+  --ag-font-size: 14px;
+  border-radius: var(--pgc-radius);
+  overflow: hidden;
+  box-shadow: var(--pgc-shadow);
+}
+
+.ag-theme-quartz .ag-header {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.ag-theme-quartz .ag-header-cell {
+  font-size: 13px;
+}
+
+/* ── Responsive ── */
 @media (max-width: 767px) {
+  .pgc-page { padding: 12px; }
+
   h1 { font-size: 1.4rem !important; }
   h2 { font-size: 1.2rem !important; }
 

@@ -1,30 +1,29 @@
-.ag-theme-quartz {
-  ag-odd-row-background-color: #E04F00;
+.record-page {
+  max-width: 1200px;
 }
 
-.ag-theme-quartz .ag-row-odd {
-  background-color: #E04F00;
+.page-header {
+  text-align: center;
+  padding: 28px 0 20px;
 }
 
-
-.ag-theme-quartz {
-  --ag-header-height: 30px;
-  --ag-header-foreground-color: white;
-  --ag-header-background-color: rgb(25, 56, 192);
-  --ag-header-cell-hover-background-color: rgb(80, 40, 140);
-  --ag-header-cell-moving-background-color: rgb(80, 40, 140);
-
-}
-.ag-theme-quartz .ag-header {
-  font-family: cursive;
-}
-.ag-theme-quartz .ag-header-group-cell {
-  font-weight: normal;
-  font-size: 22px;
-}
-.ag-theme-quartz .ag-header-cell {
-  font-size: 18px;
-
+.page-icon {
+  font-size: 48px;
+  height: 48px;
+  width: 48px;
+  color: #1a3c5e;
+  margin-bottom: 10px;
 }
 
+.page-subtitle {
+  color: #5a6a7a;
+  font-size: 15px;
+  margin: 6px 0 0;
+}
 
+.grid-wrapper {
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 16px rgba(26,60,94,0.10);
+}

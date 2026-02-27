@@ -1,0 +1,52 @@
+.stats-page {
+  max-width: 960px;
+}
+
+.page-header {
+  text-align: center;
+  padding: 28px 0 24px;
+}
+
+.page-icon {
+  font-size: 52px;
+  height: 52px;
+  width: 52px;
+  color: #1a3c5e;
+  margin-bottom: 10px;
+}
+
+.page-subtitle {
+  color: #5a6a7a;
+  font-size: 15px;
+  margin: 6px 0 0;
+}
+
+.coming-soon {
+  text-align: center;
+  padding: 60px 24px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(26,60,94,0.08);
+}
+
+.coming-icon {
+  font-size: 64px;
+  height: 64px;
+  width: 64px;
+  color: #c9a84c;
+  margin-bottom: 16px;
+}
+
+.coming-soon h2 {
+  font-size: 1.6rem;
+  color: #1a3c5e;
+  margin: 0 0 12px;
+}
+
+.coming-soon p {
+  color: #5a6a7a;
+  font-size: 15px;
+  max-width: 400px;
+  margin: 0 auto;
+  line-height: 1.65;
+}

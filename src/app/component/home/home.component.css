@@ -5,7 +5,7 @@
   background-color: #f5f5f5;
   border-radius: 0px;
   box-shadow: 0 0px 0px rgba(0, 0, 0, 0.1);
-  height: 1200px;
+  min-height: 100vh;
 }
 
 h1 {
@@ -90,10 +90,19 @@ p {
 
 
 .card-class{
-  margin: 2%;
-  width: 98%;
+  margin: 2% 1%;
+  width: 96%;
   text-align: left;
-  float: left;
+}
+
+@media (max-width: 767px) {
+  .paragraph {
+    padding: 12px;
+  }
+  .card-class {
+    margin: 8px 0;
+    width: 100%;
+  }
 }
 
 

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-menubar',
@@ -7,6 +8,16 @@ import { Component } from '@angular/core';
 })
 export class MenubarComponent {
   badgevisible = false;
+  isMobile = false;
+
+  constructor(private breakpointObserver: BreakpointObserver) {
+    this.breakpointObserver
+      .observe([Breakpoints.Handset, Breakpoints.TabletPortrait])
+      .subscribe(result => {
+        this.isMobile = result.matches;
+      });
+  }
+
   badgevisibility() {
     this.badgevisible = true;
   }

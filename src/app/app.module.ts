@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { LayoutModule } from '@angular/cdk/layout';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -78,7 +79,8 @@ import { PhotosComponent } from './component/photos/photos.component';
     BrowserAnimationsModule,
     MaterialModule,
     AngularDualListBoxModule,
-    MatGridListModule
+    MatGridListModule,
+    LayoutModule
 
   ],
   providers: [],

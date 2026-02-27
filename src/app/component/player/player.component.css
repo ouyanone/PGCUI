@@ -25,6 +25,25 @@
 }
 .ag-theme-quartz .ag-header-cell {
   font-size: 18px;
+}
 
+.player-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+  padding: 8px;
+}
+
+@media (max-width: 767px) {
+  .player-actions {
+    justify-content: stretch;
+  }
+  .player-actions button {
+    flex: 1 1 auto;
+  }
+  .ag-theme-quartz .ag-header-cell {
+    font-size: 14px;
+  }
 }
 

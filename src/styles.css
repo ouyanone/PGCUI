@@ -9,3 +9,28 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* ── Global responsive helpers ── */
+* { box-sizing: border-box; }
+
+img { max-width: 100%; height: auto; }
+
+/* Touch-friendly minimum tap target */
+button, a[mat-button], a[mat-raised-button] {
+  min-height: 44px;
+}
+
+@media (max-width: 767px) {
+  h1 { font-size: 1.4rem !important; }
+  h2 { font-size: 1.2rem !important; }
+
+  .mat-mdc-form-field {
+    width: 100% !important;
+    margin: 4px 0 !important;
+  }
+
+  .mat-50 {
+    width: 100% !important;
+    margin: 4px 0 !important;
+  }
+}

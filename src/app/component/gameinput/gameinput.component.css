@@ -38,9 +38,9 @@ label {
 
 .example-card{
   margin: 1%;
-  width: 1800px;
+  width: calc(100% - 2%);
+  max-width: 1800px;
   text-align: left;
-  float: left;
 }
 
 
@@ -64,10 +64,9 @@ button{
 }
 .container {
   margin-top: 12px;
-  height: 45%;
-  width: 60%;
-  margin: auto;
-  margin-bottom:15px;
+  width: 90%;
+  max-width: 600px;
+  margin: 12px auto 15px;
 }
 
 .container-event {
@@ -195,11 +194,32 @@ div.record-picker::-webkit-scrollbar-thumb:hover {
 	display: flex;
 	flex-direction: row;
 	align-content: flex-start;
+	flex-wrap: wrap;
 }
 
 .dual-list .listbox {
 	width: 50%;
+	min-width: 200px;
 	margin: 0px;
+}
+
+@media (max-width: 767px) {
+  .dual-list {
+    flex-direction: column;
+  }
+  .dual-list .listbox {
+    width: 100%;
+  }
+  .example-card {
+    width: 100%;
+    margin: 0;
+  }
+  .container {
+    width: 100%;
+  }
+  .mat-50 {
+    width: 48% !important;
+  }
 }
 
 .dual-list .button-bar {

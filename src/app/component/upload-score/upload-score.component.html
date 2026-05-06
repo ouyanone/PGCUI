@@ -1,0 +1,26 @@
+<p>upload-score works!</p>
+
+
+<input type="file" (change)="onFileChange($event)" accept=".csv" />
+<ag-grid-angular
+  style="width: 100%; height: 500px;"
+  class="ag-theme-alpine"
+  
+  [rowData]="scoreRowData"
+  [columnDefs]="scoreColumnDefs"
+>
+</ag-grid-angular>
+
+
+
+
+
+<button mat-raised-button (click)="onBoardingPlayer($event)">
+  Onboard Player
+</button>
+
+
+
+<button mat-raised-button (click)="onSubmit($event)">
+  Submit Score
+</button>

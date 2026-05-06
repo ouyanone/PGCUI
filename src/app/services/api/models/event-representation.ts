@@ -8,7 +8,7 @@ export class EventRepresentation {
   season?: string;
   course?: string;
   eventDate?: string;
-  player: Array<PlayerRepresentation>=[];
+
   teeList: Array<Tee>=[];
 
 }

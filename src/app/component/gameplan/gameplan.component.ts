@@ -135,7 +135,7 @@ dateChanged($event:any) {
 
 onGroupingSubmit(grouptab: MatTabGroup) {
   this.isSubmitted=true;
-  this.event1.player=this.confirmed;
+  //this.event1.player=this.confirmed;
   this.event1.eventName=this.eventName;
   this.event1.eventDesc=this.eventDesc;
   this.event1.course=this.course;
@@ -164,8 +164,7 @@ onGroupingSubmit(grouptab: MatTabGroup) {
     let tee = new Tee();
     tee.teeName =  (i+1+this.totalNumberOfTees).toString();
 
-      tee.teamA.push(this.sortedPlayers[i*4], this.sortedPlayers[i*4+3]);
-      tee.teamB.push(this.sortedPlayers[i*4+1], this.sortedPlayers[i*4+2]);
+   
 
       var teamAHandicap1 = 0;
       var teamAHandicap2 = 0;
@@ -187,17 +186,7 @@ onGroupingSubmit(grouptab: MatTabGroup) {
       if (this.sortedPlayers[i*4+2]!==undefined && this.sortedPlayers[i*4+2].handicap !==undefined) {
         teamBHandicap2 = this.sortedPlayers[i*4+2].handicap!;
       }
-      if (teamAHandicap2==0) {
-        tee.teamAavghandicap = teamAHandicap1;
-      } else {
-        tee.teamAavghandicap = (teamAHandicap1 + teamAHandicap2)/2;
-      }
 
-      if (teamBHandicap2==0) {
-        tee.teamBavghandicap = teamBHandicap1;
-      } else {
-        tee.teamBavghandicap = (teamBHandicap1 + teamBHandicap2)/2;
-      }
 
 //-------------------------------------------------------------------------------------------------------
 
@@ -221,23 +210,7 @@ onGroupingSubmit(grouptab: MatTabGroup) {
     if (this.sortedPlayers[i*4+2]!==undefined && this.sortedPlayers[i*4+2].last3GameAvg !==undefined) {
       teamB3Score2 = this.sortedPlayers[i*4+2].last3GameAvg!;
     }
-    if (teamA3Score2==0) {
-      tee.teamAavgScore = teamA3Score1;
-    } else {
-      tee.teamAavgScore = (teamA3Score1 + teamA3Score2)/2;
-    }
-
-    if (teamB3Score2==0) {
-      tee.teamBavgScore = teamB3Score1;
-    } else {
-      tee.teamBavgScore = (teamB3Score1 + teamB3Score2)/2;
-    }
-
-    tee.teamAavghandicap=Math.round(tee.teamAavghandicap * 100) / 100;
-    tee.teamBavghandicap=Math.round(tee.teamBavghandicap * 100) / 100;
-
-    tee.teamAavgScore=Math.round(tee.teamAavgScore * 100) / 100;
-    tee.teamBavgScore=Math.round(tee.teamBavgScore * 100) / 100;
+ 
 
     this.teeList.push(tee);
   }
@@ -249,10 +222,7 @@ this.totalTeamBHandicap = 0;
 this.totalTeamB3Score = 0;
 
 for (let i=0; i<this.teeList.length; i++) {
-  this.totalTeamAHandicap=this.totalTeamAHandicap+this.teeList[i].teamAavghandicap!;
-  this.totalTeamBHandicap=this.totalTeamBHandicap+this.teeList[i].teamBavghandicap!;
-  this.totalTeamA3Score=this.totalTeamA3Score+this.teeList[i].teamAavgScore!;
-  this.totalTeamB3Score=this.totalTeamB3Score+this.teeList[i].teamBavgScore!;
+
 }
 this.totalTeamAHandicap=this.totalTeamAHandicap/this.teeList.length;
 this.totalTeamBHandicap=this.totalTeamBHandicap/this.teeList.length;
@@ -322,8 +292,6 @@ addTee() {
   let tee = new Tee();
   tee.teeName =  (this.totalNumberOfTees+1).toString();
   this.totalNumberOfTees=this.totalNumberOfTees+1;
-  tee.teamA.push(this.confirmed[0], this.confirmed[1]);
-  tee.teamB.push(this.confirmed[2], this.confirmed[3]);
 
 
   var teamAHandicap1 = 0;
@@ -346,17 +314,7 @@ addTee() {
   if (this.confirmed[3]!==undefined && this.confirmed[3].handicap !==undefined) {
     teamBHandicap2 = this.confirmed[3].handicap!;
   }
-  if (teamAHandicap2==0) {
-    tee.teamAavghandicap = teamAHandicap1;
-  } else {
-    tee.teamAavghandicap = (teamAHandicap1 + teamAHandicap2)/2;
-  }
 
-  if (teamBHandicap2==0) {
-    tee.teamBavghandicap = teamBHandicap1;
-  } else {
-    tee.teamBavghandicap = (teamBHandicap1 + teamBHandicap2)/2;
-  }
 
 //-------------------------------------------------------------------------------------------------------
 
@@ -380,23 +338,7 @@ if (this.confirmed[2]!==undefined  && this.confirmed[2].last3GameAvg !==undefine
 if (this.confirmed[3]!==undefined && this.confirmed[3].last3GameAvg !==undefined) {
   teamB3Score2 = this.confirmed[3].last3GameAvg!;
 }
-if (teamA3Score2==0) {
-  tee.teamAavgScore = teamA3Score1;
-} else {
-  tee.teamAavgScore = (teamA3Score1 + teamA3Score2)/2;
-}
 
-if (teamB3Score2==0) {
-  tee.teamBavgScore = teamB3Score1;
-} else {
-  tee.teamBavgScore = (teamB3Score1 + teamB3Score2)/2;
-}
-
-tee.teamAavghandicap=Math.round(tee.teamAavghandicap * 100) / 100;
-tee.teamBavghandicap=Math.round(tee.teamBavghandicap * 100) / 100;
-
-tee.teamAavgScore=Math.round(tee.teamAavgScore * 100) / 100;
-tee.teamBavgScore=Math.round(tee.teamBavgScore * 100) / 100;
 
 
 

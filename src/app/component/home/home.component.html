@@ -22,6 +22,140 @@
   </div>
 
   <div>
+    <h1 style="color: #006400;font-family:Georgia, 'Times New Roman', Times, serif;">*************** 2025 PGC Open Rewards 07/27/2025 ***************</h1>
+ 
+  </div>
+
+  <div style="display: flex;">
+    <mat-card class="women-champion-card" appearance="outlined">
+      <mat-card-header>
+        <div mat-card-avatar class="women-champion-header-image-open"></div>
+        <mat-card-title>Theresa Zhang</mat-card-title>
+        <mat-card-subtitle>PGC 2025 Open Cup Women's Champion</mat-card-subtitle>
+      </mat-card-header>
+      <img mat-card-image src="/assets/Theresa_Zhang.jfif" alt="No Photo">
+      <mat-card-content>
+        <p>
+          Theresa Zhang这次是第一次赢得PGC的比赛。　在闷热的夏日下在这个比较难的球场打出了８５杆的好成绩。祝贺她第一次夺冠！
+        </p>
+      </mat-card-content>
+
+    </mat-card>
+
+    
+    <mat-card class="men-champion-card" appearance="outlined">
+      <mat-card-header>
+        <div mat-card-avatar class="men-champion-header-image-open"></div>
+        <mat-card-title>Jianzhong Ding</mat-card-title>
+        <mat-card-subtitle>PGC 2025 Open Cup Men's Champion</mat-card-subtitle>
+      </mat-card-header>
+      <img mat-card-image src="/assets/Jianzhong_Ding.jpg" alt="No Photo">
+      <mat-card-content>
+        <p>
+          Jianzhong Ding在打完俱乐部比赛后有参加PGC比赛并打出了74杆的好成绩。丁博士最近的挥杆和成绩都有了很大的提高。　在最近的几场比赛里，　比如国窖杯的比赛里也打出了非常好的成绩。预祝丁博士今年百尺竿头再进一步！
+        </p>
+      </mat-card-content>
+
+    </mat-card>
+  </div>
+  <div>
+    <ag-grid-angular
+    class="ag-theme-quartz"
+    style="height: 900px; width:80%;margin:0 auto;"
+    [defaultColDef]="rewardDefaultColDef"
+    [rowData]="rewardData_open"
+    [columnDefs]="rewardColDefs">
+    (gridReady)="onGridReady($event)"
+    [pagination]="true"
+    </ag-grid-angular>
+  </div>
+
+  <div>
+    <h1 style="color: #006400;font-family:Georgia, 'Times New Roman', Times, serif;">*************** 2025 PGC Open Score Results 07/27/2025***************</h1>
+ 
+  </div>
+
+  <div>
+    <ag-grid-angular
+    class="ag-theme-quartz"
+    style="height: 900px; width:80%;margin:0 auto;"
+    [defaultColDef]="playerScoreDefaultColDef"
+    [rowData]="playerScoreData_open"
+    [columnDefs]="playerScoreColDefs">
+    (gridReady)="onGridReady($event)"
+    [pagination]="true"
+    </ag-grid-angular>
+  </div>
+
+  <div>
+    <h1 style="color: #006400;font-family:Georgia, 'Times New Roman', Times, serif;">*************** 2025 PGC Master Rewards 05/04/2025***************</h1>
+ 
+  </div>
+
+  <div style="display: flex;">
+    <mat-card class="women-champion-card" appearance="outlined">
+      <mat-card-header>
+        <div mat-card-avatar class="women-champion-header-image"></div>
+        <mat-card-title>Aye Thandar Khaing 李美莲</mat-card-title>
+        <mat-card-subtitle>PGC 2025 Masters Cup Women's Champion</mat-card-subtitle>
+      </mat-card-header>
+      <img mat-card-image src="/assets/Meilian_Li.jfif" alt="No Photo">
+      <mat-card-content>
+        <p>
+          李美莲一直强调打球要保持平静的心态， 不要被自己的情绪以及环境影响。她这次比赛成功贯彻了自己的计划， 尤其推杆时的自信和平和保证了她以78杆的成绩获得女子冠军。为这个赛季在PGC赢得好成绩打下了坚实基础。
+        </p>
+      </mat-card-content>
+
+    </mat-card>
+
+    
+    <mat-card class="men-champion-card" appearance="outlined">
+      <mat-card-header>
+        <div mat-card-avatar class="men-champion-header-image"></div>
+        <mat-card-title>Jim Huang</mat-card-title>
+        <mat-card-subtitle>PGC 2025 Master Cup Men's Champion</mat-card-subtitle>
+      </mat-card-header>
+      <img mat-card-image src="/assets/Jim_Huang.jpg" alt="No Photo">
+      <mat-card-content>
+        <p>
+          Jim Huang最近状态非常好。比赛前在Forsgate打出了71杆的好成绩。这个良好的状态让他在这次比赛中战胜了山地球场的困难，非常自信获得了男子冠军。 充分展示了PGC老会长的实力。
+        </p>
+      </mat-card-content>
+
+    </mat-card>
+  </div>
+  <div>
+    <ag-grid-angular
+    class="ag-theme-quartz"
+    style="height: 900px; width:80%;margin:0 auto;"
+    [defaultColDef]="rewardDefaultColDef"
+    [rowData]="rewardData"
+    [columnDefs]="rewardColDefs">
+    (gridReady)="onGridReady($event)"
+    [pagination]="true"
+    </ag-grid-angular>
+  </div>
+
+  <div>
+    <h1 style="color: #006400;font-family:Georgia, 'Times New Roman', Times, serif;">*************** 2025 PGC Master Score Results 05/04/2025***************</h1>
+ 
+  </div>
+
+  <div>
+    <ag-grid-angular
+    class="ag-theme-quartz"
+    style="height: 900px; width:80%;margin:0 auto;"
+    [defaultColDef]="playerScoreDefaultColDef"
+    [rowData]="playerScoreData"
+    [columnDefs]="playerScoreColDefs">
+    (gridReady)="onGridReady($event)"
+    [pagination]="true"
+    </ag-grid-angular>
+  </div>
+
+
+
+  <div>
     <h1 style="color: #006400;font-family:Georgia, 'Times New Roman', Times, serif;">*************** 2025 PGC Upcoming Golf Tournament ***************</h1>
  
   </div>
@@ -30,66 +164,29 @@
     <mat-card class="card-class-upcoming-event">
 
       <mat-card-header>
-        <mat-card-title>2025 PGC Masters Invitational</mat-card-title>
-        <mat-card-subtitle>Sponsor: Jim Huang</mat-card-subtitle>
+        <mat-card-title>2025 PGC Classic</mat-card-title>
+        <mat-card-subtitle>Date: 08-10, 2025</mat-card-subtitle>
+        <mat-card-subtitle>Sponsor: Kai Yang</mat-card-subtitle>
     </mat-card-header>
-    <img mat-card-image src="https://www.theclubatmorganhill.com/images/Hole_10_green_view_edited_1.jpg" alt="Photo of a Shiba Inu">
+    <img mat-card-image src="https://cdn.sanity.io/images/arkm1m4f/production/fd847ab15e660a3b5bddcb938d0ca301c9c013b1-1600x899.jpg" alt="Photo of a Shiba Inu">
     <mat-card-content>
       <p style="font-family: Arial, KaiTi">
-          2025 PGC Masters Invitational is sponsored by Jim Huang. It will be hosted at the beautiful The Morgan Hill Golf Club. <br>
-
-        
-        Morgan Hill Golf Course, located in Easton, Pennsylvania, is a challenging and visually stunning 18-hole course designed by Kelly Blake Moran. <br>
-        It's known for its dramatic elevation changes, scenic views, and unique layout that incorporates natural elements like bunkers, hollows, and wetlands. <br>
-        The course has been praised for its challenging play and beautiful surroundings. <br>
-        
-  
-
-          今年 PGC 的首场赛事即将开启！这次比赛设在具有挑战的Morgan Hill Golf Course. 相信很多球友都打过这个山地球场， 它有着漂亮的风景以及高高低低的球道给大家带来足够挑战。 比赛结束后将举办盛大的颁奖晚宴，我们除了给大家提供了下面众多奖项外， 还准备了丰厚的奖品给大家惊喜抽奖。机会难得，名额有限, 欢迎广大球友踊跃报名，一起挥杆竞技，共享高球盛宴!<br>
-
-          这场比赛将分A和B两个组(flights)。按PGC球会记录的差点，前面50%的球员为A组，后面50%的球员为B组。比赛成绩会用于更新PGC球会的差点。
+        2025 PGC Classic is sponsored by Kai Yang. It will be hosted at the beautiful The Architects Golf Club. <br>
+        今年PGC和美中高尔夫俱乐部联合举办的首场赛事即将开启！比赛结束后，我们将举办盛大的颁奖晚宴，并准备了多项惊喜抽奖。
+        机会难得，名额有限，欢迎广大球友踊跃报名，一起挥杆竞技，共享高球盛宴！
      
       </p>
 
       <p style="font-family: Arial, KaiTi">
         ⛳️比赛球场: <br>
-        Morgan Hill Golf Course<br>
-        100 Clubhouse Dr<br>
-        Easton, PA<br>
+        The Architects Golf Club<br>
+        700 Strykers Rd<br>
+        Phillipsburg, NJ 08865<br>
         <br>
-        ⏱比赛时间 ：六月八日 <br>
+        ⏱比赛时间 ：八月十日 <br>
         Tee times starting at 12:00 <br>
         <br>
 
-        参赛费用：<br>
-        💰PGC会员: $120 <br>
-        💰非PGC会员: $150 <br>
-
-        费用包含球车，晚宴及酒水。此球场没有练习场。<br>
-        <br>
-        🏆🍻颁奖晚宴: <br>
-        ⏱晚宴时间 ：6:30点开始<br>
-        餐厅待定<br>
-        Beer will be provided at dinner. Please drink responsibly!<br>
-       </p> 
-
-
-       比赛奖项:<br>
-       总杆奖会按A组和B组分别颁发。<br>
-       🏌️‍♂️A组总杆奖：男子前3 /女子前2<br>
-       🏌️‍♂️B组总杆奖：男子前3 /女子前2<br>
-      <br>
-       以下奖项不分A组和B组：<br>
-        🏌️‍♂️净杆奖：前3名（不分男女）<br>
-        🏌️‍♂️最远距离奖LD: 男女各1名<br>
-        🏌️‍♂️最近洞奖CTP：共4名<br>
-        🏌️‍♂️最多Eagle奖：1名<br>
-        🏌️‍♂️最多Birdie奖：1名<br>
-        🏌️‍♂️最多Par奖：1名<br>
-        注：每人最多一个奖项<br>
-        <br>
-       奖品：<br>
-       奖品分为奖杯和实物奖品。 <br>
 
        <mat-grid-list cols="4" rowHeight="2:1">
         <mat-grid-tile><img src="../../../assets/reward/2025R1.jfif" mat-card-md-image class="reward-img1" (click)="show()" ></mat-grid-tile>
@@ -150,11 +247,10 @@
     </mat-card>
     <br>
 
-
-
-
-
   </div>
+
+
+
 
   <div>
     <br>
@@ -172,14 +268,14 @@
 
       <mat-card-header>
         <mat-card-title>2025 PGC Open</mat-card-title>
-        <mat-card-subtitle>Sponsor: Jack Li & Alan Long</mat-card-subtitle>
+        <mat-card-subtitle>Sponsor: Jim Huang</mat-card-subtitle>
         <mat-card-subtitle>Date: 07-27-2025</mat-card-subtitle>
-        <mat-card-subtitle>Location: The Heron Glen Golf Club</mat-card-subtitle>
+        <mat-card-subtitle>Location: Charleston Springs Golf Course</mat-card-subtitle>
     </mat-card-header>
-    <img mat-card-image src="https://i.ytimg.com/vi/FzPEzBCTMmI/maxresdefault.jpg" alt="Photo of a Shiba Inu">
+    <img mat-card-image src="https://golf-pass.brightspotcdn.com/dims4/default/c88664b/2147483647/strip/true/crop/960x540+0+90/resize/590x332!/quality/90/?url=https%3A%2F%2Fgolf-pass-brightspot.s3.amazonaws.com%2F3b%2F7e%2F19748b55368edc513fe6a56ecaf0%2F94648.jpg" alt="Photo of a Shiba Inu">
     <mat-card-content>
       <p>
-          2025 PGC Open is sponsored by Jack Li and Alan Long. It will be hosted at the beautiful The Heron Glen Golf Club <br>
+          2025 PGC Open is sponsored by Jim Huang. It will be hosted at the beautiful Charleston Springs Golf Course <br>
           今年PGC的首场赛事即将开启！比赛结束后，我们将举办盛大的颁奖晚宴，并准备了多项惊喜抽奖。为了宣传和推广 PGC，本次赛事嘉宾将和会员收费相同，不收取额外费用！
           机会难得，名额有限，欢迎广大球友踊跃报名，一起挥杆竞技，共享高球盛宴！
       </p>
@@ -203,8 +299,8 @@
     <img mat-card-image src="https://cdn.sanity.io/images/arkm1m4f/production/fd847ab15e660a3b5bddcb938d0ca301c9c013b1-1600x899.jpg" alt="Photo of a Shiba Inu">
     <mat-card-content>
       <p>
-          2025 PGC Masters Invitational is sponsored by Kai Yang. It will be hosted at the beautiful The Architects Golf Club. <br>
-          今年PGC的首场赛事即将开启！比赛结束后，我们将举办盛大的颁奖晚宴，并准备了多项惊喜抽奖。为了宣传和推广 PGC，本次赛事嘉宾将和会员收费相同，不收取额外费用！
+          2025 PGC Classic is sponsored by Kai Yang. It will be hosted at the beautiful The Architects Golf Club. <br>
+          今年PGC的首场赛事即将开启！比赛结束后，我们将举办盛大的颁奖晚宴，并准备了多项惊喜抽奖。
           机会难得，名额有限，欢迎广大球友踊跃报名，一起挥杆竞技，共享高球盛宴！
       </p>
     </mat-card-content> 
@@ -218,12 +314,12 @@
         <mat-card-title>2025 PGC Championship</mat-card-title>
         <mat-card-subtitle>Date: 09-07-2025</mat-card-subtitle>
         <mat-card-subtitle>Sponsor: Heping Wang & Zili Ma</mat-card-subtitle>
-        <mat-card-subtitle>Location: The Eagle Ridge Golf Club</mat-card-subtitle>
+        <mat-card-subtitle>Location: The Forsgate Country Golf Club Banks Course</mat-card-subtitle>
     </mat-card-header>
-    <img mat-card-image src="https://assets.simpleviewinc.com/simpleview/image/upload/crm/galenacountryil/Digital-2K-long-General-number-1-looking-back-Autumn-2021-1a-_064C046D-5056-A36A-068322D237540902-064bffb45056a36_064c142d-5056-a36a-06e3d7b571e18522.jpg" alt="Photo of a Shiba Inu">
+    <img mat-card-image src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_jSbJcuIApgLOQ0QmR-jyC73AdStPRDT7EQ&s" alt="Photo of a Shiba Inu">
     <mat-card-content>
       <p>
-          2025 PGC Championship is sponsored by Heping Wang and Zili Ma. It will be hosted at the beautiful The Eagle Ridge Golf Club. <br>
+          2025 PGC Championship is sponsored by Heping Wang and Zili Ma. It will be hosted at the beautiful The Forsgate Country Golf Club Banks Course. <br>
           今年PGC的首场赛事即将开启！比赛结束后，我们将举办盛大的颁奖晚宴，并准备了多项惊喜抽奖。为了宣传和推广 PGC，本次赛事嘉宾将和会员收费相同，不收取额外费用！
           机会难得，名额有限，欢迎广大球友踊跃报名，一起挥杆竞技，共享高球盛宴！
       </p>
@@ -236,14 +332,14 @@
 
       <mat-card-header>
         <mat-card-title>2025 PGC Cup</mat-card-title>
-        <mat-card-subtitle>Sponsor: Ping Tian & Nara Wang</mat-card-subtitle>
+        <mat-card-subtitle>Sponsor: Ping Tian & Jack Li</mat-card-subtitle>
         <mat-card-subtitle>Date: 10-12-2025</mat-card-subtitle>
-        <mat-card-subtitle>Location: The Forsgate Country Golf Club Banks Course</mat-card-subtitle>
+        <mat-card-subtitle>Location: The Eagle Ridge Golf Club</mat-card-subtitle>
     </mat-card-header>
-    <img mat-card-image src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_jSbJcuIApgLOQ0QmR-jyC73AdStPRDT7EQ&s" alt="Photo of a Shiba Inu">
+    <img mat-card-image src="https://assets.simpleviewinc.com/simpleview/image/upload/crm/galenacountryil/Digital-2K-long-General-number-1-looking-back-Autumn-2021-1a-_064C046D-5056-A36A-068322D237540902-064bffb45056a36_064c142d-5056-a36a-06e3d7b571e18522.jpg" alt="Photo of a Shiba Inu">
     <mat-card-content>
       <p>
-          2025 PGC Cup is sponsored by Ping Tian and Nara Wang. It will be hosted at the beautiful The Forsgate Country Golf Club Banks Course. <br>
+          2025 PGC Cup is sponsored by Ping Tian & Jack Li. It will be hosted at the beautiful The Eagle Ridge Golf Club. <br>
           今年PGC的首场赛事即将开启！比赛结束后，我们将举办盛大的颁奖晚宴，并准备了多项惊喜抽奖。为了宣传和推广 PGC，本次赛事嘉宾将和会员收费相同，不收取额外费用！
           机会难得，名额有限，欢迎广大球友踊跃报名，一起挥杆竞技，共享高球盛宴！
       </p>
@@ -252,8 +348,72 @@
     </mat-card>
 
 
+    
+
 
 
   </div>
+
+
+
+  <div>
+    <h1 style="color: #006400;font-family:Georgia, 'Times New Roman', Times, serif;">*************** 2025 PGC Finished Golf Tournament ***************</h1>
+ 
+  </div>
+  <div style="align-self: center; font-family: Arial, KaiTi">
+    
+    <mat-card class="card-class-upcoming-event">
+
+      <mat-card-header>
+        <mat-card-title>2025 PGC Masters Invitational</mat-card-title>
+        <mat-card-subtitle>Sponsor: Jim Huang</mat-card-subtitle>
+    </mat-card-header>
+    <img mat-card-image src="https://www.theclubatmorganhill.com/images/Hole_10_green_view_edited_1.jpg" alt="Photo of a Shiba Inu">
+    <mat-card-content>
+      <p style="font-family: Arial, KaiTi">
+          2025 PGC Masters Invitational is sponsored by Jim Huang. It will be hosted at the beautiful The Morgan Hill Golf Club. <br>
+
+        
+        Morgan Hill Golf Course, located in Easton, Pennsylvania, is a challenging and visually stunning 18-hole course designed by Kelly Blake Moran. <br>
+        It's known for its dramatic elevation changes, scenic views, and unique layout that incorporates natural elements like bunkers, hollows, and wetlands. <br>
+        The course has been praised for its challenging play and beautiful surroundings. <br>
+        
+  
+
+          今年 PGC 的首场赛事即将开启！这次比赛设在具有挑战的Morgan Hill Golf Course. 相信很多球友都打过这个山地球场， 它有着漂亮的风景以及高高低低的球道给大家带来足够挑战。 比赛结束后将举办盛大的颁奖晚宴，我们除了给大家提供了下面众多奖项外， 还准备了丰厚的奖品给大家惊喜抽奖。机会难得，名额有限, 欢迎广大球友踊跃报名，一起挥杆竞技，共享高球盛宴!<br>
+
+          这场比赛将分A和B两个组(flights)。按PGC球会记录的差点，前面50%的球员为A组，后面50%的球员为B组。比赛成绩会用于更新PGC球会的差点。
+     
+      </p>
+
+      <p style="font-family: Arial, KaiTi">
+        ⛳️比赛球场: <br>
+        Morgan Hill Golf Course<br>
+        100 Clubhouse Dr<br>
+        Easton, PA<br>
+        <br>
+        ⏱比赛时间 ：六月八日 <br>
+        Tee times starting at 12:00 <br>
+        <br>
+
+        参赛费用：<br>
+        💰PGC会员: $120 <br>
+        💰非PGC会员: $150 <br>
+
+        费用包含球车，晚宴及酒水。此球场没有练习场。<br>
+        <br>
+        🏆🍻颁奖晚宴: <br>
+        ⏱晚宴时间 ：6:30点开始<br>
+        餐厅待定<br>
+        Beer will be provided at dinner. Please drink responsibly!<br>
+       </p> 
+
+
+    </mat-card-content> 
+    <mat-card-footer></mat-card-footer>
+    </mat-card>
+    <br>
+
+  </div> 
 </div>
 

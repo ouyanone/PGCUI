@@ -18,6 +18,9 @@ import { DonationComponent } from './component/donation/donation.component';
 import { GameruleComponent } from './component/gamerule/gamerule.component';
 import { StatisticsComponent } from './component/statistics/statistics.component';
 import { PhotosComponent } from './component/photos/photos.component';
+import { UploadScoreComponent } from './component/upload-score/upload-score.component';
+
+
 
 const routes: Routes = [
   {path:'',component:HomeComponent},
@@ -37,7 +40,8 @@ const routes: Routes = [
   {path:'donation',component:DonationComponent},
   {path:'gamerule',component:GameruleComponent},
   {path:'photos',component:PhotosComponent},
-  {path:'statistics',component:StatisticsComponent}
+  {path:'statistics',component:StatisticsComponent},
+  {path:'uploadScore',component:UploadScoreComponent}
 ];
 
 @NgModule({

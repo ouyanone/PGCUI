@@ -4,7 +4,8 @@ import {PlayerRepresentation} from "../services/api/models/player-representation
 import {Tee} from "../services/api/models/tee";
 import { EventRepresentation } from '../services/api/models/event-representation';
 import { DonationRepresentation } from '../services/api/models/donation-representation';
-
+import { RewardRepresentation } from '../services/api/models/reward-representation';
+import { PlayerScoreRepresentation } from '../services/api/models/playerscore-representation';
 @Injectable({
   providedIn: 'root'
 })
@@ -74,7 +75,11 @@ export class PlayerService {
     const eventsUrl = `${this.baseUrl}webapi/events/upcoming`;
     return this.http.get<EventRepresentation>(eventsUrl);
   }
-
+  
+  getOngoingEvent() {
+    const eventUrl = `${this.baseUrl}webapi/events/find/ongoing`;
+    return this.http.get<EventRepresentation>(eventUrl);
+  }
 
   submitScore(event: EventRepresentation) {
     const submitScoreUrl = `${this.baseUrl}webapi/admin/game/submitScore`;
@@ -101,5 +106,27 @@ export class PlayerService {
   getLatestEvent() {
     const eventsUrl = `${this.baseUrl}webapi/events/latest`;
     return this.http.get<Array<EventRepresentation>>(eventsUrl);
+  }
+
+  getLatestRewards(eventId:any) {
+    const rewardsUrl = `${this.baseUrl}webapi/event/reward?eventId=`+eventId;
+    return this.http.get<Array<RewardRepresentation>>(rewardsUrl);
+  }
+
+  getLatestPlayerScores(eventId:any) {
+    const scoreUrl = `${this.baseUrl}webapi/event/score?eventId=`+eventId;
+    return this.http.get<Array<PlayerScoreRepresentation>>(scoreUrl);
+  }
+
+  submitScores(data:any) {
+    const submitscoreUrl = `${this.baseUrl}webapi/event/scores`;
+    return this.http.post<Array<PlayerScoreRepresentation>>(submitscoreUrl, data);
+  }
+
+  onboardPlayerScores(data:any) {
+    
+    const onboardPlayerScoresUrl = `${this.baseUrl}webapi/event/create/playerscores`;
+    console.log('url='+onboardPlayerScoresUrl);
+    return this.http.post<Array<PlayerScoreRepresentation>>(onboardPlayerScoresUrl, data);
   }
 }

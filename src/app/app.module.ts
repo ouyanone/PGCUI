@@ -34,6 +34,8 @@ import { StatisticsComponent } from './component/statistics/statistics.component
 import { DonationComponent } from './component/donation/donation.component';
 import { GameinputComponent } from './component/gameinput/gameinput.component';
 import { PhotosComponent } from './component/photos/photos.component';
+import { UploadScoreComponent } from './component/upload-score/upload-score.component';
+
 
 
 
@@ -61,7 +63,9 @@ import { PhotosComponent } from './component/photos/photos.component';
     StatisticsComponent,
     DonationComponent,
     GameinputComponent,
-    PhotosComponent
+    PhotosComponent,
+    UploadScoreComponent
+    
  
   ],
   imports: [

@@ -116,4 +116,39 @@ p {
   height: 20%;
 }
 
+.men-champion-card {
+  max-width: 400px;
+  margin-bottom: 50px;
+  float: left;
+  margin: 8%;
 
+}
+
+.women-champion-card {
+  max-width: 400px;
+  margin-bottom: 50px;
+  float: left;
+  margin: 8%;
+
+}
+
+.men-champion-header-image {
+  background-image: url('/assets/Jim_Huang.jpg');
+  background-size: cover;
+}
+
+.women-champion-header-image {
+  background-image: url('/assets/Meilian_Li.jfif');
+  background-size: cover;
+}
+
+
+.men-champion-header-image-open {
+  background-image: url('/assets/Jianzhong_Ding.jpg');
+  background-size: cover;
+}
+
+.women-champion-header-image-open {
+  background-image: url('/assets/Theresa_Zhang.jfif');
+  background-size: cover;
+}

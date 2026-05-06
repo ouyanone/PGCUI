@@ -1,15 +1,11 @@
-import { PlayerRepresentation } from './player-representation';
+import { PlayerScoreRepresentation } from './playerscore-representation';
 
 export class Tee {
   teeName?: string;
   teeDesc?: string;
   teeTime?: string;
   course?: string;
-  teamA: Array<PlayerRepresentation>=[];
-  teamB: Array<PlayerRepresentation>=[];
-  teamAavghandicap?: number;
-  teamAavgScore?: number;
+  playerScoreList: Array<PlayerScoreRepresentation>=[];
 
-  teamBavghandicap?: number;
-  teamBavgScore?: number;
+
 }

@@ -147,7 +147,7 @@ onGroupingSubmit(grouptab: MatTabGroup) {
   //this.teeList.length=0;
 
     this.sortedPlayers = this.confirmed.sort(function(a,b){
-    return a.last3GameAvg >b.last3GameAvg?1:a.last3GameAvg <b.last3GameAvg?-1:0
+    return (a.last3GameAvg ?? 0) > (b.last3GameAvg ?? 0) ? 1 : (a.last3GameAvg ?? 0) < (b.last3GameAvg ?? 0) ? -1 : 0
    })
 
    for (var player of this.sortedPlayers) {

@@ -1,103 +1,131 @@
-<mat-toolbar color="primary" class="mat-elevation-z8">
-    <button (click)="drawer.toggle()" mat-icon-button>
-        <mat-icon>menu</mat-icon>
-    </button>
-    <img cImg rounded src="/assets/pgc-logo.jpeg" height="60" />
-    <span>&nbsp;&nbsp;&nbsp;普林斯顿高尔夫俱乐部 - New Jersey Princeton Golf Club</span>
-    <span class="example-spacer"></span>
-    <button routerLink="" mat-button>Home</button>
-    <!--
-    <button [matMenuTriggerFor]="lvl1master" mat-button>Master</button>
-    <mat-menu #lvl1master="matMenu">
-        <button [matMenuTriggerFor]="company" mat-menu-item>Company</button>
-        <button [matMenuTriggerFor]="customer" mat-menu-item>Customer</button>
-        <button [matMenuTriggerFor]="product" mat-menu-item>Product</button>
-    </mat-menu>
+<mat-toolbar color="primary" class="app-toolbar mat-elevation-z6">
+  <button (click)="drawer.toggle()" mat-icon-button aria-label="Toggle navigation">
+    <mat-icon>menu</mat-icon>
+  </button>
 
-    <mat-menu #company="matMenu">
-        <button mat-menu-item>Term</button>
-        <button mat-menu-item>Tax</button>
-        <button mat-menu-item>Currency</button>
-    </mat-menu>
-    <mat-menu #customer="matMenu">
-        <button mat-menu-item>Type</button>
-        <button mat-menu-item>Tax</button>
-    </mat-menu>
-    <mat-menu #product="matMenu">
-        <button mat-menu-item>Category</button>
-        <button [matMenuTriggerFor]="variant" mat-menu-item>Variant</button>
-        <button mat-menu-item>UOM</button>
-    </mat-menu>
+  <img src="/assets/pgc-logo.jpeg" class="toolbar-logo" alt="PGC Logo" />
 
-    <mat-menu #variant="matMenu">
-        <button mat-menu-item>Color</button>
-        <button mat-menu-item>Size</button>
-    </mat-menu>
+  <div class="toolbar-titles">
+    <span class="toolbar-title">普林斯顿高尔夫俱乐部</span>
+    <span class="toolbar-title-en">New Jersey Princeton Golf Club</span>
+  </div>
 
-    <button routerLink="input" mat-button>Input</button>
-    <button routerLink="autocomplete" mat-button>Autocomplete</button>
-    <a href="https://www.youtube.com/channel/UCsbmVmB_or8sVLLEq4XhE_A/join" mat-raised-button color="accent">Join Us</a>
-    <button (click)="badgevisibility()"  mat-icon-button>
-        <mat-icon matBadgeColor="accent" matBadge="15" [matBadgeHidden]="badgevisible" matBadgeSize="small">notifications</mat-icon>
-    </button>
-    -->
-    <a href="mailto:yanouone@gmail.com?subject=Request to join Ten Dollar Club" mat-raised-button color="accent">Join Us</a>&nbsp;&nbsp;
-    <a href="/oauth2/authorization/cognito" mat-raised-button color="accent">Sign in</a>&nbsp;&nbsp;
-    <!-- <a href="/logout" mat-raised-button color="warn">Logout</a>-->
+  <span class="toolbar-spacer"></span>
+
+  <a href="mailto:yanouone@gmail.com?subject=Request to join Ten Dollar Club"
+     mat-raised-button class="toolbar-join-btn" aria-label="Join the club">
+    <mat-icon>golf_course</mat-icon>
+    <span class="btn-label">Join Us</span>
+  </a>
+
+  <ng-container *ngIf="authStatus.loggedIn; else signInBtn">
+    <div class="toolbar-user">
+      <mat-icon>account_circle</mat-icon>
+      <span class="toolbar-username">{{ authStatus.name }}</span>
+    </div>
+  </ng-container>
+  <ng-template #signInBtn>
+    <a [href]="authService.signInUrl"
+       mat-stroked-button class="toolbar-signin-btn" aria-label="Sign in">
+      <mat-icon>login</mat-icon>
+      <span class="btn-label">Sign In</span>
+    </a>
+  </ng-template>
 </mat-toolbar>
-<mat-drawer-container autosize>
-    <mat-drawer #drawer opened="true" mode="side" position="start">
-    <mat-nav-list>
 
-        <mat-list-item>
-            <button routerLink="" mat-button><mat-icon>home</mat-icon> Home</button>
-        </mat-list-item>
-        <mat-list-item>
-          <button routerLink="player" mat-button><mat-icon>person_search</mat-icon> Players Profile</button>
-        </mat-list-item>
-        <mat-list-item>
-            <button routerLink="gameplan" mat-button><mat-icon>calendar_month</mat-icon> Plan a Game</button>
-        </mat-list-item>
-        <mat-list-item>
-            <button routerLink="gamerecord" mat-button><mat-icon>scoreboard</mat-icon> Record a Games</button>
-        </mat-list-item>
-        <mat-list-item>
-            <button routerLink="uploadScore" mat-button><mat-icon>scoreboard</mat-icon> Upload Score</button>
-        </mat-list-item>
+<mat-drawer-container class="drawer-container" autosize>
 
-        <mat-list-item>
-            <button routerLink="statistics" mat-button><mat-icon>insights</mat-icon>PGC Hall of Fame</button>
-        </mat-list-item>
-        <mat-list-item>
-            <button routerLink="photos" mat-button><mat-icon>now_wallpaper</mat-icon> Photos</button>
-        </mat-list-item>
-        <mat-list-item>
-          <button routerLink="donation" mat-button><mat-icon>attach_money</mat-icon> Donation</button>
+  <mat-drawer #drawer
+              [opened]="isDesktop"
+              [mode]="isDesktop ? 'side' : 'over'"
+              class="app-sidenav">
+
+    <div class="sidenav-header">
+      <mat-icon class="sidenav-golf-icon">sports_golf</mat-icon>
+      <span>PGC Menu</span>
+    </div>
+
+    <mat-nav-list class="sidenav-nav">
+      <mat-list-item routerLink="" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact:true}">
+        <mat-icon matListItemIcon>home</mat-icon>
+        <span matListItemTitle>Home</span>
       </mat-list-item>
-        <mat-list-item>
-            <button routerLink="gamerule" mat-button><mat-icon>menu_book</mat-icon> Game rules</button>
-        </mat-list-item>
-        <mat-list-item>
-            <button routerLink="aboutus"  mat-button><mat-icon>help</mat-icon> About Us</button>
-        </mat-list-item>
 
+      <mat-list-item routerLink="player" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>person_search</mat-icon>
+        <span matListItemTitle>Players Profile</span>
+      </mat-list-item>
+
+      <mat-divider class="sidenav-divider"></mat-divider>
+
+      <div class="sidenav-section-label">GAME MANAGEMENT</div>
+
+      <mat-list-item routerLink="gameplan" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>calendar_month</mat-icon>
+        <span matListItemTitle>Plan a Game</span>
+      </mat-list-item>
+
+      <mat-list-item routerLink="gamerecord" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>scoreboard</mat-icon>
+        <span matListItemTitle>Game Management</span>
+      </mat-list-item>
+
+      <mat-list-item routerLink="uploadScore" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>upload_file</mat-icon>
+        <span matListItemTitle>Upload Score</span>
+      </mat-list-item>
+
+      <mat-divider class="sidenav-divider"></mat-divider>
+
+      <div class="sidenav-section-label">CLUB</div>
+
+      <mat-list-item routerLink="statistics" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>emoji_events</mat-icon>
+        <span matListItemTitle>Hall of Fame</span>
+      </mat-list-item>
+
+      <mat-list-item routerLink="photos" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>photo_library</mat-icon>
+        <span matListItemTitle>Photos</span>
+      </mat-list-item>
+
+      <mat-list-item *ngIf="authStatus.loggedIn" routerLink="news" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>newspaper</mat-icon>
+        <span matListItemTitle>News</span>
+      </mat-list-item>
+
+      <mat-list-item routerLink="donation" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>volunteer_activism</mat-icon>
+        <span matListItemTitle>Donations</span>
+      </mat-list-item>
+
+      <mat-list-item routerLink="reward" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>emoji_events</mat-icon>
+        <span matListItemTitle>Awards &amp; Rewards</span>
+      </mat-list-item>
+
+      <mat-list-item routerLink="gamerule" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>menu_book</mat-icon>
+        <span matListItemTitle>Game Rules</span>
+      </mat-list-item>
+
+      <mat-list-item routerLink="aboutus" routerLinkActive="active-link">
+        <mat-icon matListItemIcon>info</mat-icon>
+        <span matListItemTitle>About Us</span>
+      </mat-list-item>
     </mat-nav-list>
-    </mat-drawer>
-    <mat-drawer-content>
-        <div style="text-align: center;min-height: 1000px;margin-left: 1%;">
 
-            <router-outlet></router-outlet>
-        </div>
-    </mat-drawer-content>
+    <div class="sidenav-footer">
+      <mat-icon>golf_course</mat-icon> PGC © 2025
+    </div>
+  </mat-drawer>
+
+  <mat-drawer-content class="main-content">
+    <router-outlet></router-outlet>
+  </mat-drawer-content>
+
 </mat-drawer-container>
 
-<mat-toolbar >
-
-    <mat-toolbar-row>
-      <h5 style="text-align: center;margin-left: 48%;">© Copyright - The New Jersey Princeton Golf Club 2025.</h5>
-
-    </mat-toolbar-row>
-
-
-
-</mat-toolbar>
+<footer class="app-footer">
+  © 2025 The New Jersey Princeton Golf Club · 新泽西普林斯顿高尔夫球俱乐部
+</footer>

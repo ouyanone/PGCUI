@@ -1,7 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { combineLatest } from 'rxjs';
 import { PlayerService } from 'src/app/services/player.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-edit-player',
@@ -11,66 +13,98 @@ import { PlayerService } from 'src/app/services/player.service';
 export class EditPlayerComponent implements OnInit {
   inputdata: any;
   editdata: any;
-  playerIcon: any;
-  isActive: any;
-  closemessage = 'closed using directive'
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private ref: MatDialogRef<EditPlayerComponent>, private buildr: FormBuilder,
-    private service: PlayerService) {
+  isLoggedIn = false;
 
-  }
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private ref: MatDialogRef<EditPlayerComponent>,
+    private buildr: FormBuilder,
+    private service: PlayerService,
+    private authService: AuthService
+  ) {}
+
   ngOnInit(): void {
     this.inputdata = this.data;
-    console.log('userid==='+this.inputdata.userId);
-    if(this.inputdata.userId>0){
-      console.log('init form');
-      this.setpopupdata(this.inputdata.userId)
+
+    if (this.inputdata.userId > 0) {
+      combineLatest([
+        this.authService.getStatus(),
+        this.service.getPlayerById(this.inputdata.userId)
+      ]).subscribe(([status, item]) => {
+        this.isLoggedIn = status.loggedIn;
+        this.editdata = item;
+
+        if (!status.loggedIn) {
+          this.myform.disable();
+        }
+
+        this.myform.setValue({
+          id:               String(item.id ?? ''),
+          fName:            item.fName ?? '',
+          lName:            item.lName ?? '',
+          ghinNumber:       item.ghinNumber ?? '',
+          phone:            status.loggedIn ? (item.phone ?? '') : this.maskPhone(item.phone),
+          email:            status.loggedIn ? (item.email ?? '') : this.maskEmail(item.email),
+          nickName:         item.nickName ?? '',
+          chineseNickName:  item.chineseNickName ?? '',
+          handicap:         String(item.handicap ?? ''),
+          pgcHandicap:      String(item.pgcHandicap ?? ''),
+          last3GameAvg:     String(item.last3GameAvg ?? ''),
+          clubId:           item.clubId ?? '',
+          clubName:         item.clubName ?? '',
+          level:            item.level ?? 0,
+          pgc2025:          item.pgc2025 ?? false,
+          isActive:         item.isActive ?? false,
+          desc:             item.desc ?? '',
+        });
+      });
     }
   }
 
-  setpopupdata(id: any) {
-    this.service.getPlayerById(id).subscribe(item => {
-      this.editdata = item;
-      this.playerIcon = this.editdata.fName+'_'+this.editdata.lName;
-      this.isActive=this.editdata.isActive;
-      console.log(this.isActive);
-      this.myform.setValue({id:this.editdata.id,fName:this.editdata.fName,lName:this.editdata.lName,ghinNumber:this.editdata.ghinNumber,phone:this.editdata.phone,email:this.editdata.email,
-        nickName:this.editdata.nickName,chineseNickName:this.editdata.chineseNickName,handicap:this.editdata.handicap,last3GameAvg:this.editdata.last3GameAvg, clubId:this.editdata.clubId,
-        clubName:this.editdata.clubName, desc:this.editdata.desc, pgc2025:this.editdata.pgc2025, pgcHandicap:this.editdata.pgcHandicap, isActive:this.editdata.isActive})
-    });
+  private maskPhone(phone?: string): string {
+    if (!phone) return '';
+    const digits = phone.replace(/\D/g, '');
+    return '***-***-' + digits.slice(-4);
   }
 
-  toggleIsActive() {
-    console.log("isActive is called...");
-    this.isActive = !this.isActive;
+  private maskEmail(email?: string): string {
+    if (!email) return '';
+    const [user, domain] = email.split('@');
+    if (!domain) return '***';
+    const tld = domain.split('.').pop() ?? '';
+    return (user[0] ?? '*') + '***@***.' + tld;
   }
 
-  closepopup() {
-    this.ref.close('Closed using function');
+  get initials(): string {
+    if (!this.editdata) return '?';
+    return `${(this.editdata.fName ?? '')[0] ?? ''}${(this.editdata.lName ?? '')[0] ?? ''}`.toUpperCase();
   }
 
   myform = this.buildr.group({
-    id: this.buildr.control(''),
-    fName: this.buildr.control(''),
-    lName: this.buildr.control(''),
-    ghinNumber: this.buildr.control(''),
-    phone: this.buildr.control(''),
-    email: this.buildr.control(''),
-    nickName: this.buildr.control(''),
+    id:              this.buildr.control(''),
+    fName:           this.buildr.control(''),
+    lName:           this.buildr.control(''),
+    ghinNumber:      this.buildr.control(''),
+    phone:           this.buildr.control(''),
+    email:           this.buildr.control(''),
+    nickName:        this.buildr.control(''),
     chineseNickName: this.buildr.control(''),
-    handicap: this.buildr.control(''),
-    last3GameAvg:  this.buildr.control(''),
-    clubId: this.buildr.control(''),
-    clubName: this.buildr.control(''),
-    desc: this.buildr.control(''),
-    pgc2025: this.buildr.control(''),
-    pgcHandicap: this.buildr.control(''),
-    isActive: this.buildr.control(''),
+    handicap:        this.buildr.control(''),
+    pgcHandicap:     this.buildr.control(''),
+    last3GameAvg:    this.buildr.control(''),
+    clubId:          this.buildr.control(''),
+    clubName:        this.buildr.control(''),
+    level:           this.buildr.control(0),
+    pgc2025:         this.buildr.control(false),
+    isActive:        this.buildr.control(false),
+    desc:            this.buildr.control(''),
   });
 
-  Edituser() {
-    this.service.editPlayer(this.myform.value).subscribe(res => {
-      this.closepopup();
-    });
+  save() {
+    this.service.editPlayer(this.myform.value).subscribe(() => this.ref.close('saved'));
+  }
+
+  close() {
+    this.ref.close();
   }
 }
-

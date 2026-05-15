@@ -1,18 +1,20 @@
 export interface PlayerRepresentation {
-  id?: number,
-  fName?: string,
-  lName?: string,
-  ghinNumber?: string,
-  phone?: string,
-  email?: string,
-  nickName?: string,
-  chineseNickName?: string,
-  handicap?: number,
-  clubId?: string,
-  clubName?: string,
-  last3GameAvg: number,
-  level?: number,
-  pgc2025?:boolean,
-  pgcHandicap?:number
-
+  id?: number;
+  fName?: string;
+  lName?: string;
+  ghinNumber?: string;
+  phone?: string;
+  email?: string;
+  nickName?: string;
+  chineseNickName?: string;
+  handicap?: number;
+  clubId?: string;
+  clubName?: string;
+  last3GameAvg?: number;
+  level?: number;
+  pgc2025?: boolean;
+  pgcHandicap?: number;
+  isActive?: boolean;
+  desc?: string;
+  icon?: string;
 }

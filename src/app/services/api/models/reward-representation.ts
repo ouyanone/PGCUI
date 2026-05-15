@@ -6,11 +6,8 @@ export class RewardRepresentation {
   rewardName?: string;
   rewardDesc?: string;
   rewardStory?: string;
- 
-
+  displayOrder?: number;
+  rewardGroup?: string;
   player?: PlayerRepresentation;
   event?: EventRepresentation;
-
-
-
 }

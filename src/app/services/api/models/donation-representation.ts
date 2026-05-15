@@ -1,14 +1,8 @@
-
-
-export class DonationRepresentation {
+export interface DonationRepresentation {
   id?: number;
   donationName?: string;
   donationDesc?: string;
-  cash?: number;
-  product?: string;
   donationDate?: string;
-  donor?: string;
-  type?: string;
-
-
+  amount?: number;
+  player?: { id?: number; fName?: string; lName?: string; };
 }

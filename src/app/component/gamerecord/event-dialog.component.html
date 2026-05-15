@@ -1,0 +1,54 @@
+<h2 mat-dialog-title>{{ isEdit ? 'Edit Event' : 'Add Event' }}</h2>
+
+<mat-dialog-content [formGroup]="form" class="donation-form">
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Event Name</mat-label>
+    <input matInput formControlName="eventName" placeholder="e.g. 2025 Spring Game">
+    <mat-error *ngIf="form.get('eventName')?.hasError('required')">Event name is required</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Description</mat-label>
+    <textarea matInput formControlName="eventDesc" rows="2" placeholder="Optional description"></textarea>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Event Date</mat-label>
+    <input matInput [matDatepicker]="picker" formControlName="eventDate">
+    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+    <mat-error *ngIf="form.get('eventDate')?.hasError('required')">Date is required</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Status</mat-label>
+    <mat-select formControlName="status">
+      <mat-option *ngFor="let s of statusOptions" [value]="s">{{ s }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Course (optional)</mat-label>
+    <mat-select formControlName="courseId">
+      <mat-option [value]="null">— None —</mat-option>
+      <mat-option *ngFor="let c of courses" [value]="c.id">{{ courseLabel(c) }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Season (optional)</mat-label>
+    <mat-select formControlName="seasonId">
+      <mat-option [value]="null">— None —</mat-option>
+      <mat-option *ngFor="let s of seasons" [value]="s.id">{{ s.seasonName }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" style="padding: 8px 24px 16px; gap: 8px;">
+  <button mat-stroked-button (click)="cancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="save()" [disabled]="form.invalid">
+    {{ isEdit ? 'Save Changes' : 'Add Event' }}
+  </button>
+</mat-dialog-actions>

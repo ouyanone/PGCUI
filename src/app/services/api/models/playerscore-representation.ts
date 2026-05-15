@@ -1,14 +1,11 @@
 import { PlayerRepresentation } from './player-representation';
 
 export interface PlayerScoreRepresentation {
-  id?: number,
-  score?: number,
-  netScore?:number,
-  flight?:number,
+  id?: number;
+  score?: number;
+  netScore?: number;
+  flight?: number;
+  entryScore?: number;
+  entryPGCHandicap?: number;
   player?: PlayerRepresentation;
-
-
-
-
-
 }

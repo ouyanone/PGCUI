@@ -9,11 +9,9 @@ import { AgGridAngular } from 'ag-grid-angular';
 import { AgGridModule } from 'ag-grid-angular';
 import {
   ColDef,
-  ColGroupDef,
   GridApi,
   GridReadyEvent,
-  CellClickedEvent,
-  GridOptions
+  RowClickedEvent,
 } from 'ag-grid-community';
 import 'ag-grid-enterprise';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -42,20 +40,17 @@ export class PlayerComponent implements OnInit{
 
 
   colDefs: ColDef[] = [
-    { field: "id", headerName: 'Golfer ID', flex:5, onCellClicked: (event: CellClickedEvent) => this.openEditPlayer(event) },
-    { field: "fName", headerName: 'First Name', flex:5,  filter: true },
-    { field: "lName", headerName: 'Last Name' , flex:5, filter: true },
-  //  { field: "ghinNumber", headerName: 'ghin Number',  flex:5 },
-  //  { field: "phone", headerName: 'Phone Number',  flex:6 },
-  //  { field: "email", headerName: 'Email',  flex:7 },
-  //  { field: "nickName", headerName: 'Nick Name',  flex:5 },
-    { field: "chineseNickName", headerName: 'Chinese Nick Name',  flex:7 },
-    { field: "handicap", headerName: 'Handicap', type: 'numericColumn', flex:4, filter: true  },
-  //  { field: "clubId", headerName: 'Club ID',  flex:4 },
-  //  { field: "clubName", headerName: 'Club Name', flex:12, filter: true  },
-    { field: "pgcHandicap", headerName: 'PGC Handicap', flex:12, filter: true  },
-    { field: "pgc2025", headerName: 'PGC Member', flex:12, filter: true  }
-   // { field: "icon", headerName: 'Picture', cellRenderer: (params:any) => `<img style="height: 680px; width: 680px" src=http://localhost:8080${params.value} />`}
+    { field: 'fName',       headerName: 'First Name',    flex: 4, filter: true },
+    { field: 'lName',       headerName: 'Last Name',     flex: 4, filter: true },
+    { field: 'pgcHandicap', headerName: 'PGC Handicap',  flex: 3, filter: true },
+    { field: 'handicap',    headerName: 'Handicap',      flex: 3, filter: true, type: 'numericColumn' },
+    {
+      field: 'pgc2025',
+      headerName: 'PGC Member',
+      flex: 3,
+      filter: true,
+      valueFormatter: (p: any) => p.value ? 'Yes' : 'No'
+    }
   ];
 
   defaultColDef = {
@@ -166,18 +161,20 @@ export class PlayerComponent implements OnInit{
     });
   }
 
-openEditPlayer(event:CellClickedEvent) {
-  console.log("edit player is clicked"+event.value);
+onRowClicked(event: RowClickedEvent) {
+  this.openEditPlayer(event.data.id);
+}
 
+openEditPlayer(playerId: any) {
   var _popup = this.dialog.open(EditPlayerComponent, {
-    width: '60%',
-    height: '800px',
-    enterAnimationDuration:'1500ms',
-    exitAnimationDuration:'1500ms',
-    disableClose:true,
+    width: '680px',
+    maxHeight: '90vh',
+    enterAnimationDuration: '300ms',
+    exitAnimationDuration: '200ms',
+    disableClose: false,
     data: {
       title: 'Edit player',
-      userId: event.value
+      userId: playerId
     }
   });
 

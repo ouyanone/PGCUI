@@ -19,6 +19,8 @@ import { GameruleComponent } from './component/gamerule/gamerule.component';
 import { StatisticsComponent } from './component/statistics/statistics.component';
 import { PhotosComponent } from './component/photos/photos.component';
 import { UploadScoreComponent } from './component/upload-score/upload-score.component';
+import { NewsComponent } from './component/news/news.component';
+import { RewardComponent } from './component/reward/reward.component';
 
 
 
@@ -41,7 +43,9 @@ const routes: Routes = [
   {path:'gamerule',component:GameruleComponent},
   {path:'photos',component:PhotosComponent},
   {path:'statistics',component:StatisticsComponent},
-  {path:'uploadScore',component:UploadScoreComponent}
+  {path:'uploadScore',component:UploadScoreComponent},
+  {path:'news',component:NewsComponent},
+  {path:'reward',component:RewardComponent}
 ];
 
 @NgModule({

@@ -2,3 +2,5 @@
 .angular/
 
 
+.DS_Store
+dist/

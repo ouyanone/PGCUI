@@ -1,11 +1,139 @@
-/* You can add global styles to this file, and also import other style files */
-
 /* Core Grid CSS */
 @import 'ag-grid-community/styles/ag-grid.css';
-/* Quartz Theme Specific CSS */
 @import 'ag-grid-community/styles/ag-theme-quartz.css';
 
+/* ── PGC Design Tokens — Light Blue / Green Golf Theme ── */
+:root {
+  /* Blues (lighter, approachable) */
+  --pgc-blue:          #1976d2;   /* Medium blue — toolbar */
+  --pgc-blue-dark:     #1565c0;   /* Hover / active */
+  --pgc-blue-pale:     #e3f2fd;   /* Very light blue — subtle fills */
 
+  /* Greens (fresh grass) */
+  --pgc-green:         #388e3c;   /* Fairway green — accents */
+  --pgc-green-mid:     #43a047;   /* Buttons, badges */
+  --pgc-green-pale:    #e8f5e9;   /* Very pale green — row tints */
 
+  /* Neutrals — light & clean */
+  --pgc-bg:            #f4f6f8;   /* Page background */
+  --pgc-surface:       #ffffff;   /* Cards / panels */
+  --pgc-border:        #dde3ec;   /* Subtle borders */
+  --pgc-text:          #1e293b;   /* Primary text */
+  --pgc-text-muted:    #64748b;   /* Secondary text */
+
+  /* Effects */
+  --pgc-shadow-sm:     0 1px 3px rgba(0,0,0,0.08);
+  --pgc-shadow:        0 2px 10px rgba(0,0,0,0.08);
+  --pgc-shadow-lg:     0 6px 20px rgba(0,0,0,0.10);
+  --pgc-radius:        8px;
+  --pgc-radius-lg:     12px;
+  --pgc-transition:    0.15s ease;
+}
+
+/* ── Reset & Base ── */
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: var(--pgc-bg);
+  color: var(--pgc-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Material Toolbar — medium blue ── */
+.mat-toolbar.mat-primary {
+  background: var(--pgc-blue) !important;
+  color: #ffffff !important;
+}
+.mat-toolbar.mat-primary .mat-icon,
+.mat-toolbar.mat-primary button { color: #ffffff; }
+
+/* ── Accent buttons — green ── */
+.mat-raised-button.mat-accent,
+.mat-mdc-raised-button.mat-accent {
+  background-color: var(--pgc-green-mid) !important;
+  color: #ffffff !important;
+}
+
+/* ── Cards ── */
+.mat-card, .mat-mdc-card {
+  border-radius: var(--pgc-radius-lg) !important;
+  box-shadow: var(--pgc-shadow) !important;
+}
+
+/* ── Section titles ── */
+.section-title,
+.event-section-title {
+  color: var(--pgc-blue-dark);
+  font-family: Georgia, serif;
+  font-size: clamp(15px, 2.2vw, 21px);
+  font-weight: 700;
+  text-align: center;
+  padding-bottom: 8px;
+  margin: 28px auto 16px;
+  max-width: 760px;
+  border-bottom: 3px solid var(--pgc-green);
+}
+
+/* ── AG Grid — blue header, green row tints ── */
+.ag-theme-quartz .ag-header {
+  background-color: var(--pgc-blue) !important;
+}
+.ag-theme-quartz .ag-header-cell-label,
+.ag-theme-quartz .ag-header-cell-text {
+  color: #ffffff !important;
+  font-size: 13px;
+  font-weight: 600;
+}
+.ag-theme-quartz .ag-root-wrapper {
+  border-radius: var(--pgc-radius) !important;
+  border: 1px solid var(--pgc-border) !important;
+}
+.ag-theme-quartz .ag-row-odd {
+  background-color: #f0f7ff !important;   /* very light blue stripe */
+}
+.ag-theme-quartz .ag-row:hover {
+  background-color: var(--pgc-green-pale) !important;
+}
+.pgc-grid {
+  width: 95%;
+  margin: 0 auto 24px;
+  border-radius: var(--pgc-radius);
+  overflow: hidden;
+  box-shadow: var(--pgc-shadow);
+}
+
+/* ── Toolbar helpers ── */
+.toolbar-spacer { flex: 1 1 auto; }
+
+/* ── Footer ── */
+.app-footer {
+  background: #1e293b;
+  color: #94a3b8;
+  text-align: center;
+  padding: 12px 24px;
+  font-size: 12px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+/* ── Dialog form layout ── */
+.donation-form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 8px;
+  min-width: 380px;
+}
+.donation-form .full-width {
+  width: 100%;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .main-content { padding: 10px; }
+  .donation-form { min-width: unset; }
+}

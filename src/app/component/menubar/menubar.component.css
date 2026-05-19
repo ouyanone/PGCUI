@@ -1,3 +1,233 @@
-.example-spacer {
-    flex: 1 1 auto;
+/* ── Toolbar ── */
+.app-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  height: 64px;
+  gap: 4px;
+  /* Medium blue with a thin green bottom stripe */
+  background: #1976d2 !important;
+  border-bottom: 3px solid #43a047;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+.toolbar-logo {
+  height: 42px;
+  width: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 8px;
+  border: 2px solid rgba(255,255,255,0.4);
+  flex-shrink: 0;
+}
+.toolbar-titles {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+.toolbar-title {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #ffffff;
+}
+.toolbar-title-en {
+  font-size: 11px;
+  font-weight: 300;
+  opacity: 0.80;
+  white-space: nowrap;
+  color: #bbdefb;
+}
+.toolbar-spacer { flex: 1 1 auto; }
+
+/* Join Us — green, rounded */
+.toolbar-join-btn {
+  background-color: #43a047 !important;
+  color: #ffffff !important;
+  margin-right: 8px;
+  font-weight: 600;
+  border-radius: 20px !important;
+  padding: 0 16px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+  font-size: 13px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  transition: background 0.15s;
+}
+.toolbar-join-btn:hover { background-color: #388e3c !important; }
+.toolbar-join-btn mat-icon { font-size: 16px; height: 16px; width: 16px; }
+
+/* Logged-in user display */
+.toolbar-user {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 0 12px;
+  height: 34px;
+  border: 1px solid rgba(255,255,255,0.35);
+  border-radius: 20px;
+  background: rgba(255,255,255,0.1);
+}
+.toolbar-user mat-icon { font-size: 18px; height: 18px; width: 18px; }
+.toolbar-username { max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Sign In — white ghost */
+.toolbar-signin-btn {
+  color: #ffffff !important;
+  border: 1px solid rgba(255,255,255,0.55) !important;
+  border-radius: 20px !important;
+  padding: 0 14px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+  font-size: 13px;
+  transition: background 0.15s;
+}
+.toolbar-signin-btn:hover { background: rgba(255,255,255,0.12) !important; }
+.toolbar-signin-btn mat-icon { font-size: 16px; height: 16px; width: 16px; }
+
+/* ── Drawer container ── */
+.drawer-container {
+  height: calc(100vh - 64px - 48px);
+  height: calc(100dvh - 64px - 48px); /* dvh accounts for iOS Safari chrome */
+  overflow: visible;
+}
+
+/* ── Sidebar — WHITE with blue accents ── */
+.app-sidenav {
+  background: #ffffff;
+  color: #1e293b;
+  width: 220px;
+  border-right: 1px solid #e2e8f0 !important;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.05);
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.sidenav-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 18px 16px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: #1976d2;
+  border-bottom: 1px solid #e2e8f0;
+}
+.sidenav-golf-icon {
+  color: #43a047;
+  font-size: 20px;
+  height: 20px;
+  width: 20px;
+}
+
+.sidenav-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: #94a3b8;
+  padding: 14px 16px 4px;
+}
+
+.sidenav-divider {
+  border-color: #e2e8f0 !important;
+  margin: 4px 12px;
+}
+
+/* Nav items */
+.sidenav-nav mat-list-item {
+  color: #475569 !important;
+  border-radius: 6px !important;
+  margin: 1px 8px !important;
+  height: 42px !important;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.sidenav-nav mat-list-item:hover {
+  background: #e3f2fd !important;   /* light blue */
+  color: #1565c0 !important;
+}
+/* Active route */
+.sidenav-nav mat-list-item.active-link {
+  background: #e8f5e9 !important;   /* light green */
+  border-left: 3px solid #388e3c;
+  color: #1b5e20 !important;
+}
+.sidenav-nav mat-list-item.active-link mat-icon {
+  color: #388e3c !important;
+}
+/* Icons — blue by default */
+.sidenav-nav mat-icon[matlistitemicon] {
+  color: #64b5f6;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+.sidenav-footer {
+  padding: 10px 16px;
+  font-size: 11px;
+  color: #94a3b8;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #fafafa;
+  margin-top: 8px;
+}
+.sidenav-footer mat-icon {
+  font-size: 13px;
+  height: 13px;
+  width: 13px;
+  color: #43a047;
+}
+
+/* ── Main content ── */
+.main-content {
+  background-color: #f4f6f8;
+  min-height: calc(100vh - 112px);
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* ── Footer ── */
+.app-footer {
+  background: #1e293b;
+  color: #64748b;
+  text-align: center;
+  padding: 12px 24px;
+  font-size: 12px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  .toolbar-title-en { display: none; }
+  .btn-label { display: none; }
+  .toolbar-join-btn,
+  .toolbar-signin-btn {
+    padding: 0 8px !important;
+    min-width: 34px !important;
+    border-radius: 50% !important;
   }
+  .main-content { padding: 10px; }
+}

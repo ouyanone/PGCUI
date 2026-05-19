@@ -1,0 +1,22 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h2 class="page-title">Club News</h2>
+      <p class="page-subtitle">Latest updates and announcements from PGC</p>
+    </div>
+    <button mat-raised-button color="primary" *ngIf="isLoggedIn" (click)="openDialog(null)">
+      <mat-icon>add</mat-icon> Add News
+    </button>
+  </div>
+
+  <ag-grid-angular
+    class="ag-theme-quartz pgc-grid"
+    domLayout="autoHeight"
+    [columnDefs]="colDefs"
+    [defaultColDef]="defaultColDef"
+    [rowData]="newsData"
+    [pagination]="true"
+    [paginationPageSize]="20"
+    (cellClicked)="onCellClicked($event)">
+  </ag-grid-angular>
+</div>

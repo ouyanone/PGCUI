@@ -32,9 +32,16 @@ import { AboutusComponent } from './component/aboutus/aboutus.component';
 import { GameruleComponent } from './component/gamerule/gamerule.component';
 import { StatisticsComponent } from './component/statistics/statistics.component';
 import { DonationComponent } from './component/donation/donation.component';
+import { DonationDialogComponent } from './component/donation/donation-dialog.component';
+import { ConfirmDeleteDialogComponent } from './component/donation/confirm-delete-dialog.component';
+import { EventDialogComponent } from './component/gamerecord/event-dialog.component';
 import { GameinputComponent } from './component/gameinput/gameinput.component';
 import { PhotosComponent } from './component/photos/photos.component';
 import { UploadScoreComponent } from './component/upload-score/upload-score.component';
+import { NewsComponent } from './component/news/news.component';
+import { NewsDialogComponent } from './component/news/news-dialog.component';
+import { RewardComponent } from './component/reward/reward.component';
+import { RewardDialogComponent } from './component/reward/reward-dialog.component';
 
 
 
@@ -62,10 +69,17 @@ import { UploadScoreComponent } from './component/upload-score/upload-score.comp
     GameruleComponent,
     StatisticsComponent,
     DonationComponent,
+    DonationDialogComponent,
+    ConfirmDeleteDialogComponent,
+    EventDialogComponent,
     GameinputComponent,
     PhotosComponent,
-    UploadScoreComponent
-    
+    UploadScoreComponent,
+    NewsComponent,
+    NewsDialogComponent,
+    RewardComponent,
+    RewardDialogComponent
+
  
   ],
   imports: [

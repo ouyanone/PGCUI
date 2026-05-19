@@ -1,26 +1,125 @@
-html {
-  font-size: 6px;
+.rules-container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px 24px 48px;
+  background: #f4f6f8;
+  min-height: 100vh;
 }
 
-h1 {
-  font-size: 5rem;
-  color: DodgerBlue;
-  text-transform: capitalize;
-  text-shadow:
-    1px 1px 1px red,
-    2px 2px 1px red;
+/* ── Header ── */
+.rules-header {
   text-align: center;
-  letter-spacing: 2px;
+  padding: 32px 16px 24px;
+}
+.rules-header-icon {
+  font-size: 48px; height: 48px; width: 48px;
+  color: #2e7d32; margin-bottom: 8px;
+}
+.rules-title {
+  font-family: Georgia, serif;
+  font-size: clamp(22px, 4vw, 32px);
+  font-weight: 700;
+  color: #1565c0;
+  margin: 0 0 6px;
+}
+.rules-subtitle {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0;
 }
 
-h1 + p {
-  font-weight: bold;
+/* ── Section titles ── */
+.rules-section-title {
+  display: flex; align-items: center;
+  font-size: 15px; font-weight: 700;
+  color: #1565c0; font-family: Georgia, serif;
+  border-bottom: 3px solid #43a047;
+  padding-bottom: 8px;
+  margin: 28px 0 16px;
 }
 
-p {
-  font-size: 1.5rem;
-  color:darkslategrey;
-  font-family: Helvetica, Arial, sans-serif;
-  line-height: 1.2;
-  letter-spacing: 1px;
+/* ── Rules grid ── */
+.rules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+.rule-card {
+  display: flex;
+  gap: 14px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 16px;
+  border-left: 4px solid #1976d2;
+}
+
+.rule-number {
+  display: flex; align-items: center; justify-content: center;
+  min-width: 30px; height: 30px;
+  background: #1976d2; color: #fff;
+  border-radius: 50%;
+  font-size: 13px; font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.rule-body { flex: 1; }
+
+.rule-heading {
+  font-size: 13px; font-weight: 700;
+  color: #1e293b; margin-bottom: 6px;
+}
+
+.rule-body p {
+  font-size: 13px;
+  color: #475569;
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* ── Awards grid ── */
+.awards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.award-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  overflow: hidden;
+}
+
+.award-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 16px;
+  font-size: 13px; font-weight: 700; color: #fff;
+}
+.award-header mat-icon { font-size: 18px; height: 18px; width: 18px; }
+.eagle-header  { background: #7b1fa2; }
+.birdie-header { background: #1565c0; }
+.par-header    { background: #2e7d32; }
+
+.award-list {
+  margin: 10px 16px 8px;
+  padding-left: 18px;
+  font-size: 12.5px;
+  color: #475569;
+  line-height: 1.8;
+}
+
+.award-note {
+  font-size: 11px;
+  color: #94a3b8;
+  font-style: italic;
+  margin: 0 16px 12px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .rules-container { padding: 16px 12px 40px; }
+  .rules-grid, .awards-grid { grid-template-columns: 1fr; }
 }

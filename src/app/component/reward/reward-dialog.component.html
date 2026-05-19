@@ -1,0 +1,54 @@
+<h2 mat-dialog-title>{{ isEdit ? 'Edit Award' : 'Add Award' }}</h2>
+
+<mat-dialog-content [formGroup]="form" class="reward-form">
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Award Name</mat-label>
+    <input matInput formControlName="rewardName" placeholder="e.g. Flight A 男子总杆第一">
+    <mat-error *ngIf="form.get('rewardName')?.hasError('required')">Award name is required</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Description</mat-label>
+    <input matInput formControlName="rewardDesc" placeholder="e.g. Closest to pin, Hole #3">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Story</mat-label>
+    <textarea matInput formControlName="rewardStory" rows="2" placeholder="Optional story"></textarea>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Group (for grouping on home page)</mat-label>
+    <input matInput formControlName="rewardGroup" placeholder="e.g. 男子总杆, 净杆, 最近洞奖">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Display Order</mat-label>
+    <input matInput type="number" formControlName="displayOrder" placeholder="1" min="1">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Game (Event)</mat-label>
+    <mat-select formControlName="eventId">
+      <mat-option *ngFor="let e of events" [value]="e.id">{{ eventLabel(e) }}</mat-option>
+    </mat-select>
+    <mat-error *ngIf="form.get('eventId')?.hasError('required')">Game is required</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Winner (Player)</mat-label>
+    <mat-select formControlName="playerId">
+      <mat-option [value]="null">— None —</mat-option>
+      <mat-option *ngFor="let p of players" [value]="p.id">{{ playerLabel(p) }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" style="padding: 8px 24px 16px; gap: 8px;">
+  <button mat-stroked-button (click)="cancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="save()" [disabled]="form.invalid">
+    {{ isEdit ? 'Save Changes' : 'Add Award' }}
+  </button>
+</mat-dialog-actions>

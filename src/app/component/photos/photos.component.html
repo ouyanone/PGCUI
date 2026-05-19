@@ -1,20 +1,92 @@
-<p>photos uploads</p>
+<div class="photos-container">
 
+  <!-- Header -->
+  <div class="photos-header">
+    <mat-icon class="photos-header-icon">photo_library</mat-icon>
+    <h1 class="photos-title">Photo Gallery</h1>
+    <p class="photos-subtitle">Memories from the Fairway</p>
+  </div>
 
-<input type="file" class="file-input"
-       (change)="onFileSelected($event)" #fileUpload>
+  <!-- Admin upload panel -->
+  <div class="upload-panel" *ngIf="isLoggedIn">
+    <div class="upload-panel-title">
+      <mat-icon>cloud_upload</mat-icon>
+      Upload Photos
+    </div>
+    <div class="upload-panel-row">
+      <mat-select class="upload-event-select" [(ngModel)]="selectedUploadEventId"
+                  placeholder="Select an event">
+        <mat-option *ngFor="let e of allEvents" [value]="e.id">
+          {{ e.eventName }} &nbsp;&nbsp; {{ e.eventDate | date:'mediumDate' }}
+        </mat-option>
+      </mat-select>
+      <label class="upload-label" [class.disabled]="!selectedUploadEventId || uploading">
+        <mat-icon>upload</mat-icon>
+        <span>{{ uploading ? 'Uploading...' : 'Choose Photos' }}</span>
+        <input type="file" accept="image/*" multiple hidden
+               [disabled]="!selectedUploadEventId || uploading"
+               (change)="onFileSelected($event, selectedUploadEventId!)" />
+      </label>
+    </div>
+  </div>
 
-<div class="file-upload">
+  <!-- Loading -->
+  <div class="loading-wrap" *ngIf="loading">
+    <mat-spinner diameter="48"></mat-spinner>
+  </div>
 
-   {{fileName || "No file uploaded yet."}}
+  <!-- No photos -->
+  <div class="empty-msg" *ngIf="!loading && eventGroups.length === 0">
+    No photos uploaded yet. Check back soon!
+  </div>
 
-    <button mat-mini-fab color="primary" class="upload-btn"
-      (click)="fileUpload.click()">
-        <mat-icon>attach_file</mat-icon>
-    </button>
+  <!-- Event groups -->
+  <div *ngFor="let group of eventGroups" class="event-section">
+    <div class="event-heading">
+      <div class="event-heading-left">
+        <mat-icon class="event-heading-icon">golf_course</mat-icon>
+        <div>
+          <div class="event-heading-name">{{ group.event.eventName }}</div>
+          <div class="event-heading-date">{{ group.event.eventDate | date:'MMMM d, y' }}</div>
+        </div>
+      </div>
+      <!-- Quick upload inside existing event -->
+      <label *ngIf="isLoggedIn" class="upload-label-sm" [class.uploading]="uploadingEventId === group.event.id && uploading">
+        <mat-icon>upload</mat-icon>
+        <span>{{ (uploadingEventId === group.event.id && uploading) ? 'Uploading...' : 'Add Photos' }}</span>
+        <input type="file" accept="image/*" multiple hidden (change)="onFileSelected($event, group.event.id)" />
+      </label>
+    </div>
+
+    <!-- Photo grid -->
+    <div class="photo-grid">
+      <div class="photo-thumb-wrap" *ngFor="let photo of group.photos; let i = index">
+        <img class="photo-thumb" [src]="thumbnailUrl(photo)" [alt]="photo.originalName"
+             (click)="openLightbox(group.photos, i)" loading="lazy" />
+        <button *ngIf="isLoggedIn" class="delete-btn" (click)="deletePhoto(photo, group)" mat-icon-button>
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
 </div>
 
-<div>
-  uploaded file:
-  <img [src]= photourl  alt="uploaded photo" />
+<!-- Lightbox overlay -->
+<div class="lightbox-overlay" *ngIf="lightboxOpen" (click)="closeLightbox()">
+  <div class="lightbox-box" (click)="$event.stopPropagation()">
+    <button class="lb-close" (click)="closeLightbox()">
+      <mat-icon>close</mat-icon>
+    </button>
+    <button class="lb-arrow lb-prev" (click)="prevPhoto()" *ngIf="lightboxPhotos.length > 1">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <img class="lb-image" [src]="currentLightboxUrl" alt="" />
+    <button class="lb-arrow lb-next" (click)="nextPhoto()" *ngIf="lightboxPhotos.length > 1">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+    <div class="lb-counter" *ngIf="lightboxPhotos.length > 1">
+      {{ lightboxIndex + 1 }} / {{ lightboxPhotos.length }}
+    </div>
+  </div>
 </div>

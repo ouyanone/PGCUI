@@ -1,12 +1,12 @@
-<div class="gamemanagement-page">
+<div class="reward-page">
 
   <div class="page-header">
     <div class="page-header-text">
-      <h2 class="page-title">Game Management</h2>
-      <p class="page-subtitle">Manage PGC game events</p>
+      <h2 class="page-title">Awards &amp; Rewards</h2>
+      <p class="page-subtitle">Manage PGC game awards grouped by event</p>
     </div>
     <button mat-raised-button color="primary" (click)="openAddDialog()" class="add-btn">
-      <mat-icon>add</mat-icon> Add Event
+      <mat-icon>add</mat-icon> Add Award
     </button>
   </div>
 
@@ -15,10 +15,12 @@
     domLayout="autoHeight"
     style="width:100%"
     [defaultColDef]="defaultColDef"
-    [rowData]="events"
+    [autoGroupColumnDef]="autoGroupColDef"
+    [rowData]="rewards"
     [columnDefs]="colDefs"
+    [groupDisplayType]="'groupRows'"
     [pagination]="true"
-    [paginationPageSize]="20"
+    [paginationPageSize]="50"
     (gridReady)="onGridReady($event)"
     (cellClicked)="onCellClicked($event)">
   </ag-grid-angular>

@@ -1,95 +1,125 @@
-<mat-card class="example-card">
-    <mat-card-header>
-      <div mat-card-avatar class="example-header-image"></div>
-      <mat-card-title>{{editdata.chineseNickName}} {{editdata.handicap}}</mat-card-title>
-      <mat-card-subtitle>{{editdata.fName}} {{editdata.lName}}</mat-card-subtitle>
-    </mat-card-header>
-    <picture>
-      <source media='(min-width:0px)' srcset="../../../assets/{{playerIcon}}.jpg">
-      <img mat-card-image src="" alt="Golfer picture">
-    </picture>
-    <mat-card-content>
-      <p>
-        {{editdata.desc}}
-      </p>
-    </mat-card-content>
-    <mat-card-actions>
+<form [formGroup]="myform" (ngSubmit)="save()" class="player-profile-dialog">
 
-    </mat-card-actions>
-  </mat-card>
+  <!-- Profile Header -->
+  <div class="profile-header">
+    <div class="avatar-circle">{{ initials }}</div>
+    <div class="profile-header-info">
+      <h2 class="profile-name">{{ myform.get('fName')?.value }} {{ myform.get('lName')?.value }}</h2>
+      <p class="profile-chinese-name">{{ myform.get('chineseNickName')?.value }}</p>
+      <div class="profile-badges">
+        <span class="badge badge-active" *ngIf="myform.get('isActive')?.value">Active</span>
+        <span class="badge badge-inactive" *ngIf="!myform.get('isActive')?.value">Inactive</span>
+        <span class="badge badge-member" *ngIf="myform.get('pgc2025')?.value">PGC Member 2025</span>
+      </div>
+    </div>
+  </div>
 
+  <mat-dialog-content class="profile-content">
 
-<form [formGroup]="myform" (ngSubmit)="Edituser()">
-    <h1 mat-dialog-title>{{inputdata.title}}</h1>
-
-
-
-
-    <div mat-dialog-content>
+    <!-- Section: Basic Info -->
+    <div class="section-title">Basic Information</div>
+    <div class="form-grid">
       <mat-form-field appearance="outline">
-        <mat-label>Golfer Id</mat-label>
-        <input formControlName="id" matInput  readonly>
+        <mat-label>Golfer ID</mat-label>
+        <input matInput formControlName="id" readonly>
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>First Name</mat-label>
-        <input formControlName="fName" matInput readonly>
+        <input matInput formControlName="fName">
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Last Name</mat-label>
-        <input formControlName="lName" matInput readonly>
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Ghin Number</mat-label>
-        <input formControlName="ghinNumber" matInput readonly>
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Phone Number</mat-label>
-        <input formControlName="phone" matInput>
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Email</mat-label>
-        <input formControlName="email" matInput>
+        <input matInput formControlName="lName">
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Nick Name</mat-label>
-        <input formControlName="nickName" matInput>
+        <input matInput formControlName="nickName">
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Chinese Nick Name</mat-label>
-        <input formControlName="chineseNickName" matInput>
+        <input matInput formControlName="chineseNickName">
+      </mat-form-field>
+    </div>
+
+    <!-- Section: Contact -->
+    <div class="section-title">Contact</div>
+    <div class="form-grid">
+      <mat-form-field appearance="outline">
+        <mat-label>Phone</mat-label>
+        <input matInput formControlName="phone">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email">
+      </mat-form-field>
+    </div>
+
+    <!-- Section: Golf Info -->
+    <div class="section-title">Golf Information</div>
+    <div class="form-grid">
+      <mat-form-field appearance="outline">
+        <mat-label>GHIN Number</mat-label>
+        <input matInput formControlName="ghinNumber" readonly>
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Handicap</mat-label>
-        <input formControlName="handicap" matInput>
+        <input matInput formControlName="handicap" type="number">
       </mat-form-field>
       <mat-form-field appearance="outline">
-          <mat-label>PGC Handicap</mat-label>
-          <input formControlName="pgcHandicap" matInput>
-        </mat-form-field>
+        <mat-label>PGC Handicap</mat-label>
+        <input matInput formControlName="pgcHandicap" type="number">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Last 3 Game Avg</mat-label>
+        <input matInput formControlName="last3GameAvg" type="number" readonly>
+      </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Club ID</mat-label>
-        <input formControlName="clubId" matInput>
+        <input matInput formControlName="clubId">
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Club Name</mat-label>
-        <input formControlName="clubName" matInput>
+        <input matInput formControlName="clubName">
       </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>2025 PGC Member</mat-label>
-        <input formControlName="pgc2025" matInput>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Is Active</mat-label>
-        <input formControlName="isActive" matInput>
-      </mat-form-field>
- 
-
     </div>
-    <div mat-dialog-actions>
-        <button mat-raised-button type="submit" color="primary">Save</button>
-      <a (click)="closepopup()" mat-raised-button color="warn">Close</a>
-      <!-- <button mat-raised-button [mat-dialog-close]="closemessage" color="accent">Cancel</button> -->
+
+    <!-- Section: Membership -->
+    <div class="section-title">Membership</div>
+    <div class="form-grid">
+      <mat-form-field appearance="outline">
+        <mat-label>Level</mat-label>
+        <input matInput formControlName="level" type="number">
+      </mat-form-field>
+      <div class="toggle-row">
+        <mat-slide-toggle formControlName="pgc2025" color="primary">
+          PGC Member 2025
+        </mat-slide-toggle>
+        <mat-slide-toggle formControlName="isActive" color="primary">
+          Active Member
+        </mat-slide-toggle>
+      </div>
     </div>
-    </form>
+
+    <!-- Section: Bio -->
+    <div class="section-title">Bio</div>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="desc" rows="4" placeholder="Player bio..."></textarea>
+    </mat-form-field>
+
+  </mat-dialog-content>
+
+  <!-- Read-only notice for guests -->
+  <div class="readonly-notice" *ngIf="!isLoggedIn">
+    <mat-icon>lock</mat-icon>
+    <span>Sign in to edit player information</span>
+  </div>
+
+  <mat-dialog-actions align="end" class="profile-actions">
+    <button mat-stroked-button type="button" (click)="close()">Close</button>
+    <button mat-raised-button color="primary" type="submit" *ngIf="isLoggedIn">
+      <mat-icon>save</mat-icon> Save Changes
+    </button>
+  </mat-dialog-actions>
+
+</form>

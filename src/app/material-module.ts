@@ -1,4 +1,6 @@
 import { NgModule } from "@angular/core";
+import { LayoutModule } from "@angular/cdk/layout";
+import {MatChipsModule} from "@angular/material/chips"
 import {MatInputModule} from "@angular/material/input"
 import {MatSelectModule} from "@angular/material/select"
 import {MatAutocompleteModule} from "@angular/material/autocomplete"
@@ -19,9 +21,14 @@ import {MatNativeDateModule} from "@angular/material/core"
 import {MatRadioModule} from "@angular/material/radio"
 import {MatCheckboxModule} from "@angular/material/checkbox"
 import {MatDialogModule} from "@angular/material/dialog"
+import {MatSlideToggleModule} from "@angular/material/slide-toggle"
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner"
+import {MatExpansionModule} from "@angular/material/expansion"
 
 @NgModule({
 exports:[
+    LayoutModule,
+    MatChipsModule,
     MatInputModule,
     MatSelectModule,
     MatAutocompleteModule,
@@ -41,7 +48,10 @@ exports:[
     MatNativeDateModule,
     MatRadioModule,
     MatCheckboxModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSlideToggleModule,
+    MatProgressSpinnerModule,
+    MatExpansionModule
 ]
 })
 export class MaterialModule{}

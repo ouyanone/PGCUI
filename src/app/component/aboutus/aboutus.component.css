@@ -1,0 +1,163 @@
+.about-container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px 24px 48px;
+  background: #f4f6f8;
+  min-height: 100vh;
+}
+
+/* ── Header ── */
+.about-header {
+  text-align: center;
+  padding: 32px 16px 24px;
+}
+.about-header-icon {
+  font-size: 48px; height: 48px; width: 48px;
+  color: #2e7d32; margin-bottom: 8px;
+}
+.about-title {
+  font-family: Georgia, serif;
+  font-size: clamp(22px, 4vw, 32px);
+  font-weight: 700;
+  color: #1565c0;
+  margin: 0 0 6px;
+}
+.about-subtitle {
+  font-size: 15px; color: #334155;
+  font-family: Georgia, serif; margin: 0 0 4px;
+}
+.about-tagline {
+  font-size: 13px; color: #64748b;
+  letter-spacing: 1px; margin: 0;
+}
+
+/* ── Section titles ── */
+.about-section-title {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 15px; font-weight: 700;
+  color: #1565c0; font-family: Georgia, serif;
+  border-bottom: 3px solid #43a047;
+  padding-bottom: 8px;
+  margin: 28px 0 16px;
+}
+.about-section-title mat-icon { color: #43a047; font-size: 20px; height: 20px; width: 20px; }
+
+/* ── Story card ── */
+.story-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 20px 24px;
+  border-left: 4px solid #1976d2;
+}
+.story-card p {
+  font-size: 14px; color: #475569;
+  line-height: 1.75; margin: 0 0 12px;
+}
+.story-card p:last-child { margin-bottom: 0; }
+
+/* ── Leadership ── */
+.leadership-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 20px 24px;
+  display: flex; align-items: flex-start; gap: 20px;
+  border-left: 4px solid #2e7d32;
+}
+.leader-photo {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #1976d2;
+  flex-shrink: 0;
+}
+.leader-name {
+  font-size: 17px; font-weight: 700;
+  color: #1e293b; font-family: Georgia, serif;
+  margin-bottom: 3px;
+}
+.leader-title {
+  font-size: 12px; color: #43a047;
+  font-weight: 600; letter-spacing: 0.3px;
+  margin-bottom: 10px;
+}
+.leader-bio {
+  font-size: 13.5px; color: #475569;
+  line-height: 1.75; margin: 0;
+}
+
+/* ── What We Do cards ── */
+.about-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 14px;
+}
+.about-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 18px 16px;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.about-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.10); }
+.about-card-icon-wrap {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; border-radius: 50%;
+  margin-bottom: 10px;
+}
+.about-card-icon-wrap mat-icon { font-size: 22px; height: 22px; width: 22px; color: #fff; }
+.blue-wrap   { background: #1976d2; }
+.green-wrap  { background: #2e7d32; }
+.purple-wrap { background: #7b1fa2; }
+.orange-wrap { background: #e65100; }
+.about-card h3 {
+  font-size: 13px; font-weight: 700; color: #1e293b;
+  margin: 0 0 8px; font-family: Georgia, serif;
+}
+.about-card p {
+  font-size: 12.5px; color: #64748b; line-height: 1.65; margin: 0;
+}
+
+/* ── Membership card ── */
+.membership-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 8px 20px 16px;
+}
+.membership-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+.membership-item:last-child { border-bottom: none; }
+.membership-icon { color: #2e7d32; font-size: 20px; height: 20px; width: 20px; margin-top: 2px; flex-shrink: 0; }
+.membership-item strong { font-size: 13px; color: #1e293b; display: block; margin-bottom: 3px; }
+.membership-item p { font-size: 12.5px; color: #64748b; margin: 0; line-height: 1.6; }
+
+/* ── Contact card ── */
+.contact-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 12px 20px;
+}
+.contact-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 13px; color: #475569;
+}
+.contact-item:last-child { border-bottom: none; }
+.contact-item mat-icon { color: #1976d2; font-size: 20px; height: 20px; width: 20px; flex-shrink: 0; }
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .about-container { padding: 16px 12px 40px; }
+  .about-cards-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 400px) {
+  .about-cards-grid { grid-template-columns: 1fr; }
+}

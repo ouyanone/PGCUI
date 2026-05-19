@@ -1,29 +1,57 @@
-.ag-theme-quartz {
-    ag-odd-row-background-color: #E04F00;
-  }
-  
-  .ag-theme-quartz .ag-row-odd {
-    background-color: #E04F00;
-  }
-  
-  
-  .ag-theme-quartz {
-    --ag-header-height: 30px;
-    --ag-header-foreground-color: white;
-    --ag-header-background-color: rgb(25, 56, 192);
-    --ag-header-cell-hover-background-color: rgb(80, 40, 140);
-    --ag-header-cell-moving-background-color: rgb(80, 40, 140);
-  
-  }
-  .ag-theme-quartz .ag-header {
-    font-family: cursive;
-  }
-  .ag-theme-quartz .ag-header-group-cell {
-    font-weight: normal;
-    font-size: 22px;
-  }
-  .ag-theme-quartz .ag-header-cell {
-    font-size: 18px;
-  
-  }
-  
+.donation-page {
+  padding: 20px;
+}
+
+/* ── Page header ── */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.page-title {
+  margin: 0 0 4px;
+  font-family: Georgia, serif;
+  font-size: 22px;
+  color: #1565c0;
+  font-weight: 700;
+}
+.page-subtitle {
+  margin: 0;
+  color: #64748b;
+  font-size: 13px;
+}
+.add-btn {
+  border-radius: 6px !important;
+  font-weight: 600;
+}
+
+/* ── Action buttons inside AG Grid cells ── */
+:host ::ng-deep .pgc-btn-edit {
+  background: #e3f2fd;
+  color: #1565c0;
+  border: 1px solid #90caf9;
+  border-radius: 4px;
+  padding: 3px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-right: 6px;
+  transition: background 0.12s;
+}
+:host ::ng-deep .pgc-btn-edit:hover { background: #bbdefb; }
+
+:host ::ng-deep .pgc-btn-delete {
+  background: #fce4ec;
+  color: #c62828;
+  border: 1px solid #f48fb1;
+  border-radius: 4px;
+  padding: 3px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+:host ::ng-deep .pgc-btn-delete:hover { background: #f8bbd0; }

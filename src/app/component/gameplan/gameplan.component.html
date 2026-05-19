@@ -1,0 +1,402 @@
+<div class="gameplan-container">
+
+  <!-- Page header -->
+  <div class="page-header">
+    <mat-icon class="page-header-icon">event_note</mat-icon>
+    <div>
+      <h1 class="page-title">Game Plan</h1>
+      <p class="page-subtitle">Organize players into groups for an event</p>
+    </div>
+  </div>
+
+  <!-- Step indicator -->
+  <div class="step-bar">
+    <div class="step-item" [class.active]="step >= 1" [class.done]="step > 1">
+      <div class="step-circle">
+        <mat-icon *ngIf="step > 1">check</mat-icon>
+        <span *ngIf="step <= 1">1</span>
+      </div>
+      <span class="step-label">Select Event</span>
+    </div>
+    <div class="step-connector" [class.done]="step > 1"></div>
+    <div class="step-item" [class.active]="step >= 2" [class.done]="step > 2">
+      <div class="step-circle">
+        <mat-icon *ngIf="step > 2">check</mat-icon>
+        <span *ngIf="step <= 2">2</span>
+      </div>
+      <span class="step-label">Manage Roster</span>
+    </div>
+    <div class="step-connector" [class.done]="step > 2"></div>
+    <div class="step-item" [class.active]="step >= 3">
+      <div class="step-circle">3</div>
+      <span class="step-label">Generate Groups</span>
+    </div>
+  </div>
+
+  <!-- ── STEP 1: Select Event ── -->
+  <div *ngIf="step === 1" class="step-panel">
+    <h2 class="step-heading">Select an Event to Plan</h2>
+    <p class="step-hint">Only events in INIT or STARTED status are shown.</p>
+
+    <div *ngIf="events.length === 0" class="empty-msg">
+      No plannable events found. Create an event with INIT status first.
+    </div>
+
+    <div class="event-cards">
+      <mat-card class="event-card" *ngFor="let e of events" (click)="selectEvent(e)" appearance="outlined">
+        <mat-card-header>
+          <mat-card-title>{{ e.eventName }}</mat-card-title>
+          <mat-card-subtitle>{{ e.eventDate | date:'mediumDate' }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="event-meta">
+            <span><mat-icon class="inline-icon">golf_course</mat-icon>{{ e.course?.courseName || e.course?.clubName || '—' }}</span>
+            <mat-chip [color]="statusColor(e.status)" selected>{{ e.status }}</mat-chip>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- ── STEP 2: Roster ── -->
+  <div *ngIf="step === 2" class="step-panel">
+
+    <!-- Event status bar -->
+    <div class="event-status-bar">
+      <div class="event-status-info">
+        <mat-icon>event</mat-icon>
+        <span class="event-name-label">{{ selectedEvent?.eventName }}</span>
+        <mat-chip [color]="statusColor(selectedEvent?.status)" selected>{{ selectedEvent?.status }}</mat-chip>
+      </div>
+      <div class="event-status-actions" *ngIf="isLoggedIn">
+        <button mat-stroked-button (click)="step = 1" class="back-btn">
+          <mat-icon>arrow_back</mat-icon> Change Event
+        </button>
+        <button mat-raised-button color="warn" *ngIf="selectedEvent?.status === 'INIT'"
+                [disabled]="statusChanging" (click)="advanceStatus('STARTED')">
+          <mat-icon>play_arrow</mat-icon> Mark as STARTED
+        </button>
+      </div>
+    </div>
+
+    <div class="roster-layout">
+
+      <!-- Available players -->
+      <div class="roster-panel">
+        <div class="panel-header">
+          <mat-icon>people</mat-icon>
+          <span>Available Players ({{ filteredAvailable.length }})</span>
+        </div>
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Search</mat-label>
+          <input matInput [(ngModel)]="playerSearch" placeholder="Name..." />
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <div class="player-list">
+          <div class="player-row" *ngFor="let p of filteredAvailable"
+               [class.selected]="selectedAvailable.has(p.id!)"
+               (click)="toggleAvailable(p.id!)">
+            <mat-checkbox [checked]="selectedAvailable.has(p.id!)"></mat-checkbox>
+            <div class="player-info">
+              <span class="player-name">{{ p.fName }} {{ p.lName }}</span>
+              <span class="player-meta">GHIN {{ p.handicap ?? '—' }} · PGC {{ p.pgcHandicap ?? '—' }} · {{ p.gender || '?' }}</span>
+            </div>
+          </div>
+          <div *ngIf="filteredAvailable.length === 0" class="empty-list">No players found</div>
+        </div>
+
+        <div class="panel-footer">
+          <button mat-raised-button color="primary" [disabled]="selectedAvailable.size === 0" (click)="addSelected()">
+            <mat-icon>add</mat-icon> Add Selected ({{ selectedAvailable.size }})
+          </button>
+        </div>
+      </div>
+
+      <!-- Arrow -->
+      <div class="roster-arrow">
+        <mat-icon>arrow_forward</mat-icon>
+      </div>
+
+      <!-- Roster -->
+      <div class="roster-panel">
+        <div class="panel-header">
+          <mat-icon>group</mat-icon>
+          <span>Event Roster ({{ rosterPlayers.length }})</span>
+        </div>
+
+        <div class="player-list">
+          <div class="player-row roster-row" *ngFor="let p of rosterPlayers">
+            <div class="player-info">
+              <span class="player-name">{{ p.fName }} {{ p.lName }}</span>
+              <span class="player-meta">GHIN {{ p.handicap ?? '—' }} · PGC {{ p.pgcHandicap ?? '—' }} · {{ p.gender || '?' }}</span>
+            </div>
+            <button mat-icon-button color="warn" (click)="removeFromRoster(p)" *ngIf="isLoggedIn">
+              <mat-icon>remove_circle_outline</mat-icon>
+            </button>
+          </div>
+          <div *ngIf="rosterPlayers.length === 0" class="empty-list">No players added yet</div>
+        </div>
+
+        <div class="panel-footer">
+          <button mat-raised-button color="accent" [disabled]="rosterPlayers.length === 0" (click)="goToStep3()">
+            Next: Generate Groups <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── STEP 3: Groups ── -->
+  <div *ngIf="step === 3" class="step-panel">
+
+    <!-- Event status bar -->
+    <div class="event-status-bar">
+      <div class="event-status-info">
+        <mat-icon>event</mat-icon>
+        <span class="event-name-label">{{ selectedEvent?.eventName }}</span>
+        <mat-chip [color]="statusColor(selectedEvent?.status)" selected>{{ selectedEvent?.status }}</mat-chip>
+      </div>
+      <div class="event-status-actions">
+        <button mat-stroked-button (click)="isLoggedIn ? step = 2 : step = 1" class="back-btn">
+          <mat-icon>arrow_back</mat-icon> {{ isLoggedIn ? 'Back to Roster' : 'Back to Events' }}
+        </button>
+        <button mat-raised-button color="warn" *ngIf="selectedEvent?.status === 'INIT' && isLoggedIn"
+                [disabled]="statusChanging" (click)="advanceStatus('STARTED')">
+          <mat-icon>play_arrow</mat-icon> Mark as STARTED
+        </button>
+      </div>
+    </div>
+
+    <!-- Generate controls -->
+    <div class="generate-bar" *ngIf="isLoggedIn">
+      <mat-form-field appearance="outline" class="strategy-select">
+        <mat-label>Grouping Strategy</mat-label>
+        <mat-select [(ngModel)]="selectedStrategy">
+          <mat-option *ngFor="let s of strategies" [value]="s.value">{{ s.label }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-stroked-button color="warn" *ngIf="groups.length > 0" (click)="clearGroups()">
+        <mat-icon>delete_sweep</mat-icon> Clear Groups
+      </button>
+
+      <button mat-raised-button color="primary" (click)="generateGroups()" [disabled]="generating">
+        <mat-icon>shuffle</mat-icon>
+        {{ generating ? 'Generating...' : (groups.length > 0 ? 'Re-generate Groups' : 'Generate Groups') }}
+      </button>
+    </div>
+
+    <!-- Re-generate warning -->
+    <mat-card *ngIf="showRegenerateWarning" class="warning-card" appearance="outlined">
+      <mat-card-content>
+        <mat-icon class="warn-icon">warning</mat-icon>
+        <strong>This will delete the current groups and regenerate them.</strong>
+        Any manual tee time assignments will be lost.
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button (click)="showRegenerateWarning = false">Cancel</button>
+        <button mat-raised-button color="warn" (click)="confirmRegenerate()">Yes, Regenerate</button>
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- Groups grid -->
+    <div *ngIf="groups.length === 0 && !generating && isLoggedIn" class="empty-msg">
+      No groups yet. Select a strategy and click Generate Groups.
+    </div>
+    <div *ngIf="groups.length === 0 && !generating && !isLoggedIn" class="empty-msg">
+      <mat-icon style="vertical-align:middle;margin-right:6px;color:#94a3b8">hourglass_empty</mat-icon>
+      Grouping is in progress. Check back soon.
+    </div>
+
+    <div class="groups-grid">
+      <mat-card class="group-card" *ngFor="let g of groups; let gi = index" appearance="outlined">
+        <mat-card-header>
+          <!-- Editable group name -->
+          <div class="group-name-row">
+            <span *ngIf="!g.editingName" class="group-name" (click)="g.editingName = isLoggedIn">
+              {{ g.teeName }}
+            </span>
+            <input *ngIf="g.editingName" class="inline-input" [(ngModel)]="g.teeName"
+                   (blur)="saveTee(g)" (keyup.enter)="saveTee(g)" />
+            <mat-icon class="edit-hint" *ngIf="isLoggedIn && !g.editingName"
+                      (click)="g.editingName = true">edit</mat-icon>
+          </div>
+
+          <!-- Tee time -->
+          <div class="tee-time-row">
+            <mat-icon class="tee-time-icon">schedule</mat-icon>
+            <span *ngIf="!g.editingTime" class="tee-time-display" (click)="g.editingTime = isLoggedIn">
+              {{ g.teeTime || 'Set tee time' }}
+            </span>
+            <input *ngIf="g.editingTime" class="inline-input tee-time-input" [(ngModel)]="g.teeTime"
+                   placeholder="e.g. 8:00 AM" (blur)="saveTee(g)" (keyup.enter)="saveTee(g)" />
+            <mat-icon class="edit-hint" *ngIf="isLoggedIn && !g.editingTime"
+                      (click)="g.editingTime = true">edit</mat-icon>
+          </div>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="group-players">
+            <div class="group-player-row" *ngFor="let p of g.players">
+              <div class="group-player-info">
+                <span class="group-player-name">{{ p.playerName }}</span>
+                <span class="group-player-meta">
+                  GHIN {{ p.handicap ?? '—' }} · PGC {{ p.pgcHandicap ?? '—' }}
+                  <span class="gender-badge" [class.female]="p.gender === 'F'">{{ p.gender || '?' }}</span>
+                </span>
+              </div>
+              <!-- Move to group -->
+              <mat-select class="move-select" placeholder="Move to..." *ngIf="isLoggedIn && groups.length > 1"
+                          (selectionChange)="movePlayer(p, $event.value)">
+                <mat-option *ngFor="let og of groups" [value]="og.teeId"
+                            [disabled]="og.teeId === g.teeId">
+                  {{ og.teeName }}
+                </mat-option>
+              </mat-select>
+              <button mat-icon-button color="warn" *ngIf="isLoggedIn"
+                      (click)="removePlayerFromTee(p)" title="Remove from tee">
+                <mat-icon>person_remove</mat-icon>
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+
+        <mat-card-footer class="group-footer">
+          <span class="player-count">{{ g.players.length }} player{{ g.players.length !== 1 ? 's' : '' }}</span>
+          <button mat-stroked-button color="warn" *ngIf="isLoggedIn && g.players.length === 0"
+                  (click)="removeTee(g)" style="font-size:12px;height:28px;line-height:28px;">
+            <mat-icon style="font-size:14px;height:14px;width:14px;">delete</mat-icon> Remove Tee
+          </button>
+        </mat-card-footer>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- ── Unassigned players (step 3, admin only) ── -->
+  <div *ngIf="step === 3 && isLoggedIn && unassignedPlayers.length > 0" class="unassigned-panel">
+    <div class="panel-header">
+      <mat-icon>person_off</mat-icon>
+      <span>Unassigned Players ({{ unassignedPlayers.length }})</span>
+    </div>
+    <div class="player-list">
+      <div class="player-row roster-row" *ngFor="let p of unassignedPlayers">
+        <div class="player-info">
+          <span class="player-name">{{ p.fName }} {{ p.lName }}</span>
+          <span class="player-meta">GHIN {{ p.handicap ?? '—' }} · PGC {{ p.pgcHandicap ?? '—' }} · {{ p.gender || '?' }}</span>
+        </div>
+        <button mat-raised-button color="primary" (click)="assignPlayer(p)">
+          <mat-icon>person_add</mat-icon> Assign
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Course Management (admin only, always visible) ── -->
+  <mat-expansion-panel class="course-panel" *ngIf="isLoggedIn" (opened)="loadCourses()">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <mat-icon>golf_course</mat-icon>&nbsp; Manage Courses
+      </mat-panel-title>
+      <mat-panel-description>Add, edit, or remove golf courses</mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <!-- Edit form -->
+    <div *ngIf="editingCourse" class="course-form">
+      <h3 class="course-form-title">{{ isNewCourse ? 'Add Course' : 'Edit Course' }}</h3>
+      <div class="course-form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Club Name</mat-label>
+          <input matInput [(ngModel)]="editingCourse.clubName" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Course Name</mat-label>
+          <input matInput [(ngModel)]="editingCourse.courseName" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Address</mat-label>
+          <input matInput [(ngModel)]="editingCourse.address" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>City</mat-label>
+          <input matInput [(ngModel)]="editingCourse.city" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>State</mat-label>
+          <input matInput [(ngModel)]="editingCourse.state" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Phone</mat-label>
+          <input matInput [(ngModel)]="editingCourse.phone" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Website</mat-label>
+          <input matInput [(ngModel)]="editingCourse.website" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Par</mat-label>
+          <input matInput type="number" [(ngModel)]="editingCourse.parNumber" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Slope</mat-label>
+          <input matInput type="number" [(ngModel)]="editingCourse.slop" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Rating</mat-label>
+          <input matInput type="number" step="0.1" [(ngModel)]="editingCourse.rating" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Distance (yards)</mat-label>
+          <input matInput type="number" [(ngModel)]="editingCourse.distance" />
+        </mat-form-field>
+      </div>
+      <div class="course-form-actions">
+        <button mat-button (click)="cancelCourseEdit()">Cancel</button>
+        <button mat-raised-button color="primary" (click)="saveCourse()">
+          <mat-icon>save</mat-icon> Save
+        </button>
+      </div>
+    </div>
+
+    <!-- Course grid -->
+    <div *ngIf="!editingCourse">
+      <div class="course-grid-header">
+        <button mat-raised-button color="primary" (click)="openNewCourse()">
+          <mat-icon>add</mat-icon> Add Course
+        </button>
+      </div>
+      <div *ngIf="courses.length === 0" class="empty-msg">No courses yet. Click Add Course to start.</div>
+      <table class="course-table" *ngIf="courses.length > 0">
+        <thead>
+          <tr>
+            <th>Club / Course</th>
+            <th>Location</th>
+            <th>Par</th>
+            <th>Slope</th>
+            <th>Rating</th>
+            <th>Phone</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of courses">
+            <td>
+              <div class="course-name">{{ c.clubName }}</div>
+              <div class="course-sub">{{ c.courseName }}</div>
+            </td>
+            <td>{{ c.city }}{{ c.city && c.state ? ', ' : '' }}{{ c.state }}</td>
+            <td>{{ c.parNumber ?? '—' }}</td>
+            <td>{{ c.slop ?? '—' }}</td>
+            <td>{{ c.rating ?? '—' }}</td>
+            <td>{{ c.phone || '—' }}</td>
+            <td class="course-actions">
+              <button mat-icon-button color="primary" (click)="editCourse(c)"><mat-icon>edit</mat-icon></button>
+              <button mat-icon-button color="warn" (click)="deleteCourse(c.id!)"><mat-icon>delete</mat-icon></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </mat-expansion-panel>
+
+</div>

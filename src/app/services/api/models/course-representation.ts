@@ -6,4 +6,9 @@ export interface CourseRepresentation {
   distance?: number;
   slop?: number;
   rating?: number;
+  address?: string;
+  city?: string;
+  state?: string;
+  phone?: string;
+  website?: string;
 }

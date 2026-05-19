@@ -1,363 +1,292 @@
 import { Component, OnInit } from '@angular/core';
-import { DualListComponent } from '../../../../node_modules/angular-dual-listbox';
 import { PlayerService } from '../../services/player.service';
-import { PlayerRepresentation } from '../../services/api/models/player-representation';
-import { FormBuilder } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
 import { EventRepresentation } from '../../services/api/models/event-representation';
-import { throwToolbarMixedModesError } from '../../../../node_modules/@angular/material/toolbar';
-import { Tee } from 'src/app/services/api/models/tee';
-import { MatTabGroup } from '../../../../node_modules/@angular/material/tabs';
-import { Router } from '../../../../node_modules/@angular/router';
+import { PlayerRepresentation } from '../../services/api/models/player-representation';
+import { CourseRepresentation } from '../../services/api/models/course-representation';
+
+interface TeeGroup {
+  teeId: number;
+  teeName: string;
+  teeTime: string;
+  players: TeePlayer[];
+  editingName: boolean;
+  editingTime: boolean;
+}
+
+interface TeePlayer {
+  playerScoreId: number;
+  playerId: number;
+  playerName: string;
+  handicap: number;
+  pgcHandicap: number;
+  gender: string;
+}
+
+const STRATEGIES = [
+  { value: 'GHIN_BEST_TO_WORST',          label: 'GHIN Handicap — Best to Worst' },
+  { value: 'GHIN_BEST_TO_WORST_BY_GENDER', label: 'GHIN Handicap — Best to Worst (by Gender)' },
+  { value: 'PGC_BEST_TO_WORST',            label: 'PGC Handicap — Best to Worst' },
+  { value: 'PGC_BEST_TO_WORST_BY_GENDER',  label: 'PGC Handicap — Best to Worst (by Gender)' },
+  { value: 'GHIN_BEST_WITH_WORST',         label: 'GHIN Handicap — Best + Worst (Balanced)' },
+  { value: 'PGC_BEST_WITH_WORST',          label: 'PGC Handicap — Best + Worst (Balanced)' },
+  { value: 'RANDOM',                       label: 'Random' },
+];
 
 @Component({
   selector: 'app-gameplan',
   templateUrl: './gameplan.component.html',
   styleUrls: ['./gameplan.component.css']
 })
-export class GameplanComponent implements OnInit{
+export class GameplanComponent implements OnInit {
 
-//source = [ 'Pawn', 'Rook', 'Knight', 'Bishop', 'Queen', 'King' ];
-//target = [];
+  step = 1;
+  strategies = STRATEGIES;
+  selectedStrategy = 'GHIN_BEST_TO_WORST';
+  isLoggedIn = false;
 
-constructor(
-  private service: PlayerService, private builder: FormBuilder, private router:Router
-) {
+  events: EventRepresentation[] = [];
+  selectedEvent: EventRepresentation | null = null;
 
-}
-groupingMethod: number=1;
-tab = 1;
-keepSorted = true;
-key: string='';
-display: string[]=[];
-filter = false;
-source: Array<PlayerRepresentation>=[];
-confirmed: Array<PlayerRepresentation>=[];
-sortedPlayers: Array<PlayerRepresentation>=[];
-userAdd = '';
-disabled = false;
+  allActivePlayers: PlayerRepresentation[] = [];
+  rosterPlayers: PlayerRepresentation[] = [];
+  availablePlayers: PlayerRepresentation[] = [];
+  playerSearch = '';
+  selectedAvailable: Set<number> = new Set();
 
-season: string='2024';
-eventName: string='';
-eventDesc: string='';
-course: string='';
-eventNameShow:string='';
-eventDate:string='';
+  groups: TeeGroup[] = [];
+  unassignedPlayers: PlayerRepresentation[] = [];
+  generating = false;
+  showRegenerateWarning = false;
 
-totalTeamAHandicap: number = 0;
-totalTeamA3Score: number = 0;
-totalTeamBHandicap: number = 0;
-totalTeamB3Score: number = 0;
+  saving = false;
+  statusChanging = false;
 
+  constructor(private service: PlayerService, private authService: AuthService) {}
 
-isSubmitted = false;
+  ngOnInit() {
+    this.authService.getStatus().subscribe(s => { this.isLoggedIn = s.loggedIn; });
+    this.service.getAllEvent().subscribe((events: EventRepresentation[]) => {
+      this.events = (events || []).filter((e: EventRepresentation) => e.status === 'INIT' || e.status === 'STARTED');
+    });
+    this.service.getAllPlayer().subscribe(players => {
+      this.allActivePlayers = (players || []).filter(p => p.isActive);
+    });
+  }
 
-event1: EventRepresentation = new EventRepresentation();
+  // ── Step 1: Event selection ───────────────────────────────────────────────
 
-
-sourceLeft = true;
-format: any = DualListComponent.DEFAULT_FORMAT;
-
-private sourcePlayers: Array<PlayerRepresentation>=[];
-
-private confirmedPlayers: Array<PlayerRepresentation>=[];
-
-players: Array<PlayerRepresentation> = [];
-
-numberOfTees: number=1;
-totalNumberOfTees: number=0;
-teeList: Array<Tee>=[];
-
-
-ngOnInit() {
-this.doReset() ;
-this.event1.eventName='test';
-
-}
-
-private usePlayers() {
-  this.key = 'id';
-  //this.display =   'fName';  // [ 'fName', 'fName' ];
-  this.display =   ['fName', 'lName',  'chineseNickName'];
-  this.keepSorted = true;
-  this.source = this.sourcePlayers;
-  this.confirmed = this.confirmedPlayers;
-
-}
-doReset() {
-console.log('in doreset');
-
-  this.service.getAllPlayer()
-  .subscribe({
-    next: (result) => {
-      this.players = result;
-      console.log('players=='+this.players);
-      this.sourcePlayers = this.players;
-      this.confirmedPlayers = new Array<PlayerRepresentation>();
-      this.usePlayers();
-    },
-    error: (error) => {
-      // Handle errors if any
-      console.error('error=', error.status);
-      if (error.status==0) {
-        window.location.href = 'https://shiyuan.club/oauth2/authorization/cognito';
-      }
-      
+  selectEvent(event: EventRepresentation) {
+    this.selectedEvent = event;
+    this.groups = [];
+    if (!this.isLoggedIn) {
+      this.step = 3;
+      this.loadGroups();
+    } else {
+      this.step = 2;
+      this.loadRoster();
     }
-  });
-
-}
-
-
-
-filterBtn() {
-  return (this.filter ? 'Hide Filter' : 'Show Filter');
-}
-
-doDisable() {
-  this.disabled = !this.disabled;
-}
-
-disableBtn() {
-  return (this.disabled ? 'Enable' : 'Disabled');
-}
-
-swapDirection() {
-  this.sourceLeft = !this.sourceLeft;
-  this.format.direction = this.sourceLeft ? DualListComponent.LTR : DualListComponent.RTL;
-}
-
-
-dateChanged($event:any) {
-  let date: Date = new Date($event.value);
-  this.eventName=date.toDateString();
-  this.eventDate=date.toDateString();
-}
-
-onGroupingSubmit(grouptab: MatTabGroup) {
-  this.isSubmitted=true;
-  //this.event1.player=this.confirmed;
-  this.event1.eventName=this.eventName;
-  this.event1.eventDesc=this.eventDesc;
-  this.event1.course=this.course;
-  this.event1.eventDate=this.eventDate;
-  this.event1.season=this.season;
-
-  grouptab.selectedIndex=1;
-
-  //this.teeList.length=0;
-
-    this.sortedPlayers = this.confirmed.sort(function(a,b){
-    return (a.last3GameAvg ?? 0) > (b.last3GameAvg ?? 0) ? 1 : (a.last3GameAvg ?? 0) < (b.last3GameAvg ?? 0) ? -1 : 0
-   })
-
-   for (var player of this.sortedPlayers) {
-    console.log("player="+player.fName);
   }
 
-  this.numberOfTees = Math.ceil(this.sortedPlayers.length/4);
-  console.log("numberOfTees="+this.numberOfTees);
+  // ── Step 2: Roster ────────────────────────────────────────────────────────
 
+  loadRoster() {
+    if (!this.selectedEvent?.id) return;
+    this.service.getRosterPlayers(this.selectedEvent.id).subscribe(roster => {
+      this.rosterPlayers = roster || [];
+      this.refreshAvailable();
+    });
+  }
 
+  refreshAvailable() {
+    const rosterIds = new Set(this.rosterPlayers.map(p => p.id!));
+    this.availablePlayers = this.allActivePlayers.filter(p => !rosterIds.has(p.id!));
+    this.selectedAvailable.clear();
+  }
 
+  get filteredAvailable() {
+    const q = this.playerSearch.toLowerCase();
+    return this.availablePlayers.filter(p =>
+      `${p.fName} ${p.lName}`.toLowerCase().includes(q) ||
+      (p.chineseNickName || '').toLowerCase().includes(q)
+    );
+  }
 
-  for(let i=0;i<this.numberOfTees;i++) {
-    let tee = new Tee();
-    tee.teeName =  (i+1+this.totalNumberOfTees).toString();
+  toggleAvailable(id: number) {
+    if (this.selectedAvailable.has(id)) this.selectedAvailable.delete(id);
+    else this.selectedAvailable.add(id);
+  }
 
-   
+  addSelected() {
+    if (!this.selectedEvent?.id || this.selectedAvailable.size === 0) return;
+    const ids = Array.from(this.selectedAvailable);
+    this.service.addPlayersToRoster(this.selectedEvent.id, ids).subscribe(() => this.loadRoster());
+  }
 
-      var teamAHandicap1 = 0;
-      var teamAHandicap2 = 0;
+  removeFromRoster(player: PlayerRepresentation) {
+    if (!this.selectedEvent?.id) return;
+    this.service.removePlayerFromRoster(this.selectedEvent.id, player.id!).subscribe(() => this.loadRoster());
+  }
 
-      var teamBHandicap1 = 0;
-      var teamBHandicap2 = 0;
-      if (this.sortedPlayers[i*4].handicap !==undefined) {
-        teamAHandicap1 = this.sortedPlayers[i*4].handicap!;
-      }
+  goToStep3() {
+    this.step = 3;
+    this.loadGroups();
+  }
 
-      if (this.sortedPlayers[i*4+3]!==undefined && this.sortedPlayers[i*4+3].handicap !==undefined) {
-        teamAHandicap2 = this.sortedPlayers[i*4+3].handicap!;
-      }
+  // ── Step 3: Groups ────────────────────────────────────────────────────────
 
-      if (this.sortedPlayers[i*4+1]!==undefined  && this.sortedPlayers[i*4+1].handicap !==undefined) {
-        teamBHandicap1 = this.sortedPlayers[i*4+1].handicap!;
-      }
+  loadGroups() {
+    if (!this.selectedEvent?.id) return;
+    this.service.getGroups(this.selectedEvent.id).subscribe(groups => {
+      this.groups = this.mapGroups(groups);
+    });
+    if (this.isLoggedIn) this.loadUnassigned();
+  }
 
-      if (this.sortedPlayers[i*4+2]!==undefined && this.sortedPlayers[i*4+2].handicap !==undefined) {
-        teamBHandicap2 = this.sortedPlayers[i*4+2].handicap!;
-      }
+  loadUnassigned() {
+    if (!this.selectedEvent?.id) return;
+    this.service.getUnassignedPlayers(this.selectedEvent.id).subscribe(players => {
+      this.unassignedPlayers = players || [];
+    });
+  }
 
+  removePlayerFromTee(player: TeePlayer) {
+    this.service.removePlayerFromTee(player.playerScoreId).subscribe(() => this.loadGroups());
+  }
 
-//-------------------------------------------------------------------------------------------------------
+  removeTee(group: TeeGroup) {
+    this.service.deleteTee(group.teeId).subscribe(() => this.loadGroups());
+  }
 
-    var teamA3Score1 = 0;
-    var teamA3Score2 = 0;
+  assignPlayer(player: PlayerRepresentation) {
+    if (!this.selectedEvent?.id) return;
+    this.service.assignPlayer(this.selectedEvent.id, player.id!).subscribe(() => this.loadGroups());
+  }
 
-    var teamB3Score1 = 0;
-    var teamB3Score2 = 0;
-    if (this.sortedPlayers[i*4].last3GameAvg !==undefined) {
-      teamA3Score1 = this.sortedPlayers[i*4].last3GameAvg!;
+  clearGroups() {
+    if (!this.selectedEvent?.id) return;
+    this.service.clearGroups(this.selectedEvent.id).subscribe(() => {
+      this.groups = [];
+    });
+  }
+
+  generateGroups() {
+    if (this.groups.length > 0) { this.showRegenerateWarning = true; return; }
+    this.doGenerate();
+  }
+
+  confirmRegenerate() {
+    this.showRegenerateWarning = false;
+    this.doGenerate();
+  }
+
+  doGenerate() {
+    if (!this.selectedEvent?.id) return;
+    this.generating = true;
+    this.service.generateGroups(this.selectedEvent.id, this.selectedStrategy).subscribe({
+      next: () => { this.loadGroups(); this.generating = false; },
+      error: () => { this.generating = false; }
+    });
+  }
+
+  mapGroups(raw: any[]): TeeGroup[] {
+    const groups = (raw || []).map(g => ({
+      teeId: g.teeId,
+      teeName: g.teeName,
+      teeTime: g.teeTime || '',
+      players: g.players || [],
+      editingName: false,
+      editingTime: false,
+    }));
+    return this.sortGroups(groups);
+  }
+
+  private parseTeeTime(t: string): number {
+    if (!t) return Infinity;
+    const m = t.match(/(\d+):(\d+)\s*(AM|PM)?/i);
+    if (!m) return Infinity;
+    let h = parseInt(m[1]), min = parseInt(m[2]);
+    const ap = (m[3] || '').toUpperCase();
+    if (ap === 'PM' && h !== 12) h += 12;
+    if (ap === 'AM' && h === 12) h = 0;
+    return h * 60 + min;
+  }
+
+  private sortGroups(groups: TeeGroup[]): TeeGroup[] {
+    return groups.sort((a, b) => {
+      const ta = this.parseTeeTime(a.teeTime), tb = this.parseTeeTime(b.teeTime);
+      if (ta !== tb) return ta - tb;
+      return a.teeName.localeCompare(b.teeName);
+    });
+  }
+
+  saveTee(group: TeeGroup) {
+    this.service.updateTee(group.teeId, { teeName: group.teeName, teeTime: group.teeTime }).subscribe(() => {
+      group.editingName = false;
+      group.editingTime = false;
+      this.groups = this.sortGroups([...this.groups]);
+    });
+  }
+
+  movePlayer(player: TeePlayer, targetTeeId: number) {
+    this.service.movePlayerToGroup(player.playerScoreId, targetTeeId).subscribe(() => this.loadGroups());
+  }
+
+  // ── Event status ──────────────────────────────────────────────────────────
+
+  advanceStatus(status: string) {
+    if (!this.selectedEvent?.id) return;
+    this.statusChanging = true;
+    this.service.updateEventStatus(this.selectedEvent.id, status).subscribe({
+      next: () => {
+        this.selectedEvent!.status = status;
+        this.statusChanging = false;
+      },
+      error: () => { this.statusChanging = false; }
+    });
+  }
+
+  statusColor(status: string | undefined) {
+    switch (status) {
+      case 'INIT':    return 'accent';
+      case 'STARTED': return 'primary';
+      case 'FINISHED': return 'warn';
+      default: return '';
     }
-
-    if (this.sortedPlayers[i*4+3]!==undefined && this.sortedPlayers[i*4+3].last3GameAvg !==undefined) {
-      teamA3Score2 = this.sortedPlayers[i*4+3].last3GameAvg!;
-    }
-
-    if (this.sortedPlayers[i*4+1]!==undefined  && this.sortedPlayers[i*4+1].last3GameAvg !==undefined) {
-      teamB3Score1 = this.sortedPlayers[i*4+1].last3GameAvg!;
-    }
-
-    if (this.sortedPlayers[i*4+2]!==undefined && this.sortedPlayers[i*4+2].last3GameAvg !==undefined) {
-      teamB3Score2 = this.sortedPlayers[i*4+2].last3GameAvg!;
-    }
- 
-
-    this.teeList.push(tee);
   }
 
+  // ── Course management ─────────────────────────────────────────────────────
 
-this.totalTeamAHandicap= 0;
-this.totalTeamA3Score = 0;
-this.totalTeamBHandicap = 0;
-this.totalTeamB3Score = 0;
+  courses: CourseRepresentation[] = [];
+  editingCourse: CourseRepresentation | null = null;
+  isNewCourse = false;
 
-for (let i=0; i<this.teeList.length; i++) {
-
-}
-this.totalTeamAHandicap=this.totalTeamAHandicap/this.teeList.length;
-this.totalTeamBHandicap=this.totalTeamBHandicap/this.teeList.length;
-this.totalTeamA3Score=this.totalTeamA3Score/this.teeList.length;
-this.totalTeamB3Score=this.totalTeamB3Score/this.teeList.length;
-
-
-
-this.totalTeamAHandicap=Math.round(this.totalTeamAHandicap * 100) / 100;
-this.totalTeamBHandicap=Math.round(this.totalTeamBHandicap * 100) / 100;
-
-this.totalTeamA3Score=Math.round(this.totalTeamA3Score* 100) / 100;
-this.totalTeamB3Score=Math.round(this.totalTeamB3Score * 100) / 100;
-
-
-  console.log("teeList="+ JSON.stringify(this.teeList, null, 4));
-
-
-
-
-}
-
-eventForm = this.builder.group({
-  eventName: this.builder.control(this.eventNameShow),
-  eventDesc: this.builder.control('test'),
-  season:this.builder.control(''),
-  course:this.builder.control(''),
-  groupMethod:this.builder.control('')
-
-
-
-});
-
-
-onTabClick(event:any) {
-  console.log('event='+event.index);
-
-}
-
-onSubmitGroup() {
-  console.log('onSubmitGroup', this.teeList[0]);
-  this.event1.teeList=this.teeList;
-  this.service.createEventTee(this.event1).subscribe(res => {
-    console.log("calling event..."+res);
-    this.router.navigate(['gamerecord']);
-   // if(res.status == 200){
-      //this.router.navigate(['/'])
-      //alert(res.status);
-    //}
-    //else{
-      //alert(res.status);
-    //}
-    console.log("calling event...");
-  },
-
-    err => console.log("calling event...err"+err)
-  );
-
-
-
-}
-
-
-manualTeeList: Array<Tee>=[];
-addTee() {
-  console.log("adding tee:"+JSON.stringify(this.confirmed));
-  let tee = new Tee();
-  tee.teeName =  (this.totalNumberOfTees+1).toString();
-  this.totalNumberOfTees=this.totalNumberOfTees+1;
-
-
-  var teamAHandicap1 = 0;
-  var teamAHandicap2 = 0;
-
-  var teamBHandicap1 = 0;
-  var teamBHandicap2 = 0;
-  if (this.confirmed[0].handicap !==undefined) {
-    teamAHandicap1 = this.confirmed[0].handicap!;
+  loadCourses() {
+    this.service.getCourses().subscribe(c => { this.courses = c || []; });
   }
 
-  if (this.confirmed[1]!==undefined && this.confirmed[1].handicap !==undefined) {
-    teamAHandicap2 = this.confirmed[1].handicap!;
+  openNewCourse() {
+    this.editingCourse = {};
+    this.isNewCourse = true;
   }
 
-  if (this.confirmed[2]!==undefined  && this.confirmed[2].handicap !==undefined) {
-    teamBHandicap1 = this.confirmed[2].handicap!;
+  editCourse(c: CourseRepresentation) {
+    this.editingCourse = { ...c };
+    this.isNewCourse = false;
   }
 
-  if (this.confirmed[3]!==undefined && this.confirmed[3].handicap !==undefined) {
-    teamBHandicap2 = this.confirmed[3].handicap!;
+  saveCourse() {
+    if (!this.editingCourse) return;
+    const save$ = this.isNewCourse
+      ? this.service.createCourse(this.editingCourse)
+      : this.service.updateCourse(this.editingCourse.id!, this.editingCourse);
+    save$.subscribe(() => { this.editingCourse = null; this.loadCourses(); });
   }
 
+  deleteCourse(id: number) {
+    if (!confirm('Delete this course?')) return;
+    this.service.deleteCourse(id).subscribe(() => this.loadCourses());
+  }
 
-//-------------------------------------------------------------------------------------------------------
-
-var teamA3Score1 = 0;
-var teamA3Score2 = 0;
-
-var teamB3Score1 = 0;
-var teamB3Score2 = 0;
-if (this.confirmed[0].last3GameAvg !==undefined) {
-  teamA3Score1 = this.confirmed[0].last3GameAvg!;
-}
-
-if (this.confirmed[1]!==undefined && this.confirmed[1].last3GameAvg !==undefined) {
-  teamA3Score2 = this.confirmed[1].last3GameAvg!;
-}
-
-if (this.confirmed[2]!==undefined  && this.confirmed[2].last3GameAvg !==undefined) {
-  teamB3Score1 = this.confirmed[2].last3GameAvg!;
-}
-
-if (this.confirmed[3]!==undefined && this.confirmed[3].last3GameAvg !==undefined) {
-  teamB3Score2 = this.confirmed[3].last3GameAvg!;
-}
-
-
-
-
-
-  this.teeList.push(tee)
-  this.confirmed = [];
-
-}
-
-resetTee() {
-  this.teeList.length=0;
-  this.confirmed = [];
-
-  this.totalTeamAHandicap = 0;
-  this.totalTeamA3Score = 0;
-  this.totalTeamBHandicap = 0;
-  this.totalTeamB3Score = 0;
-  this.totalNumberOfTees = 0;
-  this.numberOfTees = 1;
-}
-
+  cancelCourseEdit() { this.editingCourse = null; }
 }

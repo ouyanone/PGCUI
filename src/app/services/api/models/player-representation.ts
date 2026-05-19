@@ -17,4 +17,5 @@ export interface PlayerRepresentation {
   isActive?: boolean;
   desc?: string;
   icon?: string;
+  gender?: string;
 }

@@ -25,6 +25,7 @@ export interface EventScoreDetail {
   eventName?: string;
   eventDate?: string;
   courseName?: string;
+  pars?: number[];
   scores?: PlayerScoreRow[];
   rewards?: RewardRow[];
 }

@@ -187,4 +187,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (val != null && val <= -2) return 'score-eagle';
     return '';
   }
+
+  parSum(pars: number[] | undefined, from: number, to: number): number {
+    if (!pars) return 0;
+    return pars.slice(from, to).reduce((a, b) => a + (b ?? 0), 0);
+  }
 }

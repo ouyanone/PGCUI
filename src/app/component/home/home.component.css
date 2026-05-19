@@ -381,6 +381,10 @@
 }
 .scorecard-table th.sortable { cursor: pointer; user-select: none; }
 .scorecard-table th.sortable:hover { background: #e2e8f0; }
+.par-row { background: #f0f4ff !important; }
+.par-row:hover { background: #e8eeff !important; }
+.par-label { font-weight: 700 !important; color: #3730a3 !important; font-style: italic; }
+.par-cell { color: #3730a3; font-weight: 600; font-size: 11px; }
 .sort-icon { font-size: 14px; height: 14px; width: 14px; vertical-align: middle; opacity: 0.6; }
 
 /* ── Rewards ── */

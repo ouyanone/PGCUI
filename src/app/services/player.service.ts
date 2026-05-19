@@ -210,4 +210,72 @@ export class PlayerService {
   getCarouselPhotos(count = 20) {
     return this.http.get<any[]>(`${this.baseUrl}webapi/photos/random?count=${count}`);
   }
+
+  // ── Game Plan ─────────────────────────────────────────────────────────────
+
+  getRosterPlayers(eventId: number) {
+    return this.http.get<PlayerRepresentation[]>(`${this.baseUrl}webapi/gameplan/${eventId}/players`);
+  }
+
+  addPlayersToRoster(eventId: number, playerIds: number[]) {
+    return this.http.post(`${this.baseUrl}webapi/admin/gameplan/${eventId}/players`, playerIds, { withCredentials: true });
+  }
+
+  removePlayerFromRoster(eventId: number, playerId: number) {
+    return this.http.delete(`${this.baseUrl}webapi/admin/gameplan/${eventId}/players/${playerId}`, { withCredentials: true });
+  }
+
+  clearGroups(eventId: number) {
+    return this.http.delete(`${this.baseUrl}webapi/admin/gameplan/${eventId}/groups`, { withCredentials: true });
+  }
+
+  getUnassignedPlayers(eventId: number) {
+    return this.http.get<PlayerRepresentation[]>(`${this.baseUrl}webapi/gameplan/${eventId}/unassigned`);
+  }
+
+  removePlayerFromTee(playerScoreId: number) {
+    return this.http.delete(`${this.baseUrl}webapi/admin/gameplan/playerscore/${playerScoreId}`, { withCredentials: true });
+  }
+
+  assignPlayer(eventId: number, playerId: number) {
+    return this.http.post(`${this.baseUrl}webapi/admin/gameplan/${eventId}/players/${playerId}/assign`, {}, { withCredentials: true });
+  }
+
+  generateGroups(eventId: number, strategy: string) {
+    return this.http.post<any[]>(`${this.baseUrl}webapi/admin/gameplan/${eventId}/generate`, { strategy }, { withCredentials: true });
+  }
+
+  getGroups(eventId: number) {
+    return this.http.get<any[]>(`${this.baseUrl}webapi/gameplan/${eventId}/groups`);
+  }
+
+  updateTee(teeId: number, data: { teeName?: string; teeTime?: string }) {
+    return this.http.put(`${this.baseUrl}webapi/admin/gameplan/tee/${teeId}`, data, { withCredentials: true });
+  }
+
+  deleteTee(teeId: number) {
+    return this.http.delete(`${this.baseUrl}webapi/admin/gameplan/tee/${teeId}`, { withCredentials: true });
+  }
+
+  movePlayerToGroup(playerScoreId: number, teeId: number) {
+    return this.http.put(`${this.baseUrl}webapi/admin/gameplan/playerscore/${playerScoreId}/tee/${teeId}`, {}, { withCredentials: true });
+  }
+
+  updateEventStatus(eventId: number, status: string) {
+    return this.http.put(`${this.baseUrl}webapi/admin/events/${eventId}/status`, { status }, { withCredentials: true });
+  }
+
+  // ── Course CRUD ───────────────────────────────────────────────────────────
+
+  createCourse(data: CourseRepresentation) {
+    return this.http.post<CourseRepresentation>(`${this.baseUrl}webapi/admin/courses`, data, { withCredentials: true });
+  }
+
+  updateCourse(id: number, data: CourseRepresentation) {
+    return this.http.put<CourseRepresentation>(`${this.baseUrl}webapi/admin/courses/${id}`, data, { withCredentials: true });
+  }
+
+  deleteCourse(id: number) {
+    return this.http.delete(`${this.baseUrl}webapi/admin/courses/${id}`, { withCredentials: true });
+  }
 }

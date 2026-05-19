@@ -209,6 +209,16 @@
             </tr>
           </thead>
           <tbody>
+            <tr class="par-row" *ngIf="game.pars">
+              <td class="player-col par-label">Par</td>
+              <td *ngFor="let h of [0,1,2,3,4,5,6,7,8]" class="par-cell">{{ game.pars[h] ?? '-' }}</td>
+              <td class="sub-total par-cell">{{ parSum(game.pars, 0, 9) }}</td>
+              <td *ngFor="let h of [9,10,11,12,13,14,15,16,17]" class="par-cell">{{ game.pars[h] ?? '-' }}</td>
+              <td class="sub-total par-cell">{{ parSum(game.pars, 9, 18) }}</td>
+              <td class="total-col par-cell">{{ parSum(game.pars, 0, 18) }}</td>
+              <td></td>
+              <td></td>
+            </tr>
             <tr *ngFor="let s of game.scores">
               <td class="player-col">{{ s.playerName }}</td>
               <td><span [class]="holeClass(s.hole1)">{{ s.hole1 ?? '-' }}</span></td>

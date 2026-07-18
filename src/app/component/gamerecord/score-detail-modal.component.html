@@ -1,175 +1,21 @@
-<div class="home-container">
+<h2 mat-dialog-title class="modal-title">
+  <mat-icon class="modal-title-icon">scoreboard</mat-icon>
+  {{ data.title }}
+  <button mat-icon-button class="modal-close-btn" (click)="close()">
+    <mat-icon>close</mat-icon>
+  </button>
+</h2>
 
-  <!-- Section 1: Hero Banner -->
-  <div class="hero-section">
-    <img class="homeimg" src="/assets/pgc.jpg" alt="PGC Golf Club" />
-    <div class="hero-overlay">
-      <h1>Welcome to The New Jersey Princeton Golf Club</h1>
-      <h2>新泽西普林斯顿高尔夫球俱乐部</h2>
-    </div>
-  </div>
+<mat-dialog-content class="modal-content">
 
-  <!-- Welcome intro -->
-  <div class="welcome-section">
-    <div class="welcome-badge">Est. 2008</div>
-    <h2 class="welcome-heading">Where Golf Meets Community</h2>
-    <div class="welcome-divider">
-      <span class="divider-line"></span>
-      <mat-icon class="divider-icon">sports_golf</mat-icon>
-      <span class="divider-line"></span>
-    </div>
-    <p class="welcome-lead">
-      Nestled in the heart of New Jersey, the Princeton Golf Club has united passionate golfers
-      from across the tri-state area since 2008 — building friendships one fairway at a time.
-    </p>
-    <div class="welcome-columns">
-      <div class="welcome-col">
-        <mat-icon class="welcome-col-icon">event</mat-icon>
-        <h3>Seasonal Tournaments</h3>
-        <p>Every season we host 4 to 5 carefully organized golf events on premier New Jersey courses,
-          welcoming players of all skill levels to compete and celebrate the sport.</p>
-      </div>
-      <div class="welcome-col">
-        <mat-icon class="welcome-col-icon">group</mat-icon>
-        <h3>A Thriving Community</h3>
-        <p>More than just a golf club — we are a family. Connect with fellow enthusiasts,
-          share stories on the 19th hole, and create lasting memories with every round.</p>
-      </div>
-      <div class="welcome-col">
-        <mat-icon class="welcome-col-icon">emoji_events</mat-icon>
-        <h3>Friendly Competition</h3>
-        <p>From flight winners to closest-to-pin awards, our events bring out the best in every
-          player. Join us and see where your game stands among the best in the club.</p>
-      </div>
-    </div>
-  </div>
+  <div *ngFor="let game of data.games; let i = index">
 
-  <!-- Photo Carousel -->
-  <div class="carousel-section" *ngIf="carouselPhotos.length > 0"
-       (mouseenter)="stopCarousel()" (mouseleave)="startCarousel()">
-
-    <div class="carousel-frame">
-      <!-- Ken Burns image layer — *ngIf on img forces animation restart each slide -->
-      <div class="carousel-slide" [class.fading]="carouselFading">
-        <img *ngIf="!carouselFading" class="carousel-img"
-             [src]="carouselPhotoUrl(carouselPhotos[carouselIndex])"
-             [alt]="carouselPhotos[carouselIndex].eventName" />
-      </div>
-
-      <!-- Gradient overlay -->
-      <div class="carousel-overlay"></div>
-
-      <!-- Caption -->
-      <div class="carousel-caption" [class.fading]="carouselFading">
-        <mat-icon class="caption-icon">golf_course</mat-icon>
-        <span>{{ carouselPhotos[carouselIndex].eventName }}</span>
-      </div>
-
-      <!-- Frosted-glass arrows -->
-      <button class="carousel-arrow carousel-prev" (click)="prevSlide()">
-        <mat-icon>chevron_left</mat-icon>
-      </button>
-      <button class="carousel-arrow carousel-next" (click)="nextSlide()">
-        <mat-icon>chevron_right</mat-icon>
-      </button>
-
-      <!-- Slide counter -->
-      <div class="carousel-counter">
-        {{ carouselIndex + 1 }} / {{ carouselPhotos.length }}
-      </div>
-    </div>
-
-    <!-- Animated progress bar — recreated each slide via ngIf toggle -->
-    <div class="carousel-progress-track">
-      <div class="carousel-progress-bar" *ngIf="!carouselFading"></div>
-    </div>
-
-    <!-- Dot strip -->
-    <div class="carousel-dots">
-      <span class="carousel-dot" *ngFor="let p of carouselPhotos; let i = index"
-            [class.active]="i === carouselIndex" (click)="goToSlide(i)"></span>
-    </div>
-
-  </div>
-
-  <!-- Section 2: Latest News -->
-  <div class="section-title">
-    <mat-icon class="section-icon">newspaper</mat-icon>
-    Latest News
-    <a routerLink="/news" class="section-link">View All</a>
-  </div>
-
-  <div class="news-grid" *ngIf="news.length > 0; else noNews">
-    <mat-card class="news-card" *ngFor="let item of news | slice:0:5" appearance="outlined">
-      <mat-card-header>
-        <mat-card-title>{{ item.title }}</mat-card-title>
-        <mat-card-subtitle>{{ item.publishDate | date:'mediumDate' }}</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <p class="news-content">{{ item.content }}</p>
-      </mat-card-content>
-    </mat-card>
-  </div>
-  <ng-template #noNews>
-    <p class="empty-msg">No news available. Check back soon!</p>
-  </ng-template>
-
-  <!-- Section 3: PGC Cup Points Standings -->
-  <div class="section-title">
-    <mat-icon class="section-icon">leaderboard</mat-icon>
-    PGC Cup Points Standings
-    <button mat-raised-button color="accent" class="calc-btn"
-            *ngIf="isLoggedIn" (click)="calculatePoints()" [disabled]="calculating">
-      <mat-icon>calculate</mat-icon>
-      {{ calculating ? 'Calculating...' : 'Calculate Points' }}
-    </button>
-  </div>
-
-  <div class="standings-container">
-<div class="standings-table-wrap">
-      <table class="standings-table">
-        <thead>
-          <tr>
-            <th>Rank</th>
-            <th>Name</th>
-            <th>Points</th>
-            <th>PGC Handicap</th>
-            <th>GHIN</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let p of standings; let i = index" [class.top3]="i < 3">
-            <td class="rank-cell">
-              <span class="rank-badge" [class.gold]="i===0" [class.silver]="i===1" [class.bronze]="i===2">
-                {{ i + 1 }}
-              </span>
-            </td>
-            <td>{{ p.fName }} {{ p.lName }}</td>
-            <td class="points-cell">{{ p.pgcPoints ?? 0 }}</td>
-            <td>{{ p.pgcHandicap }}</td>
-            <td>{{ (p.handicap && p.handicap !== 0) ? p.handicap : 'N/A' }}</td>
-          </tr>
-          <tr *ngIf="standings.length === 0">
-            <td colspan="5" class="empty-msg">No standings yet. Click "Calculate Points" to generate.</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- Section 4: Game Score Details -->
-  <div class="section-title section-title--wide">
-    <mat-icon class="section-icon">scoreboard</mat-icon>
-    Current Season Game Scores
-  </div>
-
-  <div class="game-scores-container" *ngIf="gameScores.length > 0; else noGames">
-    <div *ngFor="let game of gameScores; let i = index">
     <div class="game-separator" *ngIf="i > 0">
       <span class="game-separator-line"></span>
       <mat-icon class="game-separator-icon">sports_golf</mat-icon>
       <span class="game-separator-line"></span>
     </div>
+
     <div class="game-score-block">
       <div class="game-score-header">
         <span class="game-title">{{ game.eventName }}</span>
@@ -180,11 +26,8 @@
         <span class="tournament-badge" *ngIf="game.tournamentName">
           <mat-icon class="tournament-badge-icon">emoji_events</mat-icon>{{ game.tournamentName }}
         </span>
-        <button class="show-photos-btn" *ngIf="eventIdsWithPhotos.has(game.eventId!)"
-                (click)="showEventPhotos(game)">
-          <mat-icon class="photos-btn-icon">photo_library</mat-icon> Show Photos
-        </button>
       </div>
+
       <div class="scorecard-wrap">
         <table class="scorecard-table">
           <thead>
@@ -278,9 +121,7 @@
       <!-- Game Statistics -->
       <div class="game-stats" *ngIf="gameStats[game.eventId!] as stats">
         <div class="stat-card" *ngIf="stats.eagles.length > 0">
-          <div class="stat-header eagle-header">
-            <mat-icon>stars</mat-icon> Eagles
-          </div>
+          <div class="stat-header eagle-header"><mat-icon>stars</mat-icon> Eagles</div>
           <div class="stat-rows">
             <div class="stat-row" *ngFor="let e of stats.eagles; let i = index">
               <span class="stat-rank">{{ i + 1 }}</span>
@@ -289,11 +130,8 @@
             </div>
           </div>
         </div>
-
         <div class="stat-card" *ngIf="stats.birdies.length > 0">
-          <div class="stat-header birdie-header">
-            <mat-icon>flight</mat-icon> Birdies
-          </div>
+          <div class="stat-header birdie-header"><mat-icon>flight</mat-icon> Birdies</div>
           <div class="stat-rows">
             <div class="stat-row" *ngFor="let e of stats.birdies; let i = index">
               <span class="stat-rank">{{ i + 1 }}</span>
@@ -302,11 +140,8 @@
             </div>
           </div>
         </div>
-
         <div class="stat-card" *ngIf="stats.pars.length > 0">
-          <div class="stat-header par-header">
-            <mat-icon>golf_course</mat-icon> Most Pars
-          </div>
+          <div class="stat-header par-header"><mat-icon>golf_course</mat-icon> Most Pars</div>
           <div class="stat-rows">
             <div class="stat-row" *ngFor="let e of stats.pars; let i = index">
               <span class="stat-rank">{{ i + 1 }}</span>
@@ -363,10 +198,12 @@
       </div>
     </div>
 
-    </div>
   </div>
-  <ng-template #noGames>
-    <p class="empty-msg">No completed games this season.</p>
-  </ng-template>
 
-</div>
+  <div *ngIf="data.games.length === 0" class="empty-msg">No score data available.</div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()">Close</button>
+</mat-dialog-actions>

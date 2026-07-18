@@ -1,5 +1,15 @@
-.donation-page {
-  padding: 20px;
+.donation-page { padding: 20px; }
+
+.grid-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.pgc-grid { min-width: 700px; width: 100%; }
+
+@media (max-width: 640px) {
+  .donation-page { padding: 12px 8px; }
+  .page-title { font-size: 18px; }
 }
 
 /* ── Page header ── */

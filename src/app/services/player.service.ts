@@ -7,6 +7,7 @@ import { DonationRepresentation } from '../services/api/models/donation-represen
 import { RewardRepresentation } from '../services/api/models/reward-representation';
 import { PlayerScoreRepresentation } from '../services/api/models/playerscore-representation';
 import { CourseRepresentation } from '../services/api/models/course-representation';
+import { TournamentRepresentation } from '../services/api/models/tournament-representation';
 import { SeasonRepresentation } from '../services/api/models/season-representation';
 import { NewsRepresentation } from '../services/api/models/news-representation';
 import { StandingRepresentation } from '../services/api/models/standing-representation';
@@ -207,8 +208,24 @@ export class PlayerService {
     return this.http.get<EventScoreDetail[]>(`${this.baseUrl}webapi/points/game-scores`);
   }
 
+  getEventScoreDetail(eventId: number) {
+    return this.http.get<EventScoreDetail>(`${this.baseUrl}webapi/points/game-scores/event/${eventId}`);
+  }
+
+  getTournamentScoreDetails(tournamentId: number) {
+    return this.http.get<EventScoreDetail[]>(`${this.baseUrl}webapi/points/game-scores/tournament/${tournamentId}`);
+  }
+
   getCarouselPhotos(count = 20) {
     return this.http.get<any[]>(`${this.baseUrl}webapi/photos/random?count=${count}`);
+  }
+
+  getEventIdsWithPhotos() {
+    return this.http.get<{ id: number }[]>(`${this.baseUrl}webapi/photos/events`);
+  }
+
+  getEventPhotos(eventId: number) {
+    return this.http.get<any[]>(`${this.baseUrl}webapi/photos/event/${eventId}`);
   }
 
   // ── Game Plan ─────────────────────────────────────────────────────────────
@@ -263,6 +280,36 @@ export class PlayerService {
 
   updateEventStatus(eventId: number, status: string) {
     return this.http.put(`${this.baseUrl}webapi/admin/events/${eventId}/status`, { status }, { withCredentials: true });
+  }
+
+  // ── Tournament CRUD ───────────────────────────────────────────────────────
+
+  getTournaments() {
+    return this.http.get<TournamentRepresentation[]>(`${this.baseUrl}webapi/tournaments`);
+  }
+
+  createTournament(data: TournamentRepresentation) {
+    return this.http.post<TournamentRepresentation>(`${this.baseUrl}webapi/admin/tournaments`, data, { withCredentials: true });
+  }
+
+  updateTournament(id: number, data: TournamentRepresentation) {
+    return this.http.put<TournamentRepresentation>(`${this.baseUrl}webapi/admin/tournaments/${id}`, data, { withCredentials: true });
+  }
+
+  deleteTournament(id: number) {
+    return this.http.delete(`${this.baseUrl}webapi/admin/tournaments/${id}`, { withCredentials: true });
+  }
+
+  addEventToTournament(tournamentId: number, eventId: number) {
+    return this.http.post(`${this.baseUrl}webapi/admin/tournaments/${tournamentId}/events/${eventId}`, {}, { withCredentials: true });
+  }
+
+  removeEventFromTournament(tournamentId: number, eventId: number) {
+    return this.http.delete(`${this.baseUrl}webapi/admin/tournaments/${tournamentId}/events/${eventId}`, { withCredentials: true });
+  }
+
+  createEventUnderTournament(tournamentId: number, data: any) {
+    return this.http.post<any>(`${this.baseUrl}webapi/admin/tournaments/${tournamentId}/events`, data, { withCredentials: true });
   }
 
   // ── Course CRUD ───────────────────────────────────────────────────────────

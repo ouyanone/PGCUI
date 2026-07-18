@@ -4,6 +4,7 @@ import { ColDef, CellClickedEvent, GridApi, GridReadyEvent } from 'ag-grid-commu
 import 'ag-grid-enterprise';
 
 import { PlayerService } from 'src/app/services/player.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { DonationRepresentation } from 'src/app/services/api/models/donation-representation';
 import { DonationDialogComponent } from './donation-dialog.component';
 import { ConfirmDeleteDialogComponent } from './confirm-delete-dialog.component';
@@ -16,18 +17,19 @@ import { ConfirmDeleteDialogComponent } from './confirm-delete-dialog.component'
 export class DonationComponent implements OnInit {
 
   donations: DonationRepresentation[] = [];
+  isLoggedIn = false;
   private gridApi!: GridApi;
 
   colDefs: ColDef[] = [
-    { field: 'id',           headerName: 'ID',          flex: 1, filter: true },
-    { field: 'donationName', headerName: 'Name',         flex: 3, filter: true },
-    { field: 'donationDesc', headerName: 'Description',  flex: 4, filter: true },
-    { field: 'donationDate', headerName: 'Date',         flex: 2, filter: true },
-    { field: 'amount',       headerName: 'Amount ($)',    flex: 2, filter: true },
+    { field: 'donationName', headerName: 'Name',        minWidth: 150, filter: true, wrapText: false },
+    { field: 'donationDesc', headerName: 'Description', minWidth: 200, filter: true, wrapText: false },
+    { field: 'donationDate', headerName: 'Date',        minWidth: 120, filter: true, wrapText: false },
+    { field: 'amount',       headerName: 'Amount ($)',  minWidth: 110, filter: true, wrapText: false },
     {
       headerName: 'Player',
-      flex: 2,
+      minWidth: 150,
       filter: true,
+      wrapText: false,
       valueGetter: (p: any) =>
         p.data?.player
           ? `${p.data.player.fName ?? ''} ${p.data.player.lName ?? ''}`.trim()
@@ -35,28 +37,41 @@ export class DonationComponent implements OnInit {
     },
     {
       headerName: 'Actions',
-      flex: 2,
+      minWidth: 150,
       sortable: false,
       filter: false,
+      hide: true,
       cellRenderer: () =>
         `<button class="pgc-btn-edit">Edit</button>` +
         `<button class="pgc-btn-delete">Delete</button>`
     }
   ];
 
-  defaultColDef: ColDef = { minWidth: 80 };
+  defaultColDef: ColDef = { minWidth: 80, wrapText: false, autoHeight: false };
 
   constructor(
     private service: PlayerService,
+    private authService: AuthService,
     private dialog: MatDialog
   ) {}
 
   ngOnInit() {
+    this.authService.getStatus().subscribe(s => {
+      this.isLoggedIn = s.loggedIn;
+      this.updateActionsCol();
+    });
     this.loadDonations();
+  }
+
+  private updateActionsCol() {
+    const col = this.colDefs.find(c => c.headerName === 'Actions');
+    if (col) col.hide = !this.isLoggedIn;
+    this.gridApi?.setGridOption('columnDefs', this.colDefs);
   }
 
   onGridReady(event: GridReadyEvent) {
     this.gridApi = event.api;
+    this.updateActionsCol();
   }
 
   onCellClicked(event: CellClickedEvent) {

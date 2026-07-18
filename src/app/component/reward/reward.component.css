@@ -11,6 +11,18 @@
 .page-subtitle { margin: 0; color: #64748b; font-size: 13px; }
 .add-btn { border-radius: 6px !important; font-weight: 600; }
 
+.grid-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.pgc-grid { min-width: 750px; width: 100%; }
+
+@media (max-width: 640px) {
+  .reward-page { padding: 12px 8px; }
+  .page-title { font-size: 18px; }
+}
+
 :host ::ng-deep .pgc-btn-edit {
   background: #e3f2fd; color: #1565c0; border: 1px solid #90caf9;
   border-radius: 4px; padding: 3px 10px; font-size: 12px; font-weight: 600;

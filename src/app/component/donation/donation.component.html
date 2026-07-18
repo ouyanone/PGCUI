@@ -5,22 +5,23 @@
       <h2 class="page-title">Club Donations</h2>
       <p class="page-subtitle">Manage PGC Club donation records</p>
     </div>
-    <button mat-raised-button color="primary" (click)="openAddDialog()" class="add-btn">
+    <button mat-raised-button color="primary" (click)="openAddDialog()" class="add-btn" *ngIf="isLoggedIn">
       <mat-icon>add</mat-icon> Add Donation
     </button>
   </div>
 
-  <ag-grid-angular
-    class="ag-theme-quartz pgc-grid"
-    domLayout="autoHeight"
-    style="width:100%"
-    [defaultColDef]="defaultColDef"
-    [rowData]="donations"
-    [columnDefs]="colDefs"
-    [pagination]="true"
-    [paginationPageSize]="20"
-    (gridReady)="onGridReady($event)"
-    (cellClicked)="onCellClicked($event)">
-  </ag-grid-angular>
+  <div class="grid-wrap">
+    <ag-grid-angular
+      class="ag-theme-quartz pgc-grid"
+      domLayout="autoHeight"
+      [defaultColDef]="defaultColDef"
+      [rowData]="donations"
+      [columnDefs]="colDefs"
+      [pagination]="true"
+      [paginationPageSize]="20"
+      (gridReady)="onGridReady($event)"
+      (cellClicked)="onCellClicked($event)">
+    </ag-grid-angular>
+  </div>
 
 </div>

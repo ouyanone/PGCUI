@@ -1,0 +1,36 @@
+<h2 mat-dialog-title class="modal-title">
+  <mat-icon class="modal-title-icon">photo_library</mat-icon>
+  {{ data.eventName }}
+  <button mat-icon-button class="modal-close-btn" (click)="close()">
+    <mat-icon>close</mat-icon>
+  </button>
+</h2>
+
+<mat-dialog-content class="modal-content">
+  <div class="photo-grid">
+    <div class="photo-thumb" *ngFor="let p of data.photos; let i = index" (click)="openLightbox(i)">
+      <img [src]="thumbnailUrl(p)" [alt]="p.originalName" loading="lazy" />
+      <div class="thumb-overlay"><mat-icon>zoom_in</mat-icon></div>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <span class="photo-count">{{ data.photos.length }} photo{{ data.photos.length !== 1 ? 's' : '' }}</span>
+  <button mat-button (click)="close()">Close</button>
+</mat-dialog-actions>
+
+<!-- Lightbox overlay -->
+<div class="lightbox-overlay" *ngIf="lightboxIndex >= 0" (click)="closeLightbox()">
+  <button class="lb-nav lb-prev" (click)="$event.stopPropagation(); prev()">
+    <mat-icon>chevron_left</mat-icon>
+  </button>
+  <img class="lb-img" [src]="fullUrl(data.photos[lightboxIndex])"
+       [alt]="data.photos[lightboxIndex].originalName"
+       (click)="$event.stopPropagation()" />
+  <button class="lb-nav lb-next" (click)="$event.stopPropagation(); next()">
+    <mat-icon>chevron_right</mat-icon>
+  </button>
+  <button class="lb-close" (click)="closeLightbox()"><mat-icon>close</mat-icon></button>
+  <div class="lb-counter">{{ lightboxIndex + 1 }} / {{ data.photos.length }}</div>
+</div>

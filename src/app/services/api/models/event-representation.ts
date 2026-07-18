@@ -11,4 +11,6 @@ export class EventRepresentation {
   season?: any;
   player?: any;
   teeList?: Array<Tee>;
+  tournamentId?: number;
+  tournamentName?: string;
 }

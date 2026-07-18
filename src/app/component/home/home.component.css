@@ -387,6 +387,49 @@
 .par-cell { color: #3730a3; font-weight: 600; font-size: 11px; }
 .sort-icon { font-size: 14px; height: 14px; width: 14px; vertical-align: middle; opacity: 0.6; }
 
+/* ── Tournament badge & total ── */
+.tournament-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+  border-radius: 12px;
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.tournament-badge-icon { font-size: 14px; height: 14px; width: 14px; }
+.show-photos-btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  margin-left: auto;
+  background: rgba(255,255,255,0.18); color: #fff;
+  border: 1px solid rgba(255,255,255,0.45); border-radius: 16px;
+  padding: 3px 12px; font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: background 0.2s;
+}
+.show-photos-btn:hover { background: rgba(255,255,255,0.32); }
+.photos-btn-icon { font-size: 15px; height: 15px; width: 15px; }
+.tournament-total-block {
+  margin-top: 16px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 2px solid #fde68a;
+}
+.tournament-total-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  font-size: 15px;
+  font-weight: 700;
+  color: #92400e;
+}
+.tournament-total-table { width: auto; min-width: 320px; }
+.tournament-total-table .player-col { min-width: 160px; }
+
 /* ── Rewards ── */
 .game-rewards { border-top: 1px solid #e2e8f0; background: #fffdf9; padding: 8px 16px 10px; }
 .rewards-grid-header {

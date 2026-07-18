@@ -5,22 +5,256 @@
       <h2 class="page-title">Game Management</h2>
       <p class="page-subtitle">Manage PGC game events</p>
     </div>
-    <button mat-raised-button color="primary" (click)="openAddDialog()" class="add-btn">
+    <button mat-raised-button color="primary" (click)="openAddDialog()" class="add-btn" *ngIf="isLoggedIn">
       <mat-icon>add</mat-icon> Add Event
     </button>
   </div>
 
-  <ag-grid-angular
-    class="ag-theme-quartz pgc-grid"
-    domLayout="autoHeight"
-    style="width:100%"
-    [defaultColDef]="defaultColDef"
-    [rowData]="events"
-    [columnDefs]="colDefs"
-    [pagination]="true"
-    [paginationPageSize]="20"
-    (gridReady)="onGridReady($event)"
-    (cellClicked)="onCellClicked($event)">
-  </ag-grid-angular>
+  <!-- ── Hierarchical Event Grid ── -->
+  <div class="event-grid-wrap">
+    <table class="event-table">
+      <thead>
+        <tr>
+          <th class="col-name">Name</th>
+          <th class="col-date">Date</th>
+          <th class="col-status">Status</th>
+          <th class="col-course">Course</th>
+          <th class="col-season">Season</th>
+          <th class="col-actions">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <ng-container *ngFor="let row of gridRows">
+
+          <!-- Tournament header row + child events -->
+          <ng-container *ngIf="row.isTournament">
+            <tr class="t-row" [class.t-row-clickable]="isAllFinished(row.tournamentEvents!)"
+                (click)="isAllFinished(row.tournamentEvents!) && openTournamentScoreModal(row.tournament!)">
+              <td class="col-name">
+                <div class="t-name-cell">
+                  <mat-icon class="t-icon">emoji_events</mat-icon>
+                  <span class="t-name" [class.link-text]="isAllFinished(row.tournamentEvents!)">{{ row.tournament!.name }}</span>
+                  <mat-icon class="view-icon" *ngIf="isAllFinished(row.tournamentEvents!)">open_in_new</mat-icon>
+                </div>
+              </td>
+              <td class="col-date t-dates">
+                <span *ngIf="row.tournament!.startDate || row.tournament!.endDate">
+                  {{ row.tournament!.startDate | date:'shortDate' }}
+                  <span *ngIf="row.tournament!.endDate">&ndash; {{ row.tournament!.endDate | date:'shortDate' }}</span>
+                </span>
+              </td>
+              <td class="col-status"></td>
+              <td class="col-course"></td>
+              <td class="col-season t-season">{{ row.tournament!.season?.seasonName }}</td>
+              <td class="col-actions">
+                <span class="event-count-badge">{{ row.tournamentEvents!.length }} events</span>
+              </td>
+            </tr>
+            <tr *ngFor="let e of row.tournamentEvents" class="e-child-row">
+              <td class="col-name">
+                <div class="e-child-name">
+                  <mat-icon class="child-arrow">subdirectory_arrow_right</mat-icon>
+                  <span [class.link-text]="isLocked(e.status)" (click)="isLocked(e.status) && openEventScoreModal(e)">{{ e.eventName }}</span>
+                  <mat-icon class="view-icon" *ngIf="isLocked(e.status)">open_in_new</mat-icon>
+                </div>
+              </td>
+              <td class="col-date">{{ e.eventDate | date:'mediumDate' }}</td>
+              <td class="col-status">
+                <mat-chip [color]="statusColor(e.status)" selected class="status-chip">{{ e.status }}</mat-chip>
+              </td>
+              <td class="col-course">{{ e.course ? (e.course.clubName + ' — ' + e.course.courseName) : '' }}</td>
+              <td class="col-season">{{ e.season?.seasonName }}</td>
+              <td class="col-actions">
+                <ng-container *ngIf="isLoggedIn">
+                  <button class="pgc-btn-edit" (click)="openEditDialog(e)">Edit</button>
+                  <button class="pgc-btn-delete" *ngIf="!isLocked(e.status)" (click)="deleteEvent(e)">Delete</button>
+                </ng-container>
+              </td>
+            </tr>
+            <tr *ngIf="row.tournamentEvents!.length === 0" class="e-empty-row">
+              <td colspan="6">No events linked yet.</td>
+            </tr>
+          </ng-container>
+
+          <!-- Standalone event row -->
+          <tr *ngIf="!row.isTournament" class="e-row">
+            <td class="col-name">
+              <span [class.link-text]="isLocked(row.event!.status)" (click)="isLocked(row.event!.status) && openEventScoreModal(row.event!)">{{ row.event!.eventName }}</span>
+              <mat-icon class="view-icon" *ngIf="isLocked(row.event!.status)">open_in_new</mat-icon>
+            </td>
+            <td class="col-date">{{ row.event!.eventDate | date:'mediumDate' }}</td>
+            <td class="col-status">
+              <mat-chip [color]="statusColor(row.event!.status)" selected class="status-chip">{{ row.event!.status }}</mat-chip>
+            </td>
+            <td class="col-course">{{ row.event!.course ? (row.event!.course.clubName + ' — ' + row.event!.course.courseName) : '' }}</td>
+            <td class="col-season">{{ row.event!.season?.seasonName }}</td>
+            <td class="col-actions">
+              <ng-container *ngIf="isLoggedIn">
+                <button class="pgc-btn-edit" (click)="openEditDialog(row.event!)">Edit</button>
+                <button class="pgc-btn-delete" *ngIf="!isLocked(row.event!.status)" (click)="deleteEvent(row.event!)">Delete</button>
+              </ng-container>
+            </td>
+          </tr>
+
+        </ng-container>
+
+        <!-- Empty state -->
+        <tr *ngIf="gridRows.length === 0">
+          <td colspan="6" class="empty-msg">No events found.</td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── Tournament Management ── -->
+  <mat-expansion-panel class="tournament-panel" *ngIf="isLoggedIn"
+    (opened)="loadAll(); loadSeasons(); loadCourses()">
+    <mat-expansion-panel-header>
+      <mat-panel-title><mat-icon>emoji_events</mat-icon>&nbsp; Manage Tournaments</mat-panel-title>
+      <mat-panel-description>Link events into a tournament series</mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <!-- Create / Edit form -->
+    <div *ngIf="editingTournament" class="tournament-form">
+      <h3 class="tournament-form-title">{{ isNewTournament ? 'New Tournament' : 'Edit Tournament' }}</h3>
+      <div class="tournament-form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Tournament Name *</mat-label>
+          <input matInput [(ngModel)]="editingTournament.name" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Description</mat-label>
+          <input matInput [(ngModel)]="editingTournament.description" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Start Date</mat-label>
+          <input matInput type="date" [(ngModel)]="editingTournament.startDate" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>End Date</mat-label>
+          <input matInput type="date" [(ngModel)]="editingTournament.endDate" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Season</mat-label>
+          <mat-select [(ngModel)]="editingTournament.season">
+            <mat-option *ngFor="let s of seasons" [value]="s">{{ s.seasonName }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="tournament-form-actions">
+        <button mat-button (click)="cancelTournamentEdit()">Cancel</button>
+        <button mat-raised-button color="primary" [disabled]="!editingTournament.name" (click)="saveTournament()">
+          <mat-icon>save</mat-icon> Save
+        </button>
+      </div>
+    </div>
+
+    <!-- Tournament list -->
+    <div *ngIf="!editingTournament">
+      <div class="tournament-list-header">
+        <button mat-raised-button color="primary" (click)="openNewTournament()">
+          <mat-icon>add</mat-icon> New Tournament
+        </button>
+      </div>
+
+      <div *ngIf="tournaments.length === 0" class="empty-msg">No tournaments yet. Click New Tournament to start.</div>
+
+      <div *ngFor="let t of tournaments" class="tournament-card">
+
+        <!-- Tournament header row -->
+        <div class="tournament-header">
+          <div class="tournament-header-info">
+            <mat-icon class="tournament-icon">emoji_events</mat-icon>
+            <span class="tournament-name">{{ t.name }}</span>
+            <span class="tournament-dates" *ngIf="t.startDate || t.endDate">
+              {{ t.startDate | date:'shortDate' }}{{ t.endDate ? ' – ' + (t.endDate | date:'shortDate') : '' }}
+            </span>
+            <span class="tournament-season" *ngIf="t.season">{{ t.season.seasonName }}</span>
+          </div>
+          <div class="tournament-header-actions">
+            <button mat-icon-button color="primary" (click)="editTournament(t)" title="Edit"><mat-icon>edit</mat-icon></button>
+            <button mat-icon-button color="warn" (click)="deleteTournament(t)" title="Delete"><mat-icon>delete</mat-icon></button>
+          </div>
+        </div>
+
+        <!-- Events under this tournament -->
+        <div class="tournament-events">
+          <div *ngFor="let e of t.events" class="tournament-event-row">
+            <mat-icon class="event-row-icon">event</mat-icon>
+            <span class="event-row-name">{{ e.eventName }}</span>
+            <span class="event-row-date">{{ e.eventDate | date:'mediumDate' }}</span>
+            <mat-chip [color]="statusColor(e.status)" selected class="event-row-chip">{{ e.status }}</mat-chip>
+            <button mat-icon-button color="warn" (click)="removeEventFromTournament(t.id!, e.id!)" title="Unlink from tournament">
+              <mat-icon>link_off</mat-icon>
+            </button>
+          </div>
+          <div *ngIf="!t.events || t.events.length === 0" class="empty-list">No events linked yet.</div>
+        </div>
+
+        <!-- Add existing event -->
+        <div class="tournament-add-row">
+          <mat-form-field appearance="outline" class="add-event-select">
+            <mat-label>Add existing event</mat-label>
+            <mat-select (selectionChange)="addEventToTournament(t.id!, $event.value); $event.source.writeValue(null)">
+              <mat-option *ngFor="let e of unlinkedEvents" [value]="e.id">
+                {{ e.eventName }} ({{ e.eventDate | date:'shortDate' }})
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <button mat-stroked-button color="primary" *ngIf="!newEventForms[t.id!]"
+                  (click)="openNewEventForTournament(t.id!)">
+            <mat-icon>add</mat-icon> New Event
+          </button>
+        </div>
+
+        <!-- Inline new event form -->
+        <div *ngIf="newEventForms[t.id!]" class="new-event-form">
+          <h4 class="new-event-form-title">Create New Event under "{{ t.name }}"</h4>
+          <div class="tournament-form-grid">
+            <mat-form-field appearance="outline">
+              <mat-label>Event Name *</mat-label>
+              <input matInput [(ngModel)]="newEventForms[t.id!].eventName" />
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Event Date *</mat-label>
+              <input matInput type="date" [(ngModel)]="newEventForms[t.id!].eventDate" />
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Course</mat-label>
+              <mat-select [(ngModel)]="newEventForms[t.id!].course">
+                <mat-option *ngFor="let c of courses" [value]="c">{{ c.clubName }} – {{ c.courseName }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Season</mat-label>
+              <mat-select [(ngModel)]="newEventForms[t.id!].season">
+                <mat-option *ngFor="let s of seasons" [value]="s">{{ s.seasonName }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Status</mat-label>
+              <mat-select [(ngModel)]="newEventForms[t.id!].status">
+                <mat-option value="INIT">INIT</mat-option>
+                <mat-option value="STARTED">STARTED</mat-option>
+                <mat-option value="FINISHED">FINISHED</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="tournament-form-actions">
+            <button mat-button (click)="cancelNewEventForm(t.id!)">Cancel</button>
+            <button mat-raised-button color="primary"
+                    [disabled]="!newEventForms[t.id!].eventName || !newEventForms[t.id!].eventDate"
+                    (click)="saveNewEventForTournament(t.id!)">
+              <mat-icon>save</mat-icon> Create Event
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </mat-expansion-panel>
 
 </div>

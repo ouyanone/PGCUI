@@ -4,6 +4,7 @@ import { ColDef, CellClickedEvent, GridApi, GridReadyEvent } from 'ag-grid-commu
 import 'ag-grid-enterprise';
 
 import { PlayerService } from 'src/app/services/player.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { RewardRepresentation } from 'src/app/services/api/models/reward-representation';
 import { RewardDialogComponent } from './reward-dialog.component';
 import { ConfirmDeleteDialogComponent } from '../donation/confirm-delete-dialog.component';
@@ -16,6 +17,7 @@ import { ConfirmDeleteDialogComponent } from '../donation/confirm-delete-dialog.
 export class RewardComponent implements OnInit {
 
   rewards: RewardRepresentation[] = [];
+  isLoggedIn = false;
   private gridApi!: GridApi;
 
   colDefs: ColDef[] = [
@@ -25,14 +27,13 @@ export class RewardComponent implements OnInit {
       rowGroup: true,
       hide: true
     },
-    { field: 'displayOrder', headerName: 'Order',       width: 80,  filter: true },
-    { field: 'rewardName',   headerName: 'Award Name',  flex: 3,    filter: true },
-    { field: 'rewardDesc',   headerName: 'Description', flex: 3,    filter: true },
-    { field: 'rewardStory',  headerName: 'Story',       flex: 4,    filter: true },
+    { field: 'displayOrder', headerName: 'Order',       width: 80,  filter: true, wrapText: false },
+    { field: 'rewardName',   headerName: 'Award Name',  minWidth: 160, filter: true, wrapText: false },
     {
       headerName: 'Winner',
-      flex: 2,
+      minWidth: 140,
       filter: true,
+      wrapText: false,
       valueGetter: (p: any) =>
         p.data?.player
           ? `${p.data.player.fName ?? ''} ${p.data.player.lName ?? ''}`.trim()
@@ -43,27 +44,42 @@ export class RewardComponent implements OnInit {
       width: 150,
       sortable: false,
       filter: false,
+      hide: false,
       cellRenderer: () =>
         `<button class="pgc-btn-edit">Edit</button>` +
         `<button class="pgc-btn-delete">Delete</button>`
     }
   ];
 
-  defaultColDef: ColDef = { minWidth: 80 };
+  defaultColDef: ColDef = { minWidth: 80, wrapText: false, autoHeight: false };
 
   autoGroupColDef: ColDef = {
     headerName: 'Game',
     minWidth: 220,
+    wrapText: false,
     cellRendererParams: { suppressCount: true }
   };
 
-  constructor(private service: PlayerService, private dialog: MatDialog) {}
+  constructor(private service: PlayerService, private authService: AuthService, private dialog: MatDialog) {}
 
-  ngOnInit() { this.loadRewards(); }
+  ngOnInit() {
+    this.authService.getStatus().subscribe(s => {
+      this.isLoggedIn = s.loggedIn;
+      this.updateActionsCol();
+    });
+    this.loadRewards();
+  }
+
+  private updateActionsCol() {
+    const actionCol = this.colDefs.find(c => c.headerName === 'Actions');
+    if (actionCol) actionCol.hide = !this.isLoggedIn;
+    this.gridApi?.setGridOption('columnDefs', this.colDefs);
+  }
 
   onGridReady(event: GridReadyEvent) {
     this.gridApi = event.api;
     this.gridApi.expandAll();
+    this.updateActionsCol();
   }
 
   onCellClicked(event: CellClickedEvent) {

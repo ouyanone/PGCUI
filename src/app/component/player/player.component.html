@@ -1,32 +1,37 @@
-
 <div class="player-page">
 
+  <!-- ── Page header ── -->
   <div class="page-header">
     <div class="page-header-text">
       <h2 class="page-title">Players Profile</h2>
-      <p class="page-subtitle">Active PGC members — click a row to view or edit</p>
+      <p class="page-subtitle">Active PGC members</p>
     </div>
     <div class="page-actions">
       <button mat-raised-button color="primary" type="button" (click)="onGhinSyncClick()">
-        <mat-icon>sync</mat-icon> GHIN Sync
+        <mat-icon>sync</mat-icon>
+        <span class="btn-label">GHIN Sync</span>
       </button>
       <button mat-raised-button color="accent" type="button" (click)="onAddUserClick()">
-        <mat-icon>person_add</mat-icon> Add Player
+        <mat-icon>person_add</mat-icon>
+        <span class="btn-label">Add Player</span>
       </button>
     </div>
   </div>
 
-  <ag-grid-angular
-    class="ag-theme-quartz pgc-grid"
-    domLayout="autoHeight"
-    style="width:100%"
-    [defaultColDef]="defaultColDef"
-    [rowData]="players"
-    [columnDefs]="colDefs"
-    [pagination]="true"
-    [paginationPageSize]="25"
-    [rowStyle]="{ cursor: 'pointer' }"
-    (gridReady)="onGridReady($event)"
-    (rowClicked)="onRowClicked($event)">
-  </ag-grid-angular>
+  <!-- ── AG Grid (scrollable on mobile) ── -->
+  <div class="grid-wrap">
+    <ag-grid-angular
+      class="ag-theme-quartz pgc-grid"
+      domLayout="autoHeight"
+      [defaultColDef]="defaultColDef"
+      [rowData]="players"
+      [columnDefs]="colDefs"
+      [pagination]="true"
+      [paginationPageSize]="25"
+      [rowStyle]="{ cursor: 'pointer' }"
+      (gridReady)="onGridReady($event)"
+      (rowClicked)="onRowClicked($event)">
+    </ag-grid-angular>
+  </div>
+
 </div>

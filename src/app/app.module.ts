@@ -35,6 +35,8 @@ import { DonationComponent } from './component/donation/donation.component';
 import { DonationDialogComponent } from './component/donation/donation-dialog.component';
 import { ConfirmDeleteDialogComponent } from './component/donation/confirm-delete-dialog.component';
 import { EventDialogComponent } from './component/gamerecord/event-dialog.component';
+import { ScoreDetailModalComponent } from './component/gamerecord/score-detail-modal.component';
+import { EventPhotosModalComponent } from './component/home/event-photos-modal.component';
 import { GameinputComponent } from './component/gameinput/gameinput.component';
 import { PhotosComponent } from './component/photos/photos.component';
 import { UploadScoreComponent } from './component/upload-score/upload-score.component';
@@ -78,9 +80,11 @@ import { RewardDialogComponent } from './component/reward/reward-dialog.componen
     NewsComponent,
     NewsDialogComponent,
     RewardComponent,
-    RewardDialogComponent
+    RewardDialogComponent,
+    ScoreDetailModalComponent,
+    EventPhotosModalComponent
 
- 
+
   ],
   imports: [
     BrowserModule,

@@ -1,31 +1,29 @@
-.player-page {
-  padding: 20px;
-}
+.player-page { padding: 20px; }
 
 .page-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-  gap: 12px;
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px; flex-wrap: wrap; gap: 12px;
 }
-
 .page-title {
-  margin: 0 0 4px;
-  font-family: Georgia, serif;
-  font-size: 22px;
-  color: #1565c0;
-  font-weight: 700;
+  margin: 0 0 4px; font-family: Georgia, serif;
+  font-size: 22px; color: #1565c0; font-weight: 700;
+}
+.page-subtitle { margin: 0; color: #64748b; font-size: 13px; }
+.page-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+.grid-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
-.page-subtitle {
-  margin: 0;
-  color: #64748b;
-  font-size: 13px;
+.pgc-grid {
+  min-width: 600px;
+  width: 100%;
 }
 
-.page-actions {
-  display: flex;
-  gap: 8px;
+@media (max-width: 640px) {
+  .player-page { padding: 12px 8px; }
+  .page-title { font-size: 18px; }
+  .btn-label { display: none; }
+  .page-actions button { min-width: 0; padding: 0 12px; }
 }

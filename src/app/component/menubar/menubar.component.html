@@ -46,12 +46,12 @@
     </div>
 
     <mat-nav-list class="sidenav-nav">
-      <mat-list-item routerLink="" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact:true}">
+      <mat-list-item routerLink="" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact:true}" (click)="!isDesktop && drawer.close()">
         <mat-icon matListItemIcon>home</mat-icon>
         <span matListItemTitle>Home</span>
       </mat-list-item>
 
-      <mat-list-item routerLink="player" routerLinkActive="active-link">
+      <mat-list-item routerLink="player" routerLinkActive="active-link" (click)="!isDesktop && drawer.close()">
         <mat-icon matListItemIcon>person_search</mat-icon>
         <span matListItemTitle>Players Profile</span>
       </mat-list-item>
@@ -60,17 +60,17 @@
 
       <div class="sidenav-section-label">GAME MANAGEMENT</div>
 
-      <mat-list-item routerLink="gameplan" routerLinkActive="active-link">
+      <mat-list-item routerLink="gameplan" routerLinkActive="active-link" (click)="!isDesktop && drawer.close()">
         <mat-icon matListItemIcon>calendar_month</mat-icon>
         <span matListItemTitle>Plan a Game</span>
       </mat-list-item>
 
-      <mat-list-item routerLink="gamerecord" routerLinkActive="active-link">
+      <mat-list-item routerLink="gamerecord" routerLinkActive="active-link" (click)="!isDesktop && drawer.close()">
         <mat-icon matListItemIcon>scoreboard</mat-icon>
         <span matListItemTitle>Game Management</span>
       </mat-list-item>
 
-      <mat-list-item routerLink="uploadScore" routerLinkActive="active-link">
+      <mat-list-item routerLink="uploadScore" routerLinkActive="active-link" (click)="!isDesktop && drawer.close()">
         <mat-icon matListItemIcon>upload_file</mat-icon>
         <span matListItemTitle>Upload Score</span>
       </mat-list-item>
@@ -79,37 +79,37 @@
 
       <div class="sidenav-section-label">CLUB</div>
 
-      <mat-list-item routerLink="statistics" routerLinkActive="active-link">
+      <mat-list-item routerLink="statistics" routerLinkActive="active-link" (click)="!isDesktop && drawer.close()">
         <mat-icon matListItemIcon>emoji_events</mat-icon>
         <span matListItemTitle>Hall of Fame</span>
       </mat-list-item>
 
-      <mat-list-item routerLink="photos" routerLinkActive="active-link">
+      <mat-list-item routerLink="photos" routerLinkActive="active-link" (click)="!isDesktop && drawer.close()">
         <mat-icon matListItemIcon>photo_library</mat-icon>
         <span matListItemTitle>Photos</span>
       </mat-list-item>
 
-      <mat-list-item *ngIf="authStatus.loggedIn" routerLink="news" routerLinkActive="active-link">
+      <mat-list-item *ngIf="authStatus.loggedIn" routerLink="news" routerLinkActive="active-link" (click)="!isDesktop && drawer.close()">
         <mat-icon matListItemIcon>newspaper</mat-icon>
         <span matListItemTitle>News</span>
       </mat-list-item>
 
-      <mat-list-item routerLink="donation" routerLinkActive="active-link">
+      <mat-list-item routerLink="donation" routerLinkActive="active-link" (click)="!isDesktop && drawer.close()">
         <mat-icon matListItemIcon>volunteer_activism</mat-icon>
         <span matListItemTitle>Donations</span>
       </mat-list-item>
 
-      <mat-list-item routerLink="reward" routerLinkActive="active-link">
+      <mat-list-item routerLink="reward" routerLinkActive="active-link" (click)="!isDesktop && drawer.close()">
         <mat-icon matListItemIcon>emoji_events</mat-icon>
         <span matListItemTitle>Awards &amp; Rewards</span>
       </mat-list-item>
 
-      <mat-list-item routerLink="gamerule" routerLinkActive="active-link">
+      <mat-list-item routerLink="gamerule" routerLinkActive="active-link" (click)="!isDesktop && drawer.close()">
         <mat-icon matListItemIcon>menu_book</mat-icon>
         <span matListItemTitle>Game Rules</span>
       </mat-list-item>
 
-      <mat-list-item routerLink="aboutus" routerLinkActive="active-link">
+      <mat-list-item routerLink="aboutus" routerLinkActive="active-link" (click)="!isDesktop && drawer.close()">
         <mat-icon matListItemIcon>info</mat-icon>
         <span matListItemTitle>About Us</span>
       </mat-list-item>

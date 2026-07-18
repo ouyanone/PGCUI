@@ -5,24 +5,25 @@
       <h2 class="page-title">Awards &amp; Rewards</h2>
       <p class="page-subtitle">Manage PGC game awards grouped by event</p>
     </div>
-    <button mat-raised-button color="primary" (click)="openAddDialog()" class="add-btn">
+    <button mat-raised-button color="primary" (click)="openAddDialog()" class="add-btn" *ngIf="isLoggedIn">
       <mat-icon>add</mat-icon> Add Award
     </button>
   </div>
 
-  <ag-grid-angular
-    class="ag-theme-quartz pgc-grid"
-    domLayout="autoHeight"
-    style="width:100%"
-    [defaultColDef]="defaultColDef"
-    [autoGroupColumnDef]="autoGroupColDef"
-    [rowData]="rewards"
-    [columnDefs]="colDefs"
-    [groupDisplayType]="'groupRows'"
-    [pagination]="true"
-    [paginationPageSize]="50"
-    (gridReady)="onGridReady($event)"
-    (cellClicked)="onCellClicked($event)">
-  </ag-grid-angular>
+  <div class="grid-wrap">
+    <ag-grid-angular
+      class="ag-theme-quartz pgc-grid"
+      domLayout="autoHeight"
+      [defaultColDef]="defaultColDef"
+      [autoGroupColumnDef]="autoGroupColDef"
+      [rowData]="rewards"
+      [columnDefs]="colDefs"
+      [groupDisplayType]="'groupRows'"
+      [pagination]="true"
+      [paginationPageSize]="50"
+      (gridReady)="onGridReady($event)"
+      (cellClicked)="onCellClicked($event)">
+    </ag-grid-angular>
+  </div>
 
 </div>

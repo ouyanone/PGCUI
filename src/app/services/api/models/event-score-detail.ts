@@ -1,5 +1,8 @@
 export interface PlayerScoreRow {
   playerName?: string;
+  gender?: string;
+  pgcHandicap?: number;
+  handicap?: number;
   hole1?: number; hole2?: number; hole3?: number; hole4?: number; hole5?: number;
   hole6?: number; hole7?: number; hole8?: number; hole9?: number;
   hole10?: number; hole11?: number; hole12?: number; hole13?: number; hole14?: number;
@@ -26,6 +29,9 @@ export interface EventScoreDetail {
   eventDate?: string;
   courseName?: string;
   pars?: number[];
+  tournamentId?: number;
+  tournamentName?: string;
+  tournamentTotalEvents?: number;
   scores?: PlayerScoreRow[];
   rewards?: RewardRow[];
 }

@@ -1,0 +1,267 @@
+.upload-page { padding: 20px; }
+
+/* ── Page header ── */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.page-title {
+  margin: 0 0 4px;
+  font-family: Georgia, serif;
+  font-size: 22px;
+  color: #1565c0;
+  font-weight: 700;
+}
+.page-subtitle {
+  margin: 0;
+  color: #64748b;
+  font-size: 13px;
+}
+
+/* ── Target event selector ── */
+.event-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 16px 20px 4px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+.event-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+.event-icon {
+  color: #2e7d32;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+.event-select { width: 100%; max-width: 420px; }
+.no-events {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px 14px;
+  color: #b26a00;
+  font-size: 13px;
+}
+.no-events-icon {
+  color: #f9a825;
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+/* ── Upload card ── */
+.upload-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.dropzone {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 22px;
+  border: 2px dashed #90caf9;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #f1f8ff 0%, #f2fbf5 100%);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.dropzone:hover {
+  border-color: #1565c0;
+  background: linear-gradient(135deg, #e3f2fd 0%, #e6f7ec 100%);
+}
+.dropzone-icon {
+  font-size: 40px;
+  width: 40px;
+  height: 40px;
+  color: #2e7d32;
+  flex-shrink: 0;
+}
+.dropzone-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+.dropzone-title {
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 15px;
+}
+.dropzone-hint {
+  color: #64748b;
+  font-size: 12px;
+}
+.browse-btn {
+  border-radius: 6px !important;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+/* ── Selected file status ── */
+.file-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 8px 12px;
+  background: #f0f9f2;
+  border: 1px solid #c8e6c9;
+  border-radius: 6px;
+}
+.file-status-icon {
+  color: #2e7d32;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+.file-name {
+  color: #1e293b;
+  font-size: 13px;
+  font-weight: 500;
+  word-break: break-all;
+  flex: 1;
+}
+.row-badge {
+  background: #1565c0;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.edit-hint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 12px 0 0;
+  color: #64748b;
+  font-size: 12.5px;
+}
+.hint-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  color: #f9a825;
+}
+
+/* ── Data grid ── */
+/* Let AG Grid own the horizontal scroll (native touch scrolling on mobile)
+   instead of wrapping it in a second scroll container. */
+.grid-wrap { margin-bottom: 20px; }
+.pgc-grid { width: 100%; }
+
+/* Compact, centered numeric columns so 2–3 char headers (H1, H10, ALL18) fit */
+:host ::ng-deep .pgc-grid .pgc-num-header .ag-header-cell-label {
+  justify-content: center;
+}
+:host ::ng-deep .pgc-grid .pgc-num-header .ag-header-cell-comp-wrapper {
+  padding: 0 2px;
+}
+:host ::ng-deep .pgc-grid .ag-header-cell.pgc-num-header {
+  padding-left: 2px;
+  padding-right: 2px;
+}
+:host ::ng-deep .pgc-grid .pgc-num-cell {
+  padding-left: 2px;
+  padding-right: 2px;
+  text-align: center;
+}
+/* Slightly taller rows/headers for easier touch targets */
+:host ::ng-deep .pgc-grid .ag-header { min-height: 44px; }
+:host ::ng-deep .pgc-grid .ag-row { min-height: 40px; }
+
+/* ── Unmatched row highlight (Check User) ── */
+:host ::ng-deep .pgc-grid .pgc-row-unmatched .ag-cell {
+  background: #fdecec !important;
+  color: #c62828;
+}
+:host ::ng-deep .pgc-grid .pgc-row-unmatched .ag-cell[col-id="name"] {
+  font-weight: 700;
+  box-shadow: inset 3px 0 0 #d32f2f;
+}
+
+/* ── Check-user result banner ── */
+.check-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 500;
+  margin-bottom: 14px;
+}
+.check-banner mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+.check-ok {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
+}
+.check-bad {
+  background: #fdecec;
+  color: #c62828;
+  border: 1px solid #ef9a9a;
+}
+
+/* ── Empty state ── */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #94a3b8;
+  border: 1px dashed #e2e8f0;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+.empty-icon {
+  font-size: 44px;
+  width: 44px;
+  height: 44px;
+  color: #cbd5e1;
+  margin-bottom: 8px;
+}
+.empty-state p { margin: 0; font-size: 14px; }
+
+/* ── Action bar ── */
+.action-bar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.action-btn {
+  border-radius: 6px !important;
+  font-weight: 600;
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .upload-page { padding: 12px 8px; }
+  .page-title { font-size: 18px; }
+  .dropzone { flex-direction: column; text-align: center; gap: 10px; }
+  .action-bar { justify-content: stretch; }
+  .action-btn { flex: 1; }
+}

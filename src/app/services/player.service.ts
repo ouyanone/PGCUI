@@ -164,8 +164,10 @@ export class PlayerService {
     return this.http.get<Array<PlayerScoreRepresentation>>(scoreUrl);
   }
 
-  submitScores(data:any) {
-    const submitscoreUrl = `${this.baseUrl}webapi/event/scores`;
+  submitScores(data:any, eventId?:number) {
+    const submitscoreUrl = eventId != null
+      ? `${this.baseUrl}webapi/event/scores?eventId=${eventId}`
+      : `${this.baseUrl}webapi/event/scores`;
     return this.http.post<Array<PlayerScoreRepresentation>>(submitscoreUrl, data);
   }
 

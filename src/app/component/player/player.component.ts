@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PlayerService } from '../../services/player.service';
 import { PlayerRepresentation } from '../../services/api/models/player-representation';
 import { MatDialog } from '@angular/material/dialog';
+import { ScoreHistoryComponent } from '../score-history/score-history.component';
 import { PopupComponent } from '../popup/popup.component';
 import { GhinSyncComponent } from '../ghin-sync/ghin-sync.component';
 import { EditPlayerComponent } from '../edit-player/edit-player.component';
@@ -60,8 +61,20 @@ export class PlayerComponent implements OnInit {
       disableClose: false,
       data: { title: 'Edit player', userId: playerId }
     });
-    ref.afterClosed().subscribe(() => {
+    ref.afterClosed().subscribe(result => {
       this.service.getAllPlayer().subscribe({ next: r => { this.players = r; } });
+      if (result?.showScoreHistory && result.playerId) {
+        this.openScoreHistory(result.playerId);
+      }
+    });
+  }
+
+  openScoreHistory(playerId: number) {
+    this.dialog.open(ScoreHistoryComponent, {
+      width: '860px',
+      maxWidth: '96vw',
+      maxHeight: '90vh',
+      data: { playerId }
     });
   }
 

@@ -1,0 +1,140 @@
+<div class="sh-dialog">
+
+  <!-- Header -->
+  <div class="sh-head">
+    <div class="sh-head-text">
+      <div class="sh-name">{{ history?.firstName }} {{ history?.lastName }}</div>
+      <div class="sh-meta">
+        <span *ngIf="history?.pgcHandicap != null">PGC Handicap {{ history?.pgcHandicap }}</span>
+        <span *ngIf="history?.handicap">GHIN {{ history?.handicap }}</span>
+        <span>{{ history?.roundsPlayed || 0 }} round{{ history?.roundsPlayed === 1 ? '' : 's' }}</span>
+      </div>
+    </div>
+    <button mat-icon-button class="sh-close" (click)="close()" aria-label="Close">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="sh-body">
+
+    <div class="sh-loading" *ngIf="loading">Loading score history…</div>
+    <div class="sh-empty" *ngIf="failed">Could not load this player's score history.</div>
+
+    <ng-container *ngIf="!loading && !failed">
+
+      <div class="sh-empty" *ngIf="rounds.length === 0">
+        <mat-icon>sports_golf</mat-icon>
+        <p>No rounds posted yet.</p>
+      </div>
+
+      <ng-container *ngIf="rounds.length > 0">
+
+        <!-- Summary tiles -->
+        <div class="sh-kpis">
+          <div class="kpi"><div class="k">Best</div><div class="v">{{ history?.bestGross }}</div></div>
+          <div class="kpi"><div class="k">Average</div><div class="v">{{ history?.averageGross }}</div></div>
+          <div class="kpi"><div class="k">Latest</div><div class="v">{{ history?.latestGross }}</div></div>
+          <div class="kpi"><div class="k">Rounds</div><div class="v">{{ history?.roundsPlayed }}</div></div>
+        </div>
+
+        <!-- Trend chart -->
+        <h4 class="sh-sec-title">Gross score trend</h4>
+        <div class="chart-wrap" [class.scrolls]="chartScrolls">
+          <div class="chart">
+            <div class="bar-col" *ngFor="let r of chartRounds"
+                 [title]="r.eventName + ' — ' + r.gross">
+              <span class="bar-val">{{ r.gross }}</span>
+              <div class="bar" [ngClass]="barClass(r)" [style.height.%]="barHeight(r)"></div>
+              <span class="bar-x">{{ r.eventDate | date:'MMM yy' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rounds -->
+        <h4 class="sh-sec-title">Rounds <span class="sec-hint">— tap a round for the card</span></h4>
+        <div class="rounds">
+          <ng-container *ngFor="let r of rounds">
+
+            <button type="button" class="g-row" [class.open]="isOpen(r.eventId)"
+                    (click)="toggle(r.eventId)" [attr.aria-expanded]="isOpen(r.eventId)">
+              <mat-icon class="g-caret">{{ isOpen(r.eventId) ? 'expand_more' : 'chevron_right' }}</mat-icon>
+              <span class="g-date">{{ r.eventDate | date:'MM/dd/yy' }}</span>
+              <span class="g-name">
+                {{ r.eventName }}
+                <span class="g-course" *ngIf="r.clubName">· {{ r.clubName }}</span>
+              </span>
+              <span class="g-sc">{{ r.gross }}</span>
+              <span class="g-net">{{ r.netScore != null ? (r.netScore | number:'1.1-1') : '—' }}</span>
+            </button>
+
+            <div class="expanded" *ngIf="isOpen(r.eventId)">
+
+              <p class="no-par" *ngIf="!r.pars">
+                This course has no per-hole par recorded, so the figures below are strokes over par.
+              </p>
+
+              <div class="nine-wrap">
+                <table class="sh-tbl">
+                  <thead>
+                    <tr>
+                      <th class="l">Hole</th>
+                      <th *ngFor="let i of front">{{ i + 1 }}</th>
+                      <th class="tot">Out</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="par-row" *ngIf="r.pars">
+                      <td class="l">Par</td>
+                      <td *ngFor="let i of front">{{ r.pars[i] }}</td>
+                      <td class="tot">{{ r.outPar }}</td>
+                    </tr>
+                    <tr>
+                      <td class="l">Score</td>
+                      <td *ngFor="let i of front" [ngClass]="holeClass(r, i)">{{ r.holes?.[i] }}</td>
+                      <td class="tot">{{ r.pars ? r.outStrokes : '—' }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <table class="sh-tbl">
+                  <thead>
+                    <tr>
+                      <th class="l">Hole</th>
+                      <th *ngFor="let i of back">{{ i + 1 }}</th>
+                      <th class="tot">In</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="par-row" *ngIf="r.pars">
+                      <td class="l">Par</td>
+                      <td *ngFor="let i of back">{{ r.pars[i] }}</td>
+                      <td class="tot">{{ r.inPar }}</td>
+                    </tr>
+                    <tr>
+                      <td class="l">Score</td>
+                      <td *ngFor="let i of back" [ngClass]="holeClass(r, i)">{{ r.holes?.[i] }}</td>
+                      <td class="tot">{{ r.pars ? r.inStrokes : '—' }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="round-facts">
+                <span><b>Gross</b> {{ r.gross }}</span>
+                <span *ngIf="r.netScore != null"><b>Net</b> {{ r.netScore | number:'1.1-2' }}</span>
+                <span *ngIf="r.differential != null"><b>Differential</b> {{ r.differential | number:'1.1-2' }}</span>
+                <span *ngIf="r.gamePoint"><b>Points</b> {{ r.gamePoint }}</span>
+                <span class="eagle" *ngIf="r.eagles"><b>{{ r.eagles }}</b> eagle{{ r.eagles === 1 ? '' : 's' }}</span>
+                <span class="birdie" *ngIf="r.birdies"><b>{{ r.birdies }}</b> birdie{{ r.birdies === 1 ? '' : 's' }}</span>
+                <span *ngIf="r.parsMade"><b>{{ r.parsMade }}</b> par{{ r.parsMade === 1 ? '' : 's' }}</span>
+                <span class="course-line" *ngIf="r.courseName">{{ r.courseName }}<span *ngIf="r.coursePar"> · par {{ r.coursePar }}</span></span>
+              </div>
+            </div>
+
+          </ng-container>
+        </div>
+
+      </ng-container>
+    </ng-container>
+  </div>
+</div>

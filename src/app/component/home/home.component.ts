@@ -18,6 +18,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   gameScores: EventScoreDetail[] = [];
   isLoggedIn = false;
   calculating = false;
+  recalculatingHandicaps = false;
+
+  // Home news cards show a 4-line teaser; these track which ones the reader opened.
+  private expandedNews = new Set<number>();
 
   // Carousel
   carouselPhotos: any[] = [];
@@ -54,7 +58,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.buildAllStats(data);
       this.buildTournamentTotals(data);
     });
-    this.service.getCarouselPhotos(20).subscribe(photos => {
+    this.service.getCarouselPhotos(15).subscribe(photos => {
       this.carouselPhotos = photos;
       if (photos.length > 1) this.startCarousel();
     });
@@ -133,6 +137,23 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
       },
       error: () => { this.calculating = false; }
+    });
+  }
+
+  // Rebuilds every active player's PGC handicap from their last 5 rounds. Normally this
+  // runs automatically when an event is marked FINISHED; this is the manual re-run for
+  // after a score correction.
+  recalculateHandicaps() {
+    this.recalculatingHandicaps = true;
+    this.service.recalculateHandicaps().subscribe({
+      next: (res) => {
+        this.recalculatingHandicaps = false;
+        alert('Handicaps recalculated for ' + (res?.playersUpdated ?? 0) + ' player(s).');
+      },
+      error: () => {
+        this.recalculatingHandicaps = false;
+        alert('Handicap recalculation failed. Please make sure you are signed in.');
+      }
     });
   }
 
@@ -286,5 +307,23 @@ export class HomeComponent implements OnInit, OnDestroy {
   parSum(pars: number[] | undefined, from: number, to: number): number {
     if (!pars) return 0;
     return pars.slice(from, to).reduce((a, b) => a + (b ?? 0), 0);
+  }
+
+  isNewsExpanded(id: number | undefined): boolean {
+    return id != null && this.expandedNews.has(id);
+  }
+
+  toggleNews(id: number | undefined): void {
+    if (id == null) { return; }
+    if (this.expandedNews.has(id)) { this.expandedNews.delete(id); }
+    else { this.expandedNews.add(id); }
+  }
+
+  // Only offer Read more on articles long enough to actually be clamped. Judged from the
+  // content rather than measured in the DOM: measuring needs an after-view-checked hook and
+  // invites ExpressionChangedAfterItHasBeenChecked for no real gain at this list size.
+  newsNeedsToggle(item: NewsRepresentation): boolean {
+    const content = item?.content ?? '';
+    return content.length > 200 || content.includes('\n');
   }
 }

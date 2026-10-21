@@ -106,7 +106,12 @@
         <mat-card-subtitle>{{ item.publishDate | date:'mediumDate' }}</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
-        <p class="news-content">{{ item.content }}</p>
+        <p class="news-content" [class.expanded]="isNewsExpanded(item.id)">{{ item.content }}</p>
+        <button type="button" class="news-toggle" *ngIf="newsNeedsToggle(item)"
+                (click)="toggleNews(item.id)"
+                [attr.aria-expanded]="isNewsExpanded(item.id)">
+          {{ isNewsExpanded(item.id) ? 'Show less' : 'Read more' }}
+        </button>
       </mat-card-content>
     </mat-card>
   </div>
@@ -122,6 +127,12 @@
             *ngIf="isLoggedIn" (click)="calculatePoints()" [disabled]="calculating">
       <mat-icon>calculate</mat-icon>
       {{ calculating ? 'Calculating...' : 'Calculate Points' }}
+    </button>
+    <button mat-stroked-button color="primary" class="calc-btn"
+            *ngIf="isLoggedIn" (click)="recalculateHandicaps()" [disabled]="recalculatingHandicaps"
+            title="Rebuild every player's PGC handicap from their last 5 rounds">
+      <mat-icon>refresh</mat-icon>
+      {{ recalculatingHandicaps ? 'Recalculating...' : 'Recalculate Handicaps' }}
     </button>
   </div>
 

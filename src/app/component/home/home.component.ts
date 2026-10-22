@@ -187,6 +187,17 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (current != null) { this.openGames.add(current); }
   }
 
+  /**
+   * Rounds come newest-first within a group, so the last entry is Round 1. Derived from
+   * position rather than parsed out of the event name, which is sometimes English
+   * ("Round 2") and sometimes Chinese ("第二轮").
+   * A standalone event has no tournament to be a round of, so it keeps its own name.
+   */
+  roundLabel(grp: { name: string | null; events: EventScoreDetail[] }, i: number): string {
+    if (!grp.name) { return grp.events[i]?.eventName ?? 'Round'; }
+    return 'Round ' + (grp.events.length - i);
+  }
+
   isTournamentOpen(key: number): boolean {
     return this.openTournaments.has(key);
   }

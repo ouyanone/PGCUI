@@ -572,3 +572,19 @@
   .t-name { font-size: 18px; }
   .t-meta { font-size: 13.5px; }
 }
+
+/* A collapsed round is a quiet one-line row, not a full gradient banner. */
+.game-score-header.collapsed {
+  background: #f4f8fd;
+  color: #1e293b;
+  padding: 9px 14px;
+}
+.round-label {
+  background: none; border: 0; padding: 0; font: inherit; font-size: 15px; font-weight: 600;
+  color: #1565c0; cursor: pointer; text-align: left;
+}
+.round-label:hover { text-decoration: underline; }
+.round-label:focus-visible { outline: 2px solid #1976d2; outline-offset: 2px; border-radius: 2px; }
+@media (min-width: 900px) {
+  .round-label { font-size: 16px; }
+}

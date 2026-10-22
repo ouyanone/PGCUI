@@ -207,24 +207,35 @@
       <span class="game-separator-line"></span>
     </div>
     <div class="game-score-block">
-      <div class="game-score-header">
+      <!-- Collapsed, this is just "Round 2" and a plus sign; open, it carries the full
+           event name, date, course and photo link. -->
+      <div class="game-score-header" [class.collapsed]="!isGameOpen(game.eventId)">
         <button type="button" class="game-toggle" (click)="toggleGame(game.eventId)"
                 [attr.aria-expanded]="isGameOpen(game.eventId)"
-                [attr.aria-label]="(isGameOpen(game.eventId) ? 'Collapse ' : 'Expand ') + game.eventName">
+                [attr.aria-label]="(isGameOpen(game.eventId) ? 'Collapse ' : 'Expand ') + roundLabel(grp, i)">
           <mat-icon>{{ isGameOpen(game.eventId) ? 'remove' : 'add' }}</mat-icon>
         </button>
-        <span class="game-title">{{ game.eventName }}</span>
-        <span class="game-date">{{ game.eventDate | date:'mediumDate' }}</span>
-        <span class="game-course">
-          <mat-icon class="inline-icon">golf_course</mat-icon>{{ game.courseName }}
-        </span>
-        <span class="tournament-badge" *ngIf="game.tournamentName">
-          <mat-icon class="tournament-badge-icon">emoji_events</mat-icon>{{ game.tournamentName }}
-        </span>
-        <button class="show-photos-btn" *ngIf="eventIdsWithPhotos.has(game.eventId!)"
-                (click)="showEventPhotos(game)">
-          <mat-icon class="photos-btn-icon">photo_library</mat-icon> Show Photos
-        </button>
+
+        <ng-container *ngIf="!isGameOpen(game.eventId)">
+          <button type="button" class="round-label" (click)="toggleGame(game.eventId)">
+            {{ roundLabel(grp, i) }}
+          </button>
+        </ng-container>
+
+        <ng-container *ngIf="isGameOpen(game.eventId)">
+          <span class="game-title">{{ game.eventName }}</span>
+          <span class="game-date">{{ game.eventDate | date:'mediumDate' }}</span>
+          <span class="game-course">
+            <mat-icon class="inline-icon">golf_course</mat-icon>{{ game.courseName }}
+          </span>
+          <span class="tournament-badge" *ngIf="game.tournamentName">
+            <mat-icon class="tournament-badge-icon">emoji_events</mat-icon>{{ game.tournamentName }}
+          </span>
+          <button class="show-photos-btn" *ngIf="eventIdsWithPhotos.has(game.eventId!)"
+                  (click)="showEventPhotos(game)">
+            <mat-icon class="photos-btn-icon">photo_library</mat-icon> Show Photos
+          </button>
+        </ng-container>
       </div>
       <div class="game-body" *ngIf="isGameOpen(game.eventId)">
       <div class="scorecard-wrap">

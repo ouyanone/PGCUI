@@ -81,15 +81,19 @@
   background: #fffbeb; border-left: 3px solid #b45309; padding: 7px 10px; border-radius: 0 6px 6px 0;
 }
 .nine-wrap { display: flex; flex-direction: column; gap: 10px; }
-.nine-wrap > table { overflow-x: auto; display: block; }
-
-table.sh-tbl { border-collapse: collapse; width: 100%; font-size: 12px; }
+.nine { overflow-x: auto; }
+/* Fixed layout + equal share means both nines are geometrically identical, so the
+   front nine lines up with the back nine instead of sizing to its own digits. */
+table.sh-tbl {
+  border-collapse: collapse; width: 100%; font-size: 12px;
+  table-layout: fixed; min-width: 322px;
+}
 table.sh-tbl th, table.sh-tbl td {
   border-bottom: 1px solid #eef2f7; padding: 5px 4px; text-align: center; white-space: nowrap;
 }
 table.sh-tbl th { background: #e3f2fd; color: #1565c0; font-weight: 600; font-size: 10.5px; }
 table.sh-tbl .l { text-align: left; padding-left: 8px; width: 48px; color: #64748b; }
-table.sh-tbl .tot { font-weight: 600; background: #f4f6f8; }
+table.sh-tbl .tot { font-weight: 600; background: #f4f6f8; width: 40px; }
 .par-row td { background: #fafbfc; color: #64748b; font-size: 11px; }
 
 /* result tints */
@@ -144,14 +148,13 @@ table.sh-tbl .tot { font-weight: 600; background: #f4f6f8; }
   /* Side by side: there is room for both nines, so the whole card reads at once
      instead of the back nine sitting below the fold. */
   .nine-wrap { flex-direction: row; gap: 18px; }
-  .nine-wrap > table { display: table; overflow: visible; flex: 1 1 0; min-width: 0; }
+  .nine { flex: 1 1 0; min-width: 0; overflow: visible; }
 
   table.sh-tbl { font-size: 15px; }
   table.sh-tbl th, table.sh-tbl td { padding: 9px 6px; }
   table.sh-tbl th { font-size: 12px; }
   table.sh-tbl .l { width: 62px; font-size: 13px; }
-  /* Keep hole columns from collapsing to the width of a single digit. */
-  table.sh-tbl th:not(.l):not(.tot), table.sh-tbl td:not(.l):not(.tot) { min-width: 34px; }
+  table.sh-tbl .tot { width: 52px; }
 
   .round-facts { font-size: 13.5px; gap: 8px 20px; margin-top: 15px; }
   .sh-sec-title { font-size: 13px; }
@@ -160,7 +163,6 @@ table.sh-tbl .tot { font-weight: 600; background: #f4f6f8; }
 @media (min-width: 1250px) {
   table.sh-tbl { font-size: 16px; }
   table.sh-tbl th, table.sh-tbl td { padding: 11px 8px; }
-  table.sh-tbl th:not(.l):not(.tot), table.sh-tbl td:not(.l):not(.tot) { min-width: 40px; }
   .chart { height: 215px; }
   .kpi .v { font-size: 28px; }
 }

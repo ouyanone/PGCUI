@@ -70,11 +70,17 @@ export class PlayerComponent implements OnInit {
   }
 
   openScoreHistory(playerId: number) {
-    this.dialog.open(ScoreHistoryComponent, {
+    const ref = this.dialog.open(ScoreHistoryComponent, {
       width: '1180px',
       maxWidth: '96vw',
       maxHeight: '90vh',
-      data: { playerId }
+      data: { playerId, returnToProfile: true }
+    });
+    // The profile dialog closed to let this one open, so going back means reopening it.
+    ref.afterClosed().subscribe(result => {
+      if (result?.backToProfile && result.playerId) {
+        this.openEditPlayer(result.playerId);
+      }
     });
   }
 

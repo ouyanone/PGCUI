@@ -2,6 +2,11 @@
 
   <!-- Header -->
   <div class="sh-head">
+    <button type="button" class="sh-back" *ngIf="data.returnToProfile"
+            (click)="backToProfile()" aria-label="Back to player profile">
+      <mat-icon>arrow_back</mat-icon>
+      <span class="sh-back-label">Profile</span>
+    </button>
     <div class="sh-head-text">
       <div class="sh-name">{{ history?.firstName }} {{ history?.lastName }}</div>
       <div class="sh-meta">

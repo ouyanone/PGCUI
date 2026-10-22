@@ -23,7 +23,7 @@ export class ScoreHistoryComponent implements OnInit {
   constructor(
     private service: PlayerService,
     private ref: MatDialogRef<ScoreHistoryComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { playerId: number }
+    @Inject(MAT_DIALOG_DATA) public data: { playerId: number; returnToProfile?: boolean }
   ) {}
 
   ngOnInit() {
@@ -101,6 +101,12 @@ export class ScoreHistoryComponent implements OnInit {
     if (diff === 0) { return 'h-p'; }
     if (diff === 1) { return 'h-1'; }
     return 'h-2';
+  }
+
+  /** Only offered when the reader arrived from the profile dialog, which closed to let
+   *  this one open — otherwise there is no profile to go back to. */
+  backToProfile() {
+    this.ref.close({ backToProfile: true, playerId: this.data.playerId });
   }
 
   close() { this.ref.close(); }

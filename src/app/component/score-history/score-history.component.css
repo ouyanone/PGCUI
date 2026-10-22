@@ -166,3 +166,19 @@ table.sh-tbl .tot { font-weight: 600; background: #f4f6f8; width: 40px; }
   .chart { height: 215px; }
   .kpi .v { font-size: 28px; }
 }
+
+/* Back to the profile dialog, shown only when the reader came from there. */
+.sh-back {
+  display: inline-flex; align-items: center; gap: 4px; flex: none;
+  background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.35);
+  color: #fff; font: inherit; font-size: 13px; line-height: 1;
+  padding: 7px 12px 7px 8px; border-radius: 999px; cursor: pointer;
+  margin-right: 4px;
+}
+.sh-back:hover { background: rgba(255,255,255,.28); }
+.sh-back:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.sh-back mat-icon { font-size: 18px; height: 18px; width: 18px; }
+@media (max-width: 480px) {
+  .sh-back-label { display: none; }
+  .sh-back { padding: 7px; }
+}

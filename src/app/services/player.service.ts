@@ -36,8 +36,10 @@ export class PlayerService {
 
 
 
-  getAllPlayer() {
-    const playersUrl = `${this.baseUrl}webapi/players`;
+  // Active players only unless asked otherwise — the donation and reward pickers rely
+  // on that. The players grid passes true so it can offer an "All users" view.
+  getAllPlayer(includeInactive = false) {
+    const playersUrl = `${this.baseUrl}webapi/players${includeInactive ? '?includeInactive=true' : ''}`;
     return this.http.get<Array<PlayerRepresentation>>(playersUrl);
   }
 

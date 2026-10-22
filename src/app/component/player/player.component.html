@@ -4,7 +4,7 @@
   <div class="page-header">
     <div class="page-header-text">
       <h2 class="page-title">Players Profile</h2>
-      <p class="page-subtitle">Active PGC members</p>
+      <p class="page-subtitle">{{ players.length }} {{ view === 'member' ? 'PGC member' : view === 'active' ? 'active player' : 'player' }}{{ players.length === 1 ? '' : 's' }}</p>
     </div>
     <div class="page-actions">
       <button mat-raised-button color="primary" type="button" (click)="onGhinSyncClick()">
@@ -16,6 +16,22 @@
         <span class="btn-label">Add Player</span>
       </button>
     </div>
+  </div>
+
+  <!-- ── Who to show ── -->
+  <div class="view-toggle">
+    <button type="button" class="seg" [class.on]="view === 'member'" (click)="setView('member')"
+            [attr.aria-pressed]="view === 'member'">
+      PGC Members <span class="seg-count">{{ countFor('member') }}</span>
+    </button>
+    <button type="button" class="seg" [class.on]="view === 'active'" (click)="setView('active')"
+            [attr.aria-pressed]="view === 'active'">
+      Active <span class="seg-count">{{ countFor('active') }}</span>
+    </button>
+    <button type="button" class="seg" [class.on]="view === 'all'" (click)="setView('all')"
+            [attr.aria-pressed]="view === 'all'">
+      All <span class="seg-count">{{ countFor('all') }}</span>
+    </button>
   </div>
 
   <!-- ── AG Grid (scrollable on mobile) ── -->

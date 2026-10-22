@@ -155,7 +155,13 @@
                 {{ i + 1 }}
               </span>
             </td>
-            <td>{{ p.fName }} {{ p.lName }}</td>
+            <td>
+              <button type="button" class="player-link" *ngIf="p.id" (click)="openScoreHistory(p.id)"
+                      [attr.aria-label]="'Score history for ' + p.fName + ' ' + p.lName">
+                {{ p.fName }} {{ p.lName }}
+              </button>
+              <span *ngIf="!p.id">{{ p.fName }} {{ p.lName }}</span>
+            </td>
             <td class="points-cell">{{ p.pgcPoints ?? 0 }}</td>
             <td>{{ p.pgcHandicap }}</td>
             <td>{{ (p.handicap && p.handicap !== 0) ? p.handicap : 'N/A' }}</td>

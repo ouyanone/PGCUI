@@ -6,6 +6,7 @@ import { NewsRepresentation } from 'src/app/services/api/models/news-representat
 import { StandingRepresentation } from 'src/app/services/api/models/standing-representation';
 import { EventScoreDetail, PlayerScoreRow, RewardRow, GameStats, StatEntry } from 'src/app/services/api/models/event-score-detail';
 import { EventPhotosModalComponent } from './event-photos-modal.component';
+import { ScoreHistoryComponent } from '../score-history/score-history.component';
 
 @Component({
   selector: 'app-home',
@@ -137,6 +138,17 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
       },
       error: () => { this.calculating = false; }
+    });
+  }
+
+  // Standings names open the same score-history dialog the players page uses.
+  openScoreHistory(playerId?: number) {
+    if (playerId == null) { return; }
+    this.dialog.open(ScoreHistoryComponent, {
+      width: '1180px',
+      maxWidth: '96vw',
+      maxHeight: '90vh',
+      data: { playerId }
     });
   }
 

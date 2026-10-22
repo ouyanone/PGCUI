@@ -510,3 +510,11 @@
   .standings-container { padding: 0 12px 24px; }
   .section-title { padding: 0 12px 8px; }
 }
+
+/* Standings player names open their score history. */
+.player-link {
+  background: none; border: 0; padding: 0; font: inherit; color: #1976d2;
+  cursor: pointer; text-align: left;
+}
+.player-link:hover { text-decoration: underline; }
+.player-link:focus-visible { outline: 2px solid #1976d2; outline-offset: 2px; border-radius: 2px; }

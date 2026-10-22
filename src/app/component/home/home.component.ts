@@ -28,6 +28,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   tournamentGroups: { key: number; name: string | null; events: EventScoreDetail[];
                       from?: string; to?: string }[] = [];
   private openTournaments = new Set<number>();
+  /** Tournament totals start collapsed — they are a summary, not the main content. */
+  private openTotals = new Set<number>();
 
   // Home news cards show a 4-line teaser; these track which ones the reader opened.
   private expandedNews = new Set<number>();
@@ -55,7 +57,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   tournamentTotals: Map<number, { playerName: string; gender: string; pgcHandicap: number | null; handicap: number | null; totalScore: number; totalNetScore: number }[]> = new Map();
-  tournamentLastEventId: Map<number, number> = new Map();
   tournamentSortState: { [tid: number]: { col: string; dir: 'asc' | 'desc' } } = {};
 
   ngOnInit() {
@@ -198,6 +199,15 @@ export class HomeComponent implements OnInit, OnDestroy {
     return 'Round ' + (grp.events.length - i);
   }
 
+  isTotalsOpen(key: number): boolean {
+    return this.openTotals.has(key);
+  }
+
+  toggleTotals(key: number) {
+    if (this.openTotals.has(key)) { this.openTotals.delete(key); }
+    else { this.openTotals.add(key); }
+  }
+
   isTournamentOpen(key: number): boolean {
     return this.openTournaments.has(key);
   }
@@ -316,7 +326,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   buildTournamentTotals(games: EventScoreDetail[]) {
     this.tournamentTotals.clear();
-    this.tournamentLastEventId.clear();
 
     const groups = new Map<number, EventScoreDetail[]>();
     for (const g of games) {
@@ -331,8 +340,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       const totalExpected = events[0].tournamentTotalEvents ?? 0;
       if (totalExpected === 0 || events.length !== totalExpected) return;
 
-      // Show total after the latest (first in newest-first display) event
-      this.tournamentLastEventId.set(tid, events[0].eventId!);
 
       // Players who appear in ALL events
       const playerSets = events.map(e => new Set((e.scores || []).map(s => s.playerName!)));
@@ -378,10 +385,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     return s.dir === 'asc' ? 'arrow_upward' : 'arrow_downward';
   }
 
-  isLastInTournament(game: EventScoreDetail): boolean {
-    if (!game.tournamentId) return false;
-    return this.tournamentLastEventId.get(game.tournamentId) === game.eventId;
-  }
 
   showEventPhotos(game: EventScoreDetail) {
     this.service.getEventPhotos(game.eventId!).subscribe(photos => {

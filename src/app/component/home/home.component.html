@@ -374,37 +374,47 @@
     </div>
 
     <!-- Tournament Total — shown after the last event in each tournament group -->
-    <div class="tournament-total-block" *ngIf="isLastInTournament(game) && tournamentTotals.get(game.tournamentId!)?.length">
-      <div class="tournament-total-header">
+
+    </div>
+
+      <!-- Tournament total, after all the rounds in the group. Collapsed by default. -->
+      <div class="tournament-total-block"
+           *ngIf="grp.key > 0 && tournamentTotals.get(grp.key)?.length">
+        <div class="tournament-total-header" [class.collapsed]="!isTotalsOpen(grp.key)">
+          <button type="button" class="game-toggle" (click)="toggleTotals(grp.key)"
+                  [attr.aria-expanded]="isTotalsOpen(grp.key)"
+                  [attr.aria-label]="(isTotalsOpen(grp.key) ? 'Collapse ' : 'Expand ') + 'tournament total'">
+            <mat-icon>{{ isTotalsOpen(grp.key) ? 'remove' : 'add' }}</mat-icon>
+          </button>
         <mat-icon>emoji_events</mat-icon>
-        {{ game.tournamentName }} — Tournament Total
+        {{ grp.name }} — Tournament Total
       </div>
-      <div class="scorecard-wrap">
+      <div class="scorecard-wrap" *ngIf="isTotalsOpen(grp.key)">
         <table class="scorecard-table tournament-total-table">
           <thead>
             <tr>
-              <th class="player-col sortable" (click)="sortTournamentTotals(game.tournamentId!, 'playerName')">
-                Player <mat-icon class="sort-icon">{{ tournamentSortIcon(game.tournamentId!, 'playerName') }}</mat-icon>
+              <th class="player-col sortable" (click)="sortTournamentTotals(grp.key, 'playerName')">
+                Player <mat-icon class="sort-icon">{{ tournamentSortIcon(grp.key, 'playerName') }}</mat-icon>
               </th>
-              <th class="sortable" (click)="sortTournamentTotals(game.tournamentId!, 'gender')">
-                Gender <mat-icon class="sort-icon">{{ tournamentSortIcon(game.tournamentId!, 'gender') }}</mat-icon>
+              <th class="sortable" (click)="sortTournamentTotals(grp.key, 'gender')">
+                Gender <mat-icon class="sort-icon">{{ tournamentSortIcon(grp.key, 'gender') }}</mat-icon>
               </th>
-              <th class="sortable" (click)="sortTournamentTotals(game.tournamentId!, 'pgcHandicap')">
-                PGC HC <mat-icon class="sort-icon">{{ tournamentSortIcon(game.tournamentId!, 'pgcHandicap') }}</mat-icon>
+              <th class="sortable" (click)="sortTournamentTotals(grp.key, 'pgcHandicap')">
+                PGC HC <mat-icon class="sort-icon">{{ tournamentSortIcon(grp.key, 'pgcHandicap') }}</mat-icon>
               </th>
-              <th class="sortable" (click)="sortTournamentTotals(game.tournamentId!, 'handicap')">
-                GHIN <mat-icon class="sort-icon">{{ tournamentSortIcon(game.tournamentId!, 'handicap') }}</mat-icon>
+              <th class="sortable" (click)="sortTournamentTotals(grp.key, 'handicap')">
+                GHIN <mat-icon class="sort-icon">{{ tournamentSortIcon(grp.key, 'handicap') }}</mat-icon>
               </th>
-              <th class="total-col sortable" (click)="sortTournamentTotals(game.tournamentId!, 'totalScore')">
-                Total Score <mat-icon class="sort-icon">{{ tournamentSortIcon(game.tournamentId!, 'totalScore') }}</mat-icon>
+              <th class="total-col sortable" (click)="sortTournamentTotals(grp.key, 'totalScore')">
+                Total Score <mat-icon class="sort-icon">{{ tournamentSortIcon(grp.key, 'totalScore') }}</mat-icon>
               </th>
-              <th class="net-col sortable" (click)="sortTournamentTotals(game.tournamentId!, 'totalNetScore')">
-                Total Net <mat-icon class="sort-icon">{{ tournamentSortIcon(game.tournamentId!, 'totalNetScore') }}</mat-icon>
+              <th class="net-col sortable" (click)="sortTournamentTotals(grp.key, 'totalNetScore')">
+                Total Net <mat-icon class="sort-icon">{{ tournamentSortIcon(grp.key, 'totalNetScore') }}</mat-icon>
               </th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let row of tournamentTotals.get(game.tournamentId!)">
+            <tr *ngFor="let row of tournamentTotals.get(grp.key)">
               <td class="player-col">{{ row.playerName }}</td>
               <td>{{ row.gender || '—' }}</td>
               <td>{{ row.pgcHandicap != null ? row.pgcHandicap : '—' }}</td>
@@ -415,8 +425,6 @@
           </tbody>
         </table>
       </div>
-    </div>
-
     </div>
       </div>
     </div>

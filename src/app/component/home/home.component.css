@@ -588,3 +588,7 @@
 @media (min-width: 900px) {
   .round-label { font-size: 16px; }
 }
+
+/* Tournament total: a collapsed summary row until opened. */
+.tournament-total-header { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.tournament-total-header.collapsed { opacity: .92; }

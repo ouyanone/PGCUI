@@ -12,7 +12,7 @@
       <div class="sh-meta">
         <span *ngIf="history?.pgcHandicap != null">PGC Handicap {{ history?.pgcHandicap }}</span>
         <span *ngIf="history?.handicap">GHIN {{ history?.handicap }}</span>
-        <span>{{ history?.roundsPlayed || 0 }} round{{ history?.roundsPlayed === 1 ? '' : 's' }}</span>
+        <span>{{ rounds.length }} round{{ rounds.length === 1 ? '' : 's' }}{{ showAllSeasons ? ' all time' : ' in ' + seasonLabel }}</span>
       </div>
     </div>
     <button mat-icon-button class="sh-close" (click)="close()" aria-label="Close">
@@ -27,19 +27,34 @@
 
     <ng-container *ngIf="!loading && !failed">
 
-      <div class="sh-empty" *ngIf="rounds.length === 0">
+      <div class="sh-empty" *ngIf="allRounds.length === 0">
         <mat-icon>sports_golf</mat-icon>
         <p>No rounds posted yet.</p>
       </div>
 
-      <ng-container *ngIf="rounds.length > 0">
+      <ng-container *ngIf="allRounds.length > 0">
+
+        <!-- Season filter -->
+        <div class="season-toggle" *ngIf="canToggleSeason">
+          <button type="button" class="seg" [class.on]="!showAllSeasons"
+                  (click)="showAllSeasons && toggleSeason()" [attr.aria-pressed]="!showAllSeasons">
+            {{ seasonLabel }}
+          </button>
+          <button type="button" class="seg" [class.on]="showAllSeasons"
+                  (click)="!showAllSeasons && toggleSeason()" [attr.aria-pressed]="showAllSeasons">
+            All time
+          </button>
+          <span class="season-hint" *ngIf="!showAllSeasons && hiddenByFilter > 0">
+            {{ hiddenByFilter }} earlier round{{ hiddenByFilter === 1 ? '' : 's' }} hidden
+          </span>
+        </div>
 
         <!-- Summary tiles -->
         <div class="sh-kpis">
-          <div class="kpi"><div class="k">Best</div><div class="v">{{ history?.bestGross }}</div></div>
-          <div class="kpi"><div class="k">Average</div><div class="v">{{ history?.averageGross }}</div></div>
-          <div class="kpi"><div class="k">Latest</div><div class="v">{{ history?.latestGross }}</div></div>
-          <div class="kpi"><div class="k">Rounds</div><div class="v">{{ history?.roundsPlayed }}</div></div>
+          <div class="kpi"><div class="k">Best</div><div class="v">{{ bestGross ?? '—' }}</div></div>
+          <div class="kpi"><div class="k">Average</div><div class="v">{{ averageGross ?? '—' }}</div></div>
+          <div class="kpi"><div class="k">Latest</div><div class="v">{{ latestGross ?? '—' }}</div></div>
+          <div class="kpi"><div class="k">Rounds</div><div class="v">{{ rounds.length }}</div></div>
         </div>
 
         <!-- Trend chart -->
@@ -57,7 +72,12 @@
 
         <!-- Rounds -->
         <h4 class="sh-sec-title">Rounds <span class="sec-hint">— tap a round for the card</span></h4>
-        <div class="rounds">
+        <div class="sh-empty" *ngIf="rounds.length === 0">
+          <mat-icon>filter_alt_off</mat-icon>
+          <p>No rounds in {{ seasonLabel }}. Switch to <strong>All time</strong> to see earlier rounds.</p>
+        </div>
+
+        <div class="rounds" *ngIf="rounds.length > 0">
           <ng-container *ngFor="let r of rounds">
 
             <button type="button" class="g-row" [class.open]="isOpen(r.eventId)"

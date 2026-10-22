@@ -6,6 +6,8 @@ export interface ScoreHistoryRound {
   courseName?: string;
   /** Null when the course has no per-hole par, in which case `pars` is null too. */
   coursePar?: number | null;
+  seasonId?: number | null;
+  seasonName?: string | null;
 
   gross?: number;
   netScore?: number | null;
@@ -37,6 +39,10 @@ export interface PlayerScoreHistory {
   bestGross?: number | null;
   averageGross?: number | null;
   latestGross?: number | null;
+
+  /** Which season is current today; null off-season. */
+  currentSeasonId?: number | null;
+  currentSeasonName?: string | null;
 
   rounds?: ScoreHistoryRound[];
 }

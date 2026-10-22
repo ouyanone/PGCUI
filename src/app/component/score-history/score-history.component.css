@@ -182,3 +182,20 @@ table.sh-tbl .tot { font-weight: 600; background: #f4f6f8; width: 40px; }
   .sh-back-label { display: none; }
   .sh-back { padding: 7px; }
 }
+
+/* Current season / all time switch. */
+.season-toggle { display: flex; align-items: center; gap: 0; margin: 0 0 14px; flex-wrap: wrap; }
+.season-toggle .seg {
+  font: inherit; font-size: 13px; padding: 7px 14px; cursor: pointer;
+  background: #fff; color: #1976d2; border: 1px solid #bbdefb;
+}
+.season-toggle .seg:first-of-type { border-radius: 999px 0 0 999px; }
+.season-toggle .seg:nth-of-type(2) { border-radius: 0 999px 999px 0; border-left: 0; }
+.season-toggle .seg.on { background: #1976d2; color: #fff; border-color: #1976d2; }
+.season-toggle .seg:not(.on):hover { background: #e3f2fd; }
+.season-toggle .seg:focus-visible { outline: 2px solid #1976d2; outline-offset: 2px; }
+.season-hint { font-size: 12px; color: #94a3b8; margin-left: 12px; }
+@media (min-width: 900px) {
+  .season-toggle .seg { font-size: 14px; padding: 8px 18px; }
+  .season-hint { font-size: 13px; }
+}

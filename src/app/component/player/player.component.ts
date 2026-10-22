@@ -71,7 +71,7 @@ export class PlayerComponent implements OnInit {
 
   openScoreHistory(playerId: number) {
     this.dialog.open(ScoreHistoryComponent, {
-      width: '860px',
+      width: '1180px',
       maxWidth: '96vw',
       maxHeight: '90vh',
       data: { playerId }

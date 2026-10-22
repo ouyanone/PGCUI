@@ -518,3 +518,14 @@
 }
 .player-link:hover { text-decoration: underline; }
 .player-link:focus-visible { outline: 2px solid #1976d2; outline-offset: 2px; border-radius: 2px; }
+
+/* Collapsed game blocks: only the current event is open by default. */
+.game-toggle {
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+  width: 30px; height: 30px; margin-right: 10px; padding: 0;
+  background: #fff; color: #1976d2; border: 1px solid #bbdefb;
+  border-radius: 50%; cursor: pointer;
+}
+.game-toggle:hover { background: #e3f2fd; }
+.game-toggle:focus-visible { outline: 2px solid #1976d2; outline-offset: 2px; }
+.game-toggle mat-icon { font-size: 20px; height: 20px; width: 20px; }

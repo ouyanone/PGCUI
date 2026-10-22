@@ -21,6 +21,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   calculating = false;
   recalculatingHandicaps = false;
 
+  /** Only the most recent game is expanded; earlier ones open on the plus sign. */
+  private openGames = new Set<number>();
+
   // Home news cards show a 4-line teaser; these track which ones the reader opened.
   private expandedNews = new Set<number>();
 
@@ -58,6 +61,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.gameScores = data;
       this.buildAllStats(data);
       this.buildTournamentTotals(data);
+      this.openCurrentGame();
     });
     this.service.getCarouselPhotos(15).subscribe(photos => {
       this.carouselPhotos = photos;
@@ -135,10 +139,27 @@ export class HomeComponent implements OnInit, OnDestroy {
         });
         this.service.getGameScores().subscribe(data => {
       this.gameScores = data; this.sortState = {}; this.buildAllStats(data); this.buildTournamentTotals(data);
+      this.openCurrentGame();
     });
       },
       error: () => { this.calculating = false; }
     });
+  }
+
+  // Games arrive newest first, so the first one is the current event.
+  private openCurrentGame() {
+    const current = this.gameScores[0]?.eventId;
+    if (current != null) { this.openGames.add(current); }
+  }
+
+  isGameOpen(eventId?: number): boolean {
+    return eventId != null && this.openGames.has(eventId);
+  }
+
+  toggleGame(eventId?: number) {
+    if (eventId == null) { return; }
+    if (this.openGames.has(eventId)) { this.openGames.delete(eventId); }
+    else { this.openGames.add(eventId); }
   }
 
   // Standings names open the same score-history dialog the players page uses.

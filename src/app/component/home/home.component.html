@@ -189,6 +189,11 @@
     </div>
     <div class="game-score-block">
       <div class="game-score-header">
+        <button type="button" class="game-toggle" (click)="toggleGame(game.eventId)"
+                [attr.aria-expanded]="isGameOpen(game.eventId)"
+                [attr.aria-label]="(isGameOpen(game.eventId) ? 'Collapse ' : 'Expand ') + game.eventName">
+          <mat-icon>{{ isGameOpen(game.eventId) ? 'remove' : 'add' }}</mat-icon>
+        </button>
         <span class="game-title">{{ game.eventName }}</span>
         <span class="game-date">{{ game.eventDate | date:'mediumDate' }}</span>
         <span class="game-course">
@@ -202,6 +207,7 @@
           <mat-icon class="photos-btn-icon">photo_library</mat-icon> Show Photos
         </button>
       </div>
+      <div class="game-body" *ngIf="isGameOpen(game.eventId)">
       <div class="scorecard-wrap">
         <table class="scorecard-table">
           <thead>
@@ -334,6 +340,7 @@
         </div>
       </div>
 
+      </div>
     </div>
 
     <!-- Tournament Total — shown after the last event in each tournament group -->

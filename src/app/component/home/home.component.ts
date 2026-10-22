@@ -24,6 +24,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   /** Only the most recent game is expanded; earlier ones open on the plus sign. */
   private openGames = new Set<number>();
 
+  /** Events grouped under their tournament, newest first. Built once per load. */
+  tournamentGroups: { key: number; name: string | null; events: EventScoreDetail[];
+                      from?: string; to?: string }[] = [];
+  private openTournaments = new Set<number>();
+
   // Home news cards show a 4-line teaser; these track which ones the reader opened.
   private expandedNews = new Set<number>();
 
@@ -146,10 +151,49 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Games arrive newest first, so the first one is the current event.
+  // Games arrive newest first, so the first group is the current tournament and the
+  // first game in it is the current event. Built once per load rather than in a getter,
+  // so *ngFor is not handed fresh array identities on every change-detection pass.
+  private buildTournamentGroups() {
+    this.tournamentGroups = [];
+    const byKey = new Map<number, typeof this.tournamentGroups[0]>();
+    for (const g of this.gameScores) {
+      // An event with no tournament stands on its own rather than vanishing.
+      const key = g.tournamentId != null ? g.tournamentId : -(g.eventId ?? 0);
+      let grp = byKey.get(key);
+      if (!grp) {
+        grp = {
+          key,
+          name: g.tournamentId != null ? (g.tournamentName ?? null) : null,
+          events: []
+        };
+        byKey.set(key, grp);
+        this.tournamentGroups.push(grp);
+      }
+      grp.events.push(g);
+    }
+    for (const grp of this.tournamentGroups) {
+      const dates = grp.events.map(e => e.eventDate).filter(d => !!d).sort();
+      grp.from = dates[0];
+      grp.to = dates[dates.length - 1];
+    }
+  }
+
   private openCurrentGame() {
+    this.buildTournamentGroups();
+    const currentTournament = this.tournamentGroups[0];
+    if (currentTournament) { this.openTournaments.add(currentTournament.key); }
     const current = this.gameScores[0]?.eventId;
     if (current != null) { this.openGames.add(current); }
+  }
+
+  isTournamentOpen(key: number): boolean {
+    return this.openTournaments.has(key);
+  }
+
+  toggleTournament(key: number) {
+    if (this.openTournaments.has(key)) { this.openTournaments.delete(key); }
+    else { this.openTournaments.add(key); }
   }
 
   isGameOpen(eventId?: number): boolean {

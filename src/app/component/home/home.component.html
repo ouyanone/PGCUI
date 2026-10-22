@@ -181,7 +181,26 @@
   </div>
 
   <div class="game-scores-container" *ngIf="gameScores.length > 0; else noGames">
-    <div *ngFor="let game of gameScores; let i = index">
+    <div class="tournament-group" *ngFor="let grp of tournamentGroups">
+
+      <div class="tournament-head">
+        <button type="button" class="t-toggle" (click)="toggleTournament(grp.key)"
+                [attr.aria-expanded]="isTournamentOpen(grp.key)"
+                [attr.aria-label]="(isTournamentOpen(grp.key) ? 'Collapse ' : 'Expand ') + (grp.name || grp.events[0].eventName)">
+          <mat-icon>{{ isTournamentOpen(grp.key) ? 'remove' : 'add' }}</mat-icon>
+        </button>
+        <mat-icon class="t-trophy" *ngIf="grp.name">emoji_events</mat-icon>
+        <span class="t-name">{{ grp.name || grp.events[0].eventName }}</span>
+        <span class="t-meta">
+          {{ grp.name ? grp.events.length + (grp.events.length === 1 ? ' round' : ' rounds') : 'single round' }}
+          <span class="t-dates" *ngIf="grp.from">
+            · {{ grp.from | date:'mediumDate' }}<span *ngIf="grp.to && grp.to !== grp.from"> – {{ grp.to | date:'mediumDate' }}</span>
+          </span>
+        </span>
+      </div>
+
+      <div class="tournament-body" *ngIf="isTournamentOpen(grp.key)">
+    <div *ngFor="let game of grp.events; let i = index">
     <div class="game-separator" *ngIf="i > 0">
       <span class="game-separator-line"></span>
       <mat-icon class="game-separator-icon">sports_golf</mat-icon>
@@ -388,6 +407,9 @@
     </div>
 
     </div>
+      </div>
+    </div>
+
   </div>
   <ng-template #noGames>
     <p class="empty-msg">No completed games this season.</p>

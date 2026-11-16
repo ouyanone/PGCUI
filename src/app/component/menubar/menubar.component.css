@@ -64,6 +64,8 @@
 .toolbar-join-btn mat-icon { font-size: 16px; height: 16px; width: 16px; }
 
 /* Logged-in user display */
+.toolbar-chat-btn { color: #fff; }
+
 .toolbar-user {
   display: inline-flex;
   align-items: center;

@@ -1,0 +1,37 @@
+<aside class="chat-panel" [class.open]="open" role="dialog" aria-label="Club assistant" *ngIf="open">
+  <header class="chat-header">
+    <mat-icon>chat</mat-icon>
+    <span class="chat-title">Club Assistant</span>
+    <span class="chat-spacer"></span>
+    <button mat-icon-button data-test="close" aria-label="Close club assistant" (click)="closed.emit()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </header>
+
+  <div class="chat-messages" data-test="messages">
+    <p class="chat-hint" *ngIf="lines.length === 0 && !waiting">
+      Ask about standings, players, events, scores or club news.
+    </p>
+    <div class="chat-line" *ngFor="let line of lines">
+      <div class="chat-question">{{ line.question }}</div>
+      <div class="chat-answer" *ngIf="line.answerHtml !== undefined" [innerHTML]="line.answerHtml"></div>
+      <div class="chat-refusal" *ngIf="line.refusal === 'signin'">
+        Your sign-in has expired.
+        <a data-test="signin" [href]="auth.signInUrl">Sign in again</a>
+      </div>
+      <div class="chat-refusal" *ngIf="line.refusal && line.refusal !== 'signin'">
+        {{ line.message || "The club assistant can't answer right now. Please try again in a few minutes." }}
+      </div>
+    </div>
+    <div class="chat-thinking" *ngIf="waiting">thinking…</div>
+  </div>
+
+  <form class="chat-input" (ngSubmit)="send()">
+    <textarea data-test="question" name="question" rows="2" [(ngModel)]="draft" [maxLength]="maxLength"
+              placeholder="Ask about the club…" (keydown)="onKeydown($event)"></textarea>
+    <button mat-icon-button color="primary" type="submit" data-test="send" aria-label="Send"
+            [disabled]="waiting || !draft.trim()">
+      <mat-icon>send</mat-icon>
+    </button>
+  </form>
+</aside>

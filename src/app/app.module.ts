@@ -9,6 +9,7 @@ import { MaterialModule } from './material-module';
 import { AutocompleteComponent } from './component/autocomplete/autocomplete.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MenubarComponent } from './component/menubar/menubar.component';
+import { ChatPanelComponent } from './component/chat-panel/chat-panel.component';
 import { HomeComponent } from './component/home/home.component';
 import { CardComponent } from './component/card/card.component';
 import { SliderComponent } from './component/slider/slider.component';
@@ -51,6 +52,7 @@ import { RewardDialogComponent } from './component/reward/reward-dialog.componen
 
 @NgModule({
   declarations: [
+    ChatPanelComponent,
     ScoreHistoryComponent,
     AppComponent,
     InputComponent,

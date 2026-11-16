@@ -19,6 +19,10 @@
   </a>
 
   <ng-container *ngIf="authStatus.loggedIn; else signInBtn">
+    <button mat-icon-button class="toolbar-chat-btn" aria-label="Open club assistant"
+            (click)="chatOpen = !chatOpen" [attr.aria-pressed]="chatOpen">
+      <mat-icon>chat</mat-icon>
+    </button>
     <div class="toolbar-user">
       <mat-icon>account_circle</mat-icon>
       <span class="toolbar-username">{{ authStatus.name }}</span>
@@ -32,6 +36,8 @@
     </a>
   </ng-template>
 </mat-toolbar>
+
+<app-chat-panel *ngIf="authStatus.loggedIn" [open]="chatOpen" (closed)="chatOpen = false"></app-chat-panel>
 
 <mat-drawer-container class="drawer-container" autosize>
 

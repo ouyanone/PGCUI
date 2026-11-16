@@ -137,4 +137,24 @@ describe('ChatPanelComponent', () => {
     (el().querySelector('[data-test=close]') as HTMLButtonElement).click();
     expect(closed).toBeTrue();
   });
+  it('panel: Enter that confirms a Chinese IME candidate does not send', () => {
+    open();
+    component.draft = '我的积';
+    fixture.detectChanges();
+    const input = el().querySelector('[data-test=question]') as HTMLTextAreaElement;
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', isComposing: true, bubbles: true }));
+    expect(chat.ask).not.toHaveBeenCalled();
+    expect(component.draft).toBe('我的积');
+  });
+
+  it('panel: plain Enter sends, Shift+Enter does not', () => {
+    open();
+    component.draft = 'hi';
+    fixture.detectChanges();
+    const input = el().querySelector('[data-test=question]') as HTMLTextAreaElement;
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', shiftKey: true, bubbles: true }));
+    expect(chat.ask).not.toHaveBeenCalled();
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    expect(chat.ask).toHaveBeenCalledOnceWith('hi');
+  });
 });

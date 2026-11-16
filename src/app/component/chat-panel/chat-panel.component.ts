@@ -69,7 +69,8 @@ export class ChatPanelComponent implements OnChanges {
   }
 
   onKeydown(event: KeyboardEvent): void {
-    if (event.key === 'Enter' && !event.shiftKey) {
+    // isComposing / keyCode 229: Enter is confirming a Chinese (IME) candidate, not sending.
+    if (event.key === 'Enter' && !event.shiftKey && !event.isComposing && event.keyCode !== 229) {
       event.preventDefault();
       this.send();
     }

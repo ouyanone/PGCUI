@@ -6,6 +6,7 @@ import { NewsRepresentation } from 'src/app/services/api/models/news-representat
 import { StandingRepresentation } from 'src/app/services/api/models/standing-representation';
 import { EventScoreDetail, PlayerScoreRow, RewardRow, GameStats, StatEntry } from 'src/app/services/api/models/event-score-detail';
 import { EventPhotosModalComponent } from './event-photos-modal.component';
+import { ScoreHistoryComponent } from '../score-history/score-history.component';
 
 @Component({
   selector: 'app-home',
@@ -18,6 +19,20 @@ export class HomeComponent implements OnInit, OnDestroy {
   gameScores: EventScoreDetail[] = [];
   isLoggedIn = false;
   calculating = false;
+  recalculatingHandicaps = false;
+
+  /** Only the most recent game is expanded; earlier ones open on the plus sign. */
+  private openGames = new Set<number>();
+
+  /** Events grouped under their tournament, newest first. Built once per load. */
+  tournamentGroups: { key: number; name: string | null; events: EventScoreDetail[];
+                      from?: string; to?: string }[] = [];
+  private openTournaments = new Set<number>();
+  /** Tournament totals start collapsed — they are a summary, not the main content. */
+  private openTotals = new Set<number>();
+
+  // Home news cards show a 4-line teaser; these track which ones the reader opened.
+  private expandedNews = new Set<number>();
 
   // Carousel
   carouselPhotos: any[] = [];
@@ -42,7 +57,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   tournamentTotals: Map<number, { playerName: string; gender: string; pgcHandicap: number | null; handicap: number | null; totalScore: number; totalNetScore: number }[]> = new Map();
-  tournamentLastEventId: Map<number, number> = new Map();
   tournamentSortState: { [tid: number]: { col: string; dir: 'asc' | 'desc' } } = {};
 
   ngOnInit() {
@@ -53,8 +67,9 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.gameScores = data;
       this.buildAllStats(data);
       this.buildTournamentTotals(data);
+      this.openCurrentGame();
     });
-    this.service.getCarouselPhotos(20).subscribe(photos => {
+    this.service.getCarouselPhotos(15).subscribe(photos => {
       this.carouselPhotos = photos;
       if (photos.length > 1) this.startCarousel();
     });
@@ -130,9 +145,113 @@ export class HomeComponent implements OnInit, OnDestroy {
         });
         this.service.getGameScores().subscribe(data => {
       this.gameScores = data; this.sortState = {}; this.buildAllStats(data); this.buildTournamentTotals(data);
+      this.openCurrentGame();
     });
       },
       error: () => { this.calculating = false; }
+    });
+  }
+
+  // Games arrive newest first, so the first group is the current tournament and the
+  // first game in it is the current event. Built once per load rather than in a getter,
+  // so *ngFor is not handed fresh array identities on every change-detection pass.
+  private buildTournamentGroups() {
+    this.tournamentGroups = [];
+    const byKey = new Map<number, typeof this.tournamentGroups[0]>();
+    for (const g of this.gameScores) {
+      // An event with no tournament stands on its own rather than vanishing.
+      const key = g.tournamentId != null ? g.tournamentId : -(g.eventId ?? 0);
+      let grp = byKey.get(key);
+      if (!grp) {
+        grp = {
+          key,
+          name: g.tournamentId != null ? (g.tournamentName ?? null) : null,
+          events: []
+        };
+        byKey.set(key, grp);
+        this.tournamentGroups.push(grp);
+      }
+      grp.events.push(g);
+    }
+    for (const grp of this.tournamentGroups) {
+      const dates = grp.events.map(e => e.eventDate).filter(d => !!d).sort();
+      grp.from = dates[0];
+      grp.to = dates[dates.length - 1];
+    }
+  }
+
+  private openCurrentGame() {
+    this.buildTournamentGroups();
+    const currentTournament = this.tournamentGroups[0];
+    if (currentTournament) { this.openTournaments.add(currentTournament.key); }
+    const current = this.gameScores[0]?.eventId;
+    if (current != null) { this.openGames.add(current); }
+  }
+
+  /**
+   * Rounds come newest-first within a group, so the last entry is Round 1. Derived from
+   * position rather than parsed out of the event name, which is sometimes English
+   * ("Round 2") and sometimes Chinese ("第二轮").
+   * A standalone event has no tournament to be a round of, so it keeps its own name.
+   */
+  roundLabel(grp: { name: string | null; events: EventScoreDetail[] }, i: number): string {
+    if (!grp.name) { return grp.events[i]?.eventName ?? 'Round'; }
+    return 'Round ' + (grp.events.length - i);
+  }
+
+  isTotalsOpen(key: number): boolean {
+    return this.openTotals.has(key);
+  }
+
+  toggleTotals(key: number) {
+    if (this.openTotals.has(key)) { this.openTotals.delete(key); }
+    else { this.openTotals.add(key); }
+  }
+
+  isTournamentOpen(key: number): boolean {
+    return this.openTournaments.has(key);
+  }
+
+  toggleTournament(key: number) {
+    if (this.openTournaments.has(key)) { this.openTournaments.delete(key); }
+    else { this.openTournaments.add(key); }
+  }
+
+  isGameOpen(eventId?: number): boolean {
+    return eventId != null && this.openGames.has(eventId);
+  }
+
+  toggleGame(eventId?: number) {
+    if (eventId == null) { return; }
+    if (this.openGames.has(eventId)) { this.openGames.delete(eventId); }
+    else { this.openGames.add(eventId); }
+  }
+
+  // Standings names open the same score-history dialog the players page uses.
+  openScoreHistory(playerId?: number) {
+    if (playerId == null) { return; }
+    this.dialog.open(ScoreHistoryComponent, {
+      width: '1180px',
+      maxWidth: '96vw',
+      maxHeight: '90vh',
+      data: { playerId }
+    });
+  }
+
+  // Rebuilds every active player's PGC handicap from their last 5 rounds. Normally this
+  // runs automatically when an event is marked FINISHED; this is the manual re-run for
+  // after a score correction.
+  recalculateHandicaps() {
+    this.recalculatingHandicaps = true;
+    this.service.recalculateHandicaps().subscribe({
+      next: (res) => {
+        this.recalculatingHandicaps = false;
+        alert('Handicaps recalculated for ' + (res?.playersUpdated ?? 0) + ' player(s).');
+      },
+      error: () => {
+        this.recalculatingHandicaps = false;
+        alert('Handicap recalculation failed. Please make sure you are signed in.');
+      }
     });
   }
 
@@ -207,7 +326,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   buildTournamentTotals(games: EventScoreDetail[]) {
     this.tournamentTotals.clear();
-    this.tournamentLastEventId.clear();
 
     const groups = new Map<number, EventScoreDetail[]>();
     for (const g of games) {
@@ -222,8 +340,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       const totalExpected = events[0].tournamentTotalEvents ?? 0;
       if (totalExpected === 0 || events.length !== totalExpected) return;
 
-      // Show total after the latest (first in newest-first display) event
-      this.tournamentLastEventId.set(tid, events[0].eventId!);
 
       // Players who appear in ALL events
       const playerSets = events.map(e => new Set((e.scores || []).map(s => s.playerName!)));
@@ -269,10 +385,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     return s.dir === 'asc' ? 'arrow_upward' : 'arrow_downward';
   }
 
-  isLastInTournament(game: EventScoreDetail): boolean {
-    if (!game.tournamentId) return false;
-    return this.tournamentLastEventId.get(game.tournamentId) === game.eventId;
-  }
 
   showEventPhotos(game: EventScoreDetail) {
     this.service.getEventPhotos(game.eventId!).subscribe(photos => {
@@ -286,5 +398,23 @@ export class HomeComponent implements OnInit, OnDestroy {
   parSum(pars: number[] | undefined, from: number, to: number): number {
     if (!pars) return 0;
     return pars.slice(from, to).reduce((a, b) => a + (b ?? 0), 0);
+  }
+
+  isNewsExpanded(id: number | undefined): boolean {
+    return id != null && this.expandedNews.has(id);
+  }
+
+  toggleNews(id: number | undefined): void {
+    if (id == null) { return; }
+    if (this.expandedNews.has(id)) { this.expandedNews.delete(id); }
+    else { this.expandedNews.add(id); }
+  }
+
+  // Only offer Read more on articles long enough to actually be clamped. Judged from the
+  // content rather than measured in the DOM: measuring needs an after-view-checked hook and
+  // invites ExpressionChangedAfterItHasBeenChecked for no real gain at this list size.
+  newsNeedsToggle(item: NewsRepresentation): boolean {
+    const content = item?.content ?? '';
+    return content.length > 200 || content.includes('\n');
   }
 }

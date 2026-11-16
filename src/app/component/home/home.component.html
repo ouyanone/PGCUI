@@ -106,7 +106,12 @@
         <mat-card-subtitle>{{ item.publishDate | date:'mediumDate' }}</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
-        <p class="news-content">{{ item.content }}</p>
+        <p class="news-content" [class.expanded]="isNewsExpanded(item.id)">{{ item.content }}</p>
+        <button type="button" class="news-toggle" *ngIf="newsNeedsToggle(item)"
+                (click)="toggleNews(item.id)"
+                [attr.aria-expanded]="isNewsExpanded(item.id)">
+          {{ isNewsExpanded(item.id) ? 'Show less' : 'Read more' }}
+        </button>
       </mat-card-content>
     </mat-card>
   </div>
@@ -122,6 +127,12 @@
             *ngIf="isLoggedIn" (click)="calculatePoints()" [disabled]="calculating">
       <mat-icon>calculate</mat-icon>
       {{ calculating ? 'Calculating...' : 'Calculate Points' }}
+    </button>
+    <button mat-stroked-button color="primary" class="calc-btn"
+            *ngIf="isLoggedIn" (click)="recalculateHandicaps()" [disabled]="recalculatingHandicaps"
+            title="Rebuild every player's PGC handicap from their last 5 rounds">
+      <mat-icon>refresh</mat-icon>
+      {{ recalculatingHandicaps ? 'Recalculating...' : 'Recalculate Handicaps' }}
     </button>
   </div>
 
@@ -144,7 +155,13 @@
                 {{ i + 1 }}
               </span>
             </td>
-            <td>{{ p.fName }} {{ p.lName }}</td>
+            <td>
+              <button type="button" class="player-link" *ngIf="p.id" (click)="openScoreHistory(p.id)"
+                      [attr.aria-label]="'Score history for ' + p.fName + ' ' + p.lName">
+                {{ p.fName }} {{ p.lName }}
+              </button>
+              <span *ngIf="!p.id">{{ p.fName }} {{ p.lName }}</span>
+            </td>
             <td class="points-cell">{{ p.pgcPoints ?? 0 }}</td>
             <td>{{ p.pgcHandicap }}</td>
             <td>{{ (p.handicap && p.handicap !== 0) ? p.handicap : 'N/A' }}</td>
@@ -164,27 +181,63 @@
   </div>
 
   <div class="game-scores-container" *ngIf="gameScores.length > 0; else noGames">
-    <div *ngFor="let game of gameScores; let i = index">
+    <div class="tournament-group" *ngFor="let grp of tournamentGroups">
+
+      <div class="tournament-head">
+        <button type="button" class="t-toggle" (click)="toggleTournament(grp.key)"
+                [attr.aria-expanded]="isTournamentOpen(grp.key)"
+                [attr.aria-label]="(isTournamentOpen(grp.key) ? 'Collapse ' : 'Expand ') + (grp.name || grp.events[0].eventName)">
+          <mat-icon>{{ isTournamentOpen(grp.key) ? 'remove' : 'add' }}</mat-icon>
+        </button>
+        <mat-icon class="t-trophy" *ngIf="grp.name">emoji_events</mat-icon>
+        <span class="t-name">{{ grp.name || grp.events[0].eventName }}</span>
+        <span class="t-meta">
+          {{ grp.name ? grp.events.length + (grp.events.length === 1 ? ' round' : ' rounds') : 'single round' }}
+          <span class="t-dates" *ngIf="grp.from">
+            · {{ grp.from | date:'mediumDate' }}<span *ngIf="grp.to && grp.to !== grp.from"> – {{ grp.to | date:'mediumDate' }}</span>
+          </span>
+        </span>
+      </div>
+
+      <div class="tournament-body" *ngIf="isTournamentOpen(grp.key)">
+    <div *ngFor="let game of grp.events; let i = index">
     <div class="game-separator" *ngIf="i > 0">
       <span class="game-separator-line"></span>
       <mat-icon class="game-separator-icon">sports_golf</mat-icon>
       <span class="game-separator-line"></span>
     </div>
     <div class="game-score-block">
-      <div class="game-score-header">
-        <span class="game-title">{{ game.eventName }}</span>
-        <span class="game-date">{{ game.eventDate | date:'mediumDate' }}</span>
-        <span class="game-course">
-          <mat-icon class="inline-icon">golf_course</mat-icon>{{ game.courseName }}
-        </span>
-        <span class="tournament-badge" *ngIf="game.tournamentName">
-          <mat-icon class="tournament-badge-icon">emoji_events</mat-icon>{{ game.tournamentName }}
-        </span>
-        <button class="show-photos-btn" *ngIf="eventIdsWithPhotos.has(game.eventId!)"
-                (click)="showEventPhotos(game)">
-          <mat-icon class="photos-btn-icon">photo_library</mat-icon> Show Photos
+      <!-- Collapsed, this is just "Round 2" and a plus sign; open, it carries the full
+           event name, date, course and photo link. -->
+      <div class="game-score-header" [class.collapsed]="!isGameOpen(game.eventId)">
+        <button type="button" class="game-toggle" (click)="toggleGame(game.eventId)"
+                [attr.aria-expanded]="isGameOpen(game.eventId)"
+                [attr.aria-label]="(isGameOpen(game.eventId) ? 'Collapse ' : 'Expand ') + roundLabel(grp, i)">
+          <mat-icon>{{ isGameOpen(game.eventId) ? 'remove' : 'add' }}</mat-icon>
         </button>
+
+        <ng-container *ngIf="!isGameOpen(game.eventId)">
+          <button type="button" class="round-label" (click)="toggleGame(game.eventId)">
+            {{ roundLabel(grp, i) }}
+          </button>
+        </ng-container>
+
+        <ng-container *ngIf="isGameOpen(game.eventId)">
+          <span class="game-title">{{ game.eventName }}</span>
+          <span class="game-date">{{ game.eventDate | date:'mediumDate' }}</span>
+          <span class="game-course">
+            <mat-icon class="inline-icon">golf_course</mat-icon>{{ game.courseName }}
+          </span>
+          <span class="tournament-badge" *ngIf="game.tournamentName">
+            <mat-icon class="tournament-badge-icon">emoji_events</mat-icon>{{ game.tournamentName }}
+          </span>
+          <button class="show-photos-btn" *ngIf="eventIdsWithPhotos.has(game.eventId!)"
+                  (click)="showEventPhotos(game)">
+            <mat-icon class="photos-btn-icon">photo_library</mat-icon> Show Photos
+          </button>
+        </ng-container>
       </div>
+      <div class="game-body" *ngIf="isGameOpen(game.eventId)">
       <div class="scorecard-wrap">
         <table class="scorecard-table">
           <thead>
@@ -317,40 +370,51 @@
         </div>
       </div>
 
+      </div>
     </div>
 
     <!-- Tournament Total — shown after the last event in each tournament group -->
-    <div class="tournament-total-block" *ngIf="isLastInTournament(game) && tournamentTotals.get(game.tournamentId!)?.length">
-      <div class="tournament-total-header">
+
+    </div>
+
+      <!-- Tournament total, after all the rounds in the group. Collapsed by default. -->
+      <div class="tournament-total-block"
+           *ngIf="grp.key > 0 && tournamentTotals.get(grp.key)?.length">
+        <div class="tournament-total-header" [class.collapsed]="!isTotalsOpen(grp.key)">
+          <button type="button" class="game-toggle" (click)="toggleTotals(grp.key)"
+                  [attr.aria-expanded]="isTotalsOpen(grp.key)"
+                  [attr.aria-label]="(isTotalsOpen(grp.key) ? 'Collapse ' : 'Expand ') + 'tournament total'">
+            <mat-icon>{{ isTotalsOpen(grp.key) ? 'remove' : 'add' }}</mat-icon>
+          </button>
         <mat-icon>emoji_events</mat-icon>
-        {{ game.tournamentName }} — Tournament Total
+        {{ grp.name }} — Tournament Total
       </div>
-      <div class="scorecard-wrap">
+      <div class="scorecard-wrap" *ngIf="isTotalsOpen(grp.key)">
         <table class="scorecard-table tournament-total-table">
           <thead>
             <tr>
-              <th class="player-col sortable" (click)="sortTournamentTotals(game.tournamentId!, 'playerName')">
-                Player <mat-icon class="sort-icon">{{ tournamentSortIcon(game.tournamentId!, 'playerName') }}</mat-icon>
+              <th class="player-col sortable" (click)="sortTournamentTotals(grp.key, 'playerName')">
+                Player <mat-icon class="sort-icon">{{ tournamentSortIcon(grp.key, 'playerName') }}</mat-icon>
               </th>
-              <th class="sortable" (click)="sortTournamentTotals(game.tournamentId!, 'gender')">
-                Gender <mat-icon class="sort-icon">{{ tournamentSortIcon(game.tournamentId!, 'gender') }}</mat-icon>
+              <th class="sortable" (click)="sortTournamentTotals(grp.key, 'gender')">
+                Gender <mat-icon class="sort-icon">{{ tournamentSortIcon(grp.key, 'gender') }}</mat-icon>
               </th>
-              <th class="sortable" (click)="sortTournamentTotals(game.tournamentId!, 'pgcHandicap')">
-                PGC HC <mat-icon class="sort-icon">{{ tournamentSortIcon(game.tournamentId!, 'pgcHandicap') }}</mat-icon>
+              <th class="sortable" (click)="sortTournamentTotals(grp.key, 'pgcHandicap')">
+                PGC HC <mat-icon class="sort-icon">{{ tournamentSortIcon(grp.key, 'pgcHandicap') }}</mat-icon>
               </th>
-              <th class="sortable" (click)="sortTournamentTotals(game.tournamentId!, 'handicap')">
-                GHIN <mat-icon class="sort-icon">{{ tournamentSortIcon(game.tournamentId!, 'handicap') }}</mat-icon>
+              <th class="sortable" (click)="sortTournamentTotals(grp.key, 'handicap')">
+                GHIN <mat-icon class="sort-icon">{{ tournamentSortIcon(grp.key, 'handicap') }}</mat-icon>
               </th>
-              <th class="total-col sortable" (click)="sortTournamentTotals(game.tournamentId!, 'totalScore')">
-                Total Score <mat-icon class="sort-icon">{{ tournamentSortIcon(game.tournamentId!, 'totalScore') }}</mat-icon>
+              <th class="total-col sortable" (click)="sortTournamentTotals(grp.key, 'totalScore')">
+                Total Score <mat-icon class="sort-icon">{{ tournamentSortIcon(grp.key, 'totalScore') }}</mat-icon>
               </th>
-              <th class="net-col sortable" (click)="sortTournamentTotals(game.tournamentId!, 'totalNetScore')">
-                Total Net <mat-icon class="sort-icon">{{ tournamentSortIcon(game.tournamentId!, 'totalNetScore') }}</mat-icon>
+              <th class="net-col sortable" (click)="sortTournamentTotals(grp.key, 'totalNetScore')">
+                Total Net <mat-icon class="sort-icon">{{ tournamentSortIcon(grp.key, 'totalNetScore') }}</mat-icon>
               </th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let row of tournamentTotals.get(game.tournamentId!)">
+            <tr *ngFor="let row of tournamentTotals.get(grp.key)">
               <td class="player-col">{{ row.playerName }}</td>
               <td>{{ row.gender || '—' }}</td>
               <td>{{ row.pgcHandicap != null ? row.pgcHandicap : '—' }}</td>
@@ -362,8 +426,9 @@
         </table>
       </div>
     </div>
-
+      </div>
     </div>
+
   </div>
   <ng-template #noGames>
     <p class="empty-msg">No completed games this season.</p>

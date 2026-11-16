@@ -290,7 +290,22 @@
   display: -webkit-box; -webkit-line-clamp: 4;
   -webkit-box-orient: vertical; overflow: hidden;
   margin: 0;
+  /* Article bodies carry real newlines; without this the browser collapses them
+     into spaces and multi-paragraph news renders as one run-on block. */
+  white-space: pre-line;
+  overflow-wrap: break-word;
 }
+/* Expanded: drop the clamp so the whole article shows. */
+.news-content.expanded {
+  display: block; -webkit-line-clamp: none; overflow: visible;
+}
+.news-toggle {
+  margin-top: 8px; padding: 0; border: 0; background: none; cursor: pointer;
+  font-size: 13px; font-weight: 500; color: #1976d2;
+  font-family: inherit;
+}
+.news-toggle:hover { text-decoration: underline; }
+.news-toggle:focus-visible { outline: 2px solid #1976d2; outline-offset: 2px; border-radius: 2px; }
 
 /* ── Standings ── */
 .standings-container { padding: 0 24px 40px; max-width: 960px; margin: 0 auto; }
@@ -495,3 +510,85 @@
   .standings-container { padding: 0 12px 24px; }
   .section-title { padding: 0 12px 8px; }
 }
+
+/* Standings player names open their score history. */
+.player-link {
+  background: none; border: 0; padding: 0; font: inherit; color: #1976d2;
+  cursor: pointer; text-align: left;
+}
+.player-link:hover { text-decoration: underline; }
+.player-link:focus-visible { outline: 2px solid #1976d2; outline-offset: 2px; border-radius: 2px; }
+
+/* Collapsed game blocks: only the current event is open by default. */
+.game-toggle {
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+  width: 30px; height: 30px; margin-right: 10px; padding: 0;
+  background: #fff; color: #1976d2; border: 1px solid #bbdefb;
+  border-radius: 50%; cursor: pointer;
+}
+.game-toggle:hover { background: #e3f2fd; }
+.game-toggle:focus-visible { outline: 2px solid #1976d2; outline-offset: 2px; }
+.game-toggle mat-icon { font-size: 20px; height: 20px; width: 20px; }
+
+/* Tournament grouping: only the current tournament is open by default. */
+/* No max-width or auto margin: the game blocks below have none either, so capping
+   and centring this made the header inset from the scorecards and a short
+   tournament name look centred. */
+.tournament-group { margin: 0 0 10px; }
+.tournament-head {
+  display: flex; align-items: center; justify-content: flex-start; gap: 10px; flex-wrap: wrap;
+  text-align: left;
+  padding: 12px 16px; background: #fff; border: 1px solid #dde3ec;
+  border-left: 4px solid #1976d2; border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+}
+.t-toggle {
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+  width: 32px; height: 32px; padding: 0; cursor: pointer;
+  background: #1976d2; color: #fff; border: 0; border-radius: 50%;
+}
+.t-toggle:hover { background: #1565c0; }
+.t-toggle:focus-visible { outline: 2px solid #1976d2; outline-offset: 2px; }
+.t-toggle mat-icon { font-size: 20px; height: 20px; width: 20px; }
+.t-trophy { color: #f9a825; flex: none; }
+.t-name { font-size: 16px; font-weight: 600; color: #1e293b; }
+.t-meta { font-size: 12.5px; color: #64748b; }
+/* Indent the rounds so the tournament reads as their parent, with a guide line
+   dropping from under the toggle to make the nesting visible. */
+.tournament-body {
+  padding: 8px 0 0 26px;
+  margin-left: 15px;
+  border-left: 2px solid #d6e9fb;
+}
+
+@media (max-width: 600px) {
+  /* Scorecards are wide; keep the indent token on a phone. */
+  .tournament-body { padding-left: 10px; margin-left: 10px; }
+  .tournament-head { padding: 10px 12px; gap: 8px; }
+  .t-name { font-size: 14.5px; }
+  .t-meta { font-size: 11.5px; width: 100%; padding-left: 42px; }
+}
+@media (min-width: 900px) {
+  .t-name { font-size: 18px; }
+  .t-meta { font-size: 13.5px; }
+}
+
+/* A collapsed round is a quiet one-line row, not a full gradient banner. */
+.game-score-header.collapsed {
+  background: #f4f8fd;
+  color: #1e293b;
+  padding: 9px 14px;
+}
+.round-label {
+  background: none; border: 0; padding: 0; font: inherit; font-size: 15px; font-weight: 600;
+  color: #1565c0; cursor: pointer; text-align: left;
+}
+.round-label:hover { text-decoration: underline; }
+.round-label:focus-visible { outline: 2px solid #1976d2; outline-offset: 2px; border-radius: 2px; }
+@media (min-width: 900px) {
+  .round-label { font-size: 16px; }
+}
+
+/* Tournament total: a collapsed summary row until opened. */
+.tournament-total-header { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.tournament-total-header.collapsed { opacity: .92; }

@@ -116,6 +116,9 @@
   </div>
 
   <mat-dialog-actions align="end" class="profile-actions">
+    <button mat-stroked-button type="button" class="history-btn" (click)="viewScoreHistory()">
+      <mat-icon>bar_chart</mat-icon> Score History
+    </button>
     <button mat-stroked-button type="button" (click)="close()">Close</button>
     <button mat-raised-button color="primary" type="submit" *ngIf="isLoggedIn">
       <mat-icon>save</mat-icon> Save Changes

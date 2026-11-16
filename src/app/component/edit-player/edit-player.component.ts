@@ -104,6 +104,12 @@ export class EditPlayerComponent implements OnInit {
     this.service.editPlayer(this.myform.value).subscribe(() => this.ref.close('saved'));
   }
 
+  // Hand off rather than stacking a second dialog on top of this one: close with a
+  // result and let the players page open the history.
+  viewScoreHistory() {
+    this.ref.close({ showScoreHistory: true, playerId: this.inputdata?.userId });
+  }
+
   close() {
     this.ref.close();
   }

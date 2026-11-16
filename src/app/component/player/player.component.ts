@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PlayerService } from '../../services/player.service';
 import { PlayerRepresentation } from '../../services/api/models/player-representation';
 import { MatDialog } from '@angular/material/dialog';
+import { ScoreHistoryComponent } from '../score-history/score-history.component';
 import { PopupComponent } from '../popup/popup.component';
 import { GhinSyncComponent } from '../ghin-sync/ghin-sync.component';
 import { EditPlayerComponent } from '../edit-player/edit-player.component';
@@ -15,7 +16,11 @@ import 'ag-grid-enterprise';
 })
 export class PlayerComponent implements OnInit {
 
-  players: PlayerRepresentation[] = [];
+  /** Everything the server sent, including inactive players. */
+  allPlayers: PlayerRepresentation[] = [];
+
+  /** PGC members by default; the toggle widens it. */
+  view: 'member' | 'active' | 'all' = 'member';
   private gridApi!: GridApi<any>;
 
   colDefs: ColDef[] = [
@@ -35,12 +40,31 @@ export class PlayerComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.service.getAllPlayer().subscribe({
-      next: result => { this.players = result; },
+    this.service.getAllPlayer(true).subscribe({
+      next: result => { this.allPlayers = result; },
       error: err => {
         if (err.status === 0) window.location.href = 'https://shiyuan.club/oauth2/authorization/cognito';
       }
     });
+  }
+
+  /** The rows the grid shows, per the selected view. */
+  get players(): PlayerRepresentation[] {
+    if (this.view === 'all') { return this.allPlayers; }
+    if (this.view === 'active') { return this.allPlayers.filter(p => p.isActive); }
+    // "PGC member" means the membership flag is actually set, not merely not-false:
+    // 21 players have it null, and null is not a member.
+    return this.allPlayers.filter(p => p.pgc2025 === true);
+  }
+
+  countFor(view: 'member' | 'active' | 'all'): number {
+    if (view === 'all') { return this.allPlayers.length; }
+    if (view === 'active') { return this.allPlayers.filter(p => p.isActive).length; }
+    return this.allPlayers.filter(p => p.pgc2025 === true).length;
+  }
+
+  setView(view: 'member' | 'active' | 'all') {
+    this.view = view;
   }
 
   onGridReady(params: GridReadyEvent<any>) {
@@ -60,8 +84,26 @@ export class PlayerComponent implements OnInit {
       disableClose: false,
       data: { title: 'Edit player', userId: playerId }
     });
-    ref.afterClosed().subscribe(() => {
-      this.service.getAllPlayer().subscribe({ next: r => { this.players = r; } });
+    ref.afterClosed().subscribe(result => {
+      this.service.getAllPlayer(true).subscribe({ next: r => { this.allPlayers = r; } });
+      if (result?.showScoreHistory && result.playerId) {
+        this.openScoreHistory(result.playerId);
+      }
+    });
+  }
+
+  openScoreHistory(playerId: number) {
+    const ref = this.dialog.open(ScoreHistoryComponent, {
+      width: '1180px',
+      maxWidth: '96vw',
+      maxHeight: '90vh',
+      data: { playerId, returnToProfile: true }
+    });
+    // The profile dialog closed to let this one open, so going back means reopening it.
+    ref.afterClosed().subscribe(result => {
+      if (result?.backToProfile && result.playerId) {
+        this.openEditPlayer(result.playerId);
+      }
     });
   }
 
@@ -76,7 +118,7 @@ export class PlayerComponent implements OnInit {
       data: { title: 'Player @ Shi Yuan Club in Forsgate' }
     });
     ref.afterClosed().subscribe(() => {
-      this.service.getAllPlayer().subscribe({ next: r => { this.players = r; } });
+      this.service.getAllPlayer(true).subscribe({ next: r => { this.allPlayers = r; } });
     });
   }
 
@@ -91,7 +133,7 @@ export class PlayerComponent implements OnInit {
       data: { title: 'Updating all players handicap' }
     });
     ref.afterClosed().subscribe(() => {
-      this.service.getAllPlayer().subscribe({ next: r => { this.players = r; } });
+      this.service.getAllPlayer(true).subscribe({ next: r => { this.allPlayers = r; } });
     });
   }
 }

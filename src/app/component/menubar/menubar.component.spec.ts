@@ -1,23 +1,47 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { RouterTestingModule } from '@angular/router/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { of } from 'rxjs';
 
 import { MenubarComponent } from './menubar.component';
+import { AuthService, AuthStatus } from '../../services/auth.service';
+import { MaterialModule } from '../../material-module';
 
 describe('MenubarComponent', () => {
-  let component: MenubarComponent;
   let fixture: ComponentFixture<MenubarComponent>;
 
-  beforeEach(async () => {
+  async function render(status: AuthStatus) {
     await TestBed.configureTestingModule({
-      declarations: [ MenubarComponent ]
-    })
-    .compileComponents();
-
+      declarations: [MenubarComponent],
+      imports: [RouterTestingModule, NoopAnimationsModule, MaterialModule],
+      providers: [{ provide: AuthService, useValue: { getStatus: () => of(status), signInUrl: '/oauth2/authorization/cognito' } }],
+      // app-chat-panel is tested on its own; here only whether the menubar offers it.
+      schemas: [NO_ERRORS_SCHEMA],
+    }).compileComponents();
     fixture = TestBed.createComponent(MenubarComponent);
-    component = fixture.componentInstance;
     fixture.detectChanges();
+  }
+
+  function assistantButton(): HTMLButtonElement | null {
+    return (fixture.nativeElement as HTMLElement).querySelector('button[aria-label="Open club assistant"]');
+  }
+
+  it('menubar: icon hidden when logged out', async () => {
+    await render({ loggedIn: false });
+    expect(assistantButton()).toBeNull();
+    expect((fixture.nativeElement as HTMLElement).querySelector('app-chat-panel')).toBeNull();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('menubar: icon shown when logged in', async () => {
+    await render({ loggedIn: true, name: 'Jane Lee' });
+    expect(assistantButton()).not.toBeNull();
+  });
+
+  it('menubar: clicking the icon opens the panel', async () => {
+    await render({ loggedIn: true, name: 'Jane Lee' });
+    assistantButton()!.click();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.chatOpen).toBeTrue();
   });
 });

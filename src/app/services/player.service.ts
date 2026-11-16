@@ -12,6 +12,7 @@ import { SeasonRepresentation } from '../services/api/models/season-representati
 import { NewsRepresentation } from '../services/api/models/news-representation';
 import { StandingRepresentation } from '../services/api/models/standing-representation';
 import { EventScoreDetail } from '../services/api/models/event-score-detail';
+import { PlayerScoreHistory } from '../services/api/models/player-score-history';
 @Injectable({
   providedIn: 'root'
 })
@@ -35,8 +36,10 @@ export class PlayerService {
 
 
 
-  getAllPlayer() {
-    const playersUrl = `${this.baseUrl}webapi/players`;
+  // Active players only unless asked otherwise — the donation and reward pickers rely
+  // on that. The players grid passes true so it can offer an "All users" view.
+  getAllPlayer(includeInactive = false) {
+    const playersUrl = `${this.baseUrl}webapi/players${includeInactive ? '?includeInactive=true' : ''}`;
     return this.http.get<Array<PlayerRepresentation>>(playersUrl);
   }
 
@@ -48,6 +51,11 @@ export class PlayerService {
   editPlayer(data:any) {
     const playersUrl = `${this.baseUrl}webapi/admin/players`;
     return this.http.post(playersUrl, data, { withCredentials: true });
+  }
+
+  // Every round this player has posted. Public — no credentials needed.
+  getScoreHistory(playerId: number) {
+    return this.http.get<PlayerScoreHistory>(`${this.baseUrl}webapi/players/${playerId}/score-history`);
   }
 
   getPlayerById(id:any) {
@@ -206,6 +214,11 @@ export class PlayerService {
     return this.http.post(`${this.baseUrl}webapi/admin/points/calculate`, {}, { withCredentials: true });
   }
 
+  recalculateHandicaps() {
+    return this.http.post<{ playersUpdated: number }>(
+      `${this.baseUrl}webapi/admin/handicaps/recalculate`, {}, { withCredentials: true });
+  }
+
   getGameScores() {
     return this.http.get<EventScoreDetail[]>(`${this.baseUrl}webapi/points/game-scores`);
   }
@@ -218,8 +231,9 @@ export class PlayerService {
     return this.http.get<EventScoreDetail[]>(`${this.baseUrl}webapi/points/game-scores/tournament/${tournamentId}`);
   }
 
-  getCarouselPhotos(count = 20) {
-    return this.http.get<any[]>(`${this.baseUrl}webapi/photos/random?count=${count}`);
+  // Photos from the most recent events (by event date), newest first.
+  getCarouselPhotos(count = 15) {
+    return this.http.get<any[]>(`${this.baseUrl}webapi/photos/latest?count=${count}`);
   }
 
   getEventIdsWithPhotos() {

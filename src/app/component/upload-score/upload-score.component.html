@@ -97,8 +97,8 @@
       <mat-icon>how_to_reg</mat-icon> Check User
     </button>
     <button mat-raised-button color="primary" (click)="onSubmit($event)" class="action-btn"
-            [disabled]="selectedEventId == null">
-      <mat-icon>save</mat-icon> Submit Score
+            [disabled]="selectedEventId == null || submitting">
+      <mat-icon>save</mat-icon> {{ submitting ? 'Submitting...' : 'Submit Score' }}
     </button>
   </div>
 

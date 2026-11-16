@@ -11,6 +11,8 @@ import { AuthService, AuthStatus } from 'src/app/services/auth.service';
 export class MenubarComponent implements OnInit, OnDestroy {
   isDesktop = true;
   authStatus: AuthStatus = { loggedIn: false };
+  /** The club assistant panel (signed-in members only). */
+  chatOpen = false;
   private bpSub!: Subscription;
   private authSub!: Subscription;
 

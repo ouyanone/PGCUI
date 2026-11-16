@@ -36,6 +36,7 @@ export class UploadScoreComponent implements OnInit {
   private eventPlayers: { f: string; l: string }[] = [];
   checked = false;
   unmatchedCount = 0;
+  submitting = false;
   private gridApi: any;
 
   // Paint rows whose player name isn't found in the selected event.
@@ -257,10 +258,30 @@ export class UploadScoreComponent implements OnInit {
        + 'Submit the matched players anyway?');
      if (!proceed) { return; }
    }
-   console.log('onSubmit submitted to event ' + this.selectedEventId, this.scoreRowData);
-   this.service.submitScores(this.scoreRowData, this.selectedEventId).subscribe(item => {
-    console.log('item==='+item);
-  });
+   this.submitting = true;
+   this.service.submitScores(this.scoreRowData, this.selectedEventId).subscribe({
+     next: () => {
+       this.submitting = false;
+       const skipped = this.checked ? this.unmatchedCount : 0;
+       alert('Scores submitted for ' + (this.scoreRowData.length - skipped) + ' player(s).');
+     },
+     error: (err) => {
+       this.submitting = false;
+       // The backend returns a 400 with a plain-text explanation (e.g. the event has
+       // no course assigned); show it verbatim so the admin knows what to fix.
+       alert(this.errorMessage(err));
+     }
+   });
+  }
+
+  // Pull the server's message out of an HttpErrorResponse, falling back to something
+  // useful when the body is empty or the request never reached the server.
+  private errorMessage(err: any): string {
+    const body = err?.error;
+    if (typeof body === 'string' && body.trim()) { return body; }
+    if (body?.message) { return body.message; }
+    if (err?.message) { return err.message; }
+    return 'Score submission failed. Please try again.';
   }
 
 

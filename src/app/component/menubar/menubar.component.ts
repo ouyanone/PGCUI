@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Subscription } from 'rxjs';
 import { AuthService, AuthStatus } from 'src/app/services/auth.service';
+import { ChatVariant } from 'src/app/services/chat.service';
 
 @Component({
   selector: 'app-menubar',
@@ -11,8 +12,8 @@ import { AuthService, AuthStatus } from 'src/app/services/auth.service';
 export class MenubarComponent implements OnInit, OnDestroy {
   isDesktop = true;
   authStatus: AuthStatus = { loggedIn: false };
-  /** The club assistant panel (signed-in members only). */
-  chatOpen = false;
+  /** Which club assistant is open, if any (signed-in members only). One panel at a time. */
+  chatOpen: ChatVariant | null = null;
   private bpSub!: Subscription;
   private authSub!: Subscription;
 
@@ -31,6 +32,10 @@ export class MenubarComponent implements OnInit, OnDestroy {
     this.authSub = this.authService.getStatus().subscribe(status => {
       this.authStatus = status;
     });
+  }
+
+  toggleChat(variant: ChatVariant) {
+    this.chatOpen = this.chatOpen === variant ? null : variant;
   }
 
   ngOnDestroy() {

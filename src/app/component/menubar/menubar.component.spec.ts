@@ -42,6 +42,47 @@ describe('MenubarComponent', () => {
     await render({ loggedIn: true, name: 'Jane Lee' });
     assistantButton()!.click();
     fixture.detectChanges();
-    expect(fixture.componentInstance.chatOpen).toBeTrue();
+    expect(fixture.componentInstance.chatOpen).toBe('sdk');
+  });
+
+  function sButton(): HTMLButtonElement | null {
+    return (fixture.nativeElement as HTMLElement).querySelector('[data-test=chat-springai]');
+  }
+
+  function panels(): NodeListOf<Element> {
+    return (fixture.nativeElement as HTMLElement).querySelectorAll('app-chat-panel');
+  }
+
+  it('menubar: S button hidden when logged out', async () => {
+    await render({ loggedIn: false });
+    expect(sButton()).toBeNull();
+  });
+
+  it('menubar: S button shows an S and opens the Spring AI panel', async () => {
+    await render({ loggedIn: true, name: 'Jane Lee' });
+    expect(sButton()!.getAttribute('aria-label')).toBe('Open club assistant (Spring AI)');
+    expect(sButton()!.textContent!.trim()).toBe('S');
+    sButton()!.click();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.chatOpen).toBe('springai');
+  });
+
+  it('menubar: S after the chat icon switches bots, one panel only', async () => {
+    await render({ loggedIn: true, name: 'Jane Lee' });
+    assistantButton()!.click();
+    fixture.detectChanges();
+    sButton()!.click();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.chatOpen).toBe('springai');
+    expect(panels().length).toBe(1);
+  });
+
+  it('menubar: clicking S twice closes it', async () => {
+    await render({ loggedIn: true, name: 'Jane Lee' });
+    sButton()!.click();
+    fixture.detectChanges();
+    sButton()!.click();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.chatOpen).toBeNull();
   });
 });

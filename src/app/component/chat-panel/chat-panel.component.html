@@ -1,7 +1,7 @@
 <aside class="chat-panel" [class.open]="open" role="dialog" aria-label="Club assistant" *ngIf="open">
   <header class="chat-header">
     <mat-icon>chat</mat-icon>
-    <span class="chat-title">Club Assistant</span>
+    <span class="chat-title">{{ variant === 'springai' ? 'Club Assistant (Spring AI)' : 'Club Assistant' }}</span>
     <span class="chat-spacer"></span>
     <button mat-icon-button data-test="close" aria-label="Close club assistant" (click)="closed.emit()">
       <mat-icon>close</mat-icon>

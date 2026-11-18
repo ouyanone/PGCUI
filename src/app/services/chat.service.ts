@@ -17,7 +17,10 @@ export interface ChatReply {
   message?: string;
 }
 
-/** The club assistant's two endpoints. The session cookie is the member's credential. */
+/** Which backend answers: the Anthropic Java SDK bot, or the Spring AI one. Both share history. */
+export type ChatVariant = 'sdk' | 'springai';
+
+/** The club assistant's endpoints. The session cookie is the member's credential. */
 @Injectable({ providedIn: 'root' })
 export class ChatService {
 
@@ -29,9 +32,10 @@ export class ChatService {
       .pipe(catchError(() => of([] as ChatExchange[])));
   }
 
-  ask(question: string): Observable<ChatReply> {
+  ask(question: string, variant: ChatVariant = 'sdk'): Observable<ChatReply> {
+    const path = variant === 'springai' ? '/webapi/chat/spring' : '/webapi/chat';
     return this.http
-      .post<ChatReply>(`${this.auth.backendUrl}/webapi/chat`, { question }, { withCredentials: true })
+      .post<ChatReply>(`${this.auth.backendUrl}${path}`, { question }, { withCredentials: true })
       .pipe(catchError((e: HttpErrorResponse) => of(
         e.status === 401 ? { refusal: 'signin' }
           : e.error && typeof e.error === 'object' && e.error.refusal ? e.error as ChatReply

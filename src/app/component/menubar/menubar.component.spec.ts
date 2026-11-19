@@ -38,6 +38,16 @@ describe('MenubarComponent', () => {
     expect(assistantButton()).not.toBeNull();
   });
 
+  function letterOf(button: HTMLButtonElement): string {
+    return button.querySelector('.chat-letter')!.textContent!.trim();
+  }
+
+  it('menubar: chat icon is a bubble marked J', async () => {
+    await render({ loggedIn: true, name: 'Jane Lee' });
+    expect(assistantButton()!.querySelector('mat-icon')!.textContent!.trim()).toBe('chat_bubble');
+    expect(letterOf(assistantButton()!)).toBe('J');
+  });
+
   it('menubar: clicking the icon opens the panel', async () => {
     await render({ loggedIn: true, name: 'Jane Lee' });
     assistantButton()!.click();
@@ -58,10 +68,11 @@ describe('MenubarComponent', () => {
     expect(sButton()).toBeNull();
   });
 
-  it('menubar: S button shows an S and opens the Spring AI panel', async () => {
+  it('menubar: S button is a bubble marked S and opens the Spring AI panel', async () => {
     await render({ loggedIn: true, name: 'Jane Lee' });
     expect(sButton()!.getAttribute('aria-label')).toBe('Open club assistant (Spring AI)');
-    expect(sButton()!.textContent!.trim()).toBe('S');
+    expect(sButton()!.querySelector('mat-icon')!.textContent!.trim()).toBe('chat_bubble');
+    expect(letterOf(sButton()!)).toBe('S');
     sButton()!.click();
     fixture.detectChanges();
     expect(fixture.componentInstance.chatOpen).toBe('springai');

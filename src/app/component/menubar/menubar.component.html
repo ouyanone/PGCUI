@@ -21,12 +21,12 @@
   <ng-container *ngIf="authStatus.loggedIn; else signInBtn">
     <button mat-icon-button class="toolbar-chat-btn" aria-label="Open club assistant"
             (click)="toggleChat('sdk')" [attr.aria-pressed]="chatOpen === 'sdk'">
-      <mat-icon>chat</mat-icon>
+      <mat-icon>chat_bubble</mat-icon><span class="chat-letter" aria-hidden="true">J</span>
     </button>
     <button mat-icon-button class="toolbar-chat-btn" data-test="chat-springai"
             aria-label="Open club assistant (Spring AI)"
             (click)="toggleChat('springai')" [attr.aria-pressed]="chatOpen === 'springai'">
-      <span class="chat-s-badge">S</span>
+      <mat-icon>chat_bubble</mat-icon><span class="chat-letter" aria-hidden="true">S</span>
     </button>
     <div class="toolbar-user">
       <mat-icon>account_circle</mat-icon>

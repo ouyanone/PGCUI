@@ -20,8 +20,13 @@
 
   <ng-container *ngIf="authStatus.loggedIn; else signInBtn">
     <button mat-icon-button class="toolbar-chat-btn" aria-label="Open club assistant"
-            (click)="chatOpen = !chatOpen" [attr.aria-pressed]="chatOpen">
-      <mat-icon>chat</mat-icon>
+            (click)="toggleChat('sdk')" [attr.aria-pressed]="chatOpen === 'sdk'">
+      <mat-icon>chat_bubble</mat-icon><span class="chat-letter" aria-hidden="true">J</span>
+    </button>
+    <button mat-icon-button class="toolbar-chat-btn" data-test="chat-springai"
+            aria-label="Open club assistant (Spring AI)"
+            (click)="toggleChat('springai')" [attr.aria-pressed]="chatOpen === 'springai'">
+      <mat-icon>chat_bubble</mat-icon><span class="chat-letter" aria-hidden="true">S</span>
     </button>
     <div class="toolbar-user">
       <mat-icon>account_circle</mat-icon>
@@ -37,7 +42,8 @@
   </ng-template>
 </mat-toolbar>
 
-<app-chat-panel *ngIf="authStatus.loggedIn" [open]="chatOpen" (closed)="chatOpen = false"></app-chat-panel>
+<app-chat-panel *ngIf="authStatus.loggedIn" [open]="chatOpen !== null" [variant]="chatOpen ?? 'sdk'"
+                (closed)="chatOpen = null"></app-chat-panel>
 
 <mat-drawer-container class="drawer-container" autosize>
 

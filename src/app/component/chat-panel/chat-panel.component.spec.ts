@@ -50,6 +50,24 @@ describe('ChatPanelComponent', () => {
     fixture.detectChanges();
   }
 
+  it('panel: title says Spring AI for the springai variant', () => {
+    component.variant = 'springai';
+    open();
+    expect(el().querySelector('.chat-title')!.textContent!.trim()).toBe('Club Assistant (Spring AI)');
+  });
+
+  it('panel: title is plain for the default variant', () => {
+    open();
+    expect(el().querySelector('.chat-title')!.textContent!.trim()).toBe('Club Assistant');
+  });
+
+  it('panel: sends with its variant', () => {
+    component.variant = 'springai';
+    open();
+    send('Where am I?');
+    expect(chat.ask).toHaveBeenCalledWith('Where am I?', 'springai');
+  });
+
   it('panel: does not load history while closed', () => {
     fixture.detectChanges();
     expect(chat.history).not.toHaveBeenCalled();
@@ -78,7 +96,7 @@ describe('ChatPanelComponent', () => {
   it('panel: sends the question once, trimmed', () => {
     open();
     send('  hi  ');
-    expect(chat.ask).toHaveBeenCalledOnceWith('hi');
+    expect(chat.ask).toHaveBeenCalledOnceWith('hi', 'sdk');
   });
 
   it('panel: blank question is not sent', () => {
@@ -155,6 +173,6 @@ describe('ChatPanelComponent', () => {
     input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', shiftKey: true, bubbles: true }));
     expect(chat.ask).not.toHaveBeenCalled();
     input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
-    expect(chat.ask).toHaveBeenCalledOnceWith('hi');
+    expect(chat.ask).toHaveBeenCalledOnceWith('hi', 'sdk');
   });
 });

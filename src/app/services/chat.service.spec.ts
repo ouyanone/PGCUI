@@ -39,6 +39,22 @@ describe('ChatService', () => {
     expect(got.answer).toBe('You are #7.');
   });
 
+  it('ask: the Spring AI variant POSTs to /webapi/chat/spring', () => {
+    let got: any;
+    service.ask('Where am I?', 'springai').subscribe(r => got = r);
+    const req = http.expectOne(`${base}/webapi/chat/spring`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.withCredentials).toBeTrue();
+    expect(req.request.body).toEqual({ question: 'Where am I?' });
+    req.flush({ answer: 'You are #7.' });
+    expect(got.answer).toBe('You are #7.');
+  });
+
+  it('ask: the sdk variant (and the default) POSTs to /webapi/chat', () => {
+    service.ask('hi', 'sdk').subscribe();
+    http.expectOne(`${base}/webapi/chat`).flush({ answer: 'ok' });
+  });
+
   it('service: 401 maps to signin', () => {
     let got: any;
     service.ask('hi').subscribe(r => got = r);

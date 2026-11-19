@@ -66,6 +66,21 @@
 /* Logged-in user display */
 .toolbar-chat-btn { color: #fff; }
 
+/* The two assistants' buttons: a solid chat bubble with a letter cut out in the toolbar blue,
+   J for the Anthropic Java SDK bot, S for the Spring AI bot. */
+.toolbar-chat-btn { position: relative; }
+.chat-letter {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-62%);
+  text-align: center;
+  font: 900 12px/1 Roboto, "Helvetica Neue", sans-serif;
+  color: var(--pgc-blue);
+  pointer-events: none;
+}
+
 .toolbar-user {
   display: inline-flex;
   align-items: center;

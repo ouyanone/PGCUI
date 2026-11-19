@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { marked } from 'marked';
 
-import { ChatService, ChatReply } from '../../services/chat.service';
+import { ChatService, ChatReply, ChatVariant } from '../../services/chat.service';
 import { AuthService } from '../../services/auth.service';
 
 interface ChatLine {
@@ -23,6 +23,8 @@ export class ChatPanelComponent implements OnChanges {
   static readonly MAX_QUESTION = 500;
 
   @Input() open = false;
+  /** Which bot answers; the history is shared, so only the title and endpoint change. */
+  @Input() variant: ChatVariant = 'sdk';
   @Output() closed = new EventEmitter<void>();
 
   lines: ChatLine[] = [];
@@ -51,7 +53,7 @@ export class ChatPanelComponent implements OnChanges {
     this.lines = [...this.lines, line];
     this.draft = '';
     this.waiting = true;
-    this.chat.ask(question).subscribe({
+    this.chat.ask(question, this.variant).subscribe({
       next: (reply: ChatReply) => {
         if (reply.answer !== undefined) {
           line.answerHtml = this.render(reply.answer);
